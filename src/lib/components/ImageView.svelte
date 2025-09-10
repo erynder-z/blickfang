@@ -1,14 +1,27 @@
+<script lang="ts">
+	import { imageUrl } from '$lib/store';
+</script>
+
 <div class="image-view-container">
-  <p>Image will be displayed here</p>
+	{#if $imageUrl}
+		<img src={$imageUrl} alt="Selected" />
+	{:else}
+		<p>Select an image to view</p>
+	{/if}
 </div>
 
 <style>
-  .image-view-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50vh;
-    border: 2px dashed #ccc;
-    margin: 1rem;
-  }
+	.image-view-container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-grow: 1;
+		margin: 1rem;
+		min-height: 0;
+	}
+	img {
+		max-width: 100%;
+		max-height: 100%;
+		object-fit: contain;
+	}
 </style>
