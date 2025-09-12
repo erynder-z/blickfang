@@ -8,5 +8,10 @@
     "identifier": "fs:read-file",
     "windows": ["main"],
     "permissions": []
+  },
+  {
+    "identifier": "webview:devtools",
+    "windows": ["main"],
+    "permissions": ["core:webview:allow-internal-toggle-devtools"]
   }
 ]
