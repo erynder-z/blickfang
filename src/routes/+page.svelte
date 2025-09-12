@@ -1,18 +1,21 @@
 <script lang="ts">
-  import Header from "../lib/components/Header.svelte";
   import ImageView from "../lib/components/ImageView.svelte";
   import Controls from "../lib/components/Controls.svelte";
   import Footer from "../lib/components/Footer.svelte";
 </script>
 
 <main>
-  <Header />
-  <ImageView />
   <Controls />
+  <ImageView />
   <Footer />
 </main>
 
 <style>
+  main {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
   :global(:root) {
     font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
     font-size: 16px;
