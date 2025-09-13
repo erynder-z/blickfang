@@ -1,10 +1,11 @@
 <script lang="ts">
   import { imageUrl, zoomLevel } from "$lib/store";
+  import { zoomPan } from "$lib/actions/zoompan";
 </script>
 
 <div class="image-view-container">
   {#if $imageUrl}
-    <img src={$imageUrl} alt="Selected" style="transform: scale({$zoomLevel});" />
+    <canvas use:zoomPan={{ imageUrlStore: imageUrl, zoomLevelStore: zoomLevel }}></canvas>
   {:else}
     <p>Select an image to view</p>
   {/if}
@@ -19,11 +20,13 @@
     min-height: 0;
     max-height: 80%;
     overflow: hidden;
+    cursor: grab;
   }
-  img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    transition: transform 0.2s ease-in-out;
+  .image-view-container:active {
+    cursor: grabbing;
+  }
+  canvas {
+    width: 100%;
+    height: 100%;
   }
 </style>
