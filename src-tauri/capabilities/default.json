@@ -10,6 +10,16 @@
     "permissions": []
   },
   {
+    "identifier": "fs:read-dir",
+    "windows": ["main"],
+    "permissions": []
+  },
+  {
+    "identifier": "core:event:default",
+    "windows": ["main"],
+    "permissions": ["core:event:allow-listen"]
+  },
+  {
     "identifier": "webview:devtools",
     "windows": ["main"],
     "permissions": ["core:webview:allow-internal-toggle-devtools"]
