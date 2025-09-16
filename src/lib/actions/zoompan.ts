@@ -11,6 +11,7 @@ export function zoomPan(canvas: HTMLCanvasElement, options: ZoomPanOptions) {
   const container = canvas.parentElement;
   if (!container) return;
 
+  canvas.style.willChange = "transform";
   let ctx = canvas.getContext("2d");
 
   // --- State ---
@@ -81,9 +82,8 @@ export function zoomPan(canvas: HTMLCanvasElement, options: ZoomPanOptions) {
       const newDisplayScale =
         startDisplayScale + (targetDisplayScale - startDisplayScale) * progress;
 
-      const rect = canvas.getBoundingClientRect();
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
       const worldX = (centerX - offsetX) / displayScale;
       const worldY = (centerY - offsetY) / displayScale;
 
@@ -128,9 +128,8 @@ export function zoomPan(canvas: HTMLCanvasElement, options: ZoomPanOptions) {
     isAnimating = false;
     lastWheelTime = Date.now();
 
-    const rect = canvas.getBoundingClientRect();
-    const mouseX = event.clientX - rect.left;
-    const mouseY = event.clientY - rect.top;
+    const mouseX = event.offsetX;
+    const mouseY = event.offsetY;
 
     const worldX = (mouseX - offsetX) / displayScale;
     const worldY = (mouseY - offsetY) / displayScale;
@@ -207,6 +206,7 @@ export function zoomPan(canvas: HTMLCanvasElement, options: ZoomPanOptions) {
 
   return {
     destroy() {
+      canvas.style.willChange = "auto";
       container.removeEventListener("mousedown", onMouseDown);
       container.removeEventListener("mousemove", onMouseMove);
       container.removeEventListener("mouseup", onMouseUp);

@@ -1,5 +1,5 @@
-use tauri_plugin_opener;
 use tauri_plugin_dialog;
+use tauri_plugin_opener;
 
 mod commands;
 mod utils;
