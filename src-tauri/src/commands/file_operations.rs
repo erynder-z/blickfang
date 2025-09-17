@@ -79,7 +79,7 @@ pub async fn change_image(
     let next_index = if direction == "next" {
         (current_index + 1) % files.len()
     } else {
-        (current_index - 1 + files.len()) % files.len()
+        (current_index + files.len() - 1) % files.len()
     };
 
     let next_image_path = files[next_index].clone();
