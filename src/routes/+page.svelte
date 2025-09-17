@@ -5,24 +5,28 @@
 </script>
 
 <main>
-  <Controls />
   <ImageView />
+  <Controls />
   <Footer />
 </main>
 
 <style>
   main {
-    display: flex;
-    flex-direction: column;
     height: 100vh;
+    position: relative;
   }
+
+  :global(*, *:before, *:after) {
+    box-sizing: border-box;
+  }
+
   :global(:root) {
     font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
     font-size: 16px;
     line-height: 24px;
     font-weight: 400;
-    color: #0f0f0f;
-    background-color: #f6f6f6;
+    color: #747474;
+    background-color: #241f2e;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -32,12 +36,5 @@
 
   :global(body) {
     margin: 0;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :global(:root) {
-      color: #f6f6f6;
-      background-color: #2f2f2f;
-    }
   }
 </style>

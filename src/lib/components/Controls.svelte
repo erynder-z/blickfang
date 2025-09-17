@@ -13,9 +13,7 @@
 
   const openFile = async () => {
     try {
-      const [newImageData, newImagePath] = await invoke<[string, string]>(
-        "open_and_read_file"
-      );
+      const [newImageData, newImagePath] = await invoke<[string, string]>("open_and_read_file");
       if (newImageData) {
         imageUrl.set(newImageData);
         imagePath.set(newImagePath);
@@ -30,10 +28,10 @@
     if (!currentPath) return;
 
     try {
-      const [newImageData, newImagePath] = await invoke<[string, string]>(
-        "change_image",
-        { currentPath, direction }
-      );
+      const [newImageData, newImagePath] = await invoke<[string, string]>("change_image", {
+        currentPath,
+        direction,
+      });
       imageUrl.set(newImageData);
       imagePath.set(newImagePath);
     } catch (error) {
@@ -62,19 +60,52 @@
 </script>
 
 <div class="controls-container">
-  <button on:click={openFile}>Open Image</button>
-  <button on:click={previous}>Previous</button>
-  <button on:click={next}>Next</button>
-  <button on:click={zoomIn}>Zoom In</button>
-  <button on:click={zoomOut}>Zoom Out</button>
+  <button on:click={openFile}>
+    <img src="/file_open_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Open" />
+  </button>
+  <button on:click={previous}>
+    <img src="/arrow_back_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Previous" />
+  </button>
+  <button on:click={next}>
+    <img src="/arrow_forward_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Next" />
+  </button>
+  <button on:click={zoomIn}>
+    <img src="/zoom_in_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Zoom In" />
+  </button>
+  <button on:click={zoomOut}>
+    <img src="/zoom_out_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Zoom Out" />
+  </button>
 </div>
 
 <style>
   .controls-container {
-    height: 5vh;
+    position: absolute;
+    top: 0;
+    width: 100%;
     display: flex;
     justify-content: center;
     gap: 1rem;
-    margin: 1rem;
+    padding: 1rem;
+    background-color: transparent;
+    z-index: 10;
+  }
+
+  button {
+    background-color: rgba(67, 67, 67, 0.5);
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.2s ease-in-out;
+  }
+
+  button:hover {
+    filter: brightness(1.5);
+    cursor: pointer;
+  }
+
+  img {
+    width: 24px;
+    height: 24px;
   }
 </style>

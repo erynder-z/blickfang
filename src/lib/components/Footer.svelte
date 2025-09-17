@@ -2,8 +2,13 @@
 
 <style>
   footer {
-    height: 5vh;
-    text-align: center;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
     padding: 1rem;
+    text-align: center;
+    background-color: transparent;
+    color: white;
+    z-index: 10;
   }
 </style>
