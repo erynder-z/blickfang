@@ -1,11 +1,18 @@
 <script lang="ts">
   import { imageUrl, zoomLevel } from "$lib/store";
+  import Placeholder from "./Placeholder.svelte";
   import { zoomPan } from "$lib/actions/zoompan";
+
+  let resizing = false;
 </script>
 
 <div class="image-view-container">
   {#if $imageUrl}
-    <canvas use:zoomPan={{ imageUrlStore: imageUrl, zoomLevelStore: zoomLevel }}></canvas>
+    <canvas
+      use:zoomPan={{ imageUrlStore: imageUrl, zoomLevelStore: zoomLevel }}
+      on:resizing={(e) => (resizing = e.detail)}
+    ></canvas>
+    <Placeholder {resizing} />
   {:else}
     <p>Select an image to view</p>
   {/if}

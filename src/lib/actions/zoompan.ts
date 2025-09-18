@@ -48,7 +48,7 @@ export function zoomPan(canvas: HTMLCanvasElement, options: ZoomPanOptions) {
   }
 
   function setInitialTransform() {
-    if (!image || !canvas || canvas.width === 0) return;
+    if (!image || !image.complete || !canvas || canvas.width === 0) return;
 
     const canvasAspect = canvas.width / canvas.height;
     const imageAspect = image.naturalWidth / image.naturalHeight;
@@ -155,29 +155,29 @@ export function zoomPan(canvas: HTMLCanvasElement, options: ZoomPanOptions) {
   container.addEventListener("mouseleave", onMouseUp);
   container.addEventListener("wheel", onWheel);
 
+  let resizeTimeout: ReturnType<typeof setTimeout> | null = null;
+
   const resizeObserver = new ResizeObserver((entries) => {
-    // Defer the execution to prevent ResizeObserver loop errors
-    requestAnimationFrame(() => {
-      if (!ctx || !canvas) return;
-      const entry = entries[0];
-      if (!entry) return;
-      const { width, height } = entry.contentRect;
+    if (!ctx || !canvas || !image || !image.complete) return;
+    const entry = entries[0];
+    if (!entry) return;
+    const { width, height } = entry.contentRect;
 
-      const oldCanvasWidth = canvas.width;
-      const oldCanvasHeight = canvas.height;
+    if (resizeTimeout) clearTimeout(resizeTimeout);
 
-      if (oldCanvasWidth !== width || oldCanvasHeight !== height) {
-        const worldCenterX = (oldCanvasWidth / 2 - offsetX) / displayScale;
-        const worldCenterY = (oldCanvasHeight / 2 - offsetY) / displayScale;
+    canvas.dispatchEvent(new CustomEvent("resizing", { detail: true }));
 
+    resizeTimeout = setTimeout(() => {
+      if (canvas.width !== width || canvas.height !== height) {
         canvas.width = width;
         canvas.height = height;
-
-        offsetX = width / 2 - worldCenterX * displayScale;
-        offsetY = height / 2 - worldCenterY * displayScale;
+        setInitialTransform();
       }
-    });
+
+      canvas.dispatchEvent(new CustomEvent("resizing", { detail: false }));
+    }, 150); // debounce delay
   });
+
   resizeObserver.observe(container);
   if (container) {
     canvas.width = container.clientWidth;
