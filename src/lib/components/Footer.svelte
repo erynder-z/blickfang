@@ -1,4 +1,15 @@
-<footer>Image information will be displayed here</footer>
+<script lang="ts">
+  import { imagePath, imageExif } from "$lib/store";
+</script>
+
+<footer>
+  {#if $imagePath}
+    <span>{$imagePath}</span>
+  {/if}
+  {#if $imageExif}
+    <span>{$imageExif}</span>
+  {/if}
+</footer>
 
 <style>
   footer {
@@ -10,5 +21,8 @@
     background-color: transparent;
     color: white;
     z-index: 10;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
   }
 </style>

@@ -1,4 +1,5 @@
 use base64::{engine::general_purpose, Engine as _};
+use exif::Reader;
 use mime_guess;
 use std::path::PathBuf;
 use tauri::Emitter;
@@ -10,7 +11,7 @@ use crate::utils::file_system::get_directory_files;
 #[tauri::command]
 pub async fn open_and_read_file(
     window: tauri::Window,
-) -> Result<(String, String, Vec<String>), String> {
+) -> Result<(String, String, String, Vec<String>), String> {
     let (tx, rx) = oneshot::channel();
 
     window
@@ -27,7 +28,7 @@ pub async fn open_and_read_file(
         let path_str = file_path.to_string();
         let path_buf = PathBuf::from(path_str);
 
-        let new_image_data = read_image_file(path_buf.to_str().unwrap().to_string())?;
+        let (new_image_data, exif_data) = read_image_file(path_buf.to_str().unwrap().to_string())?;
         let directory_files = get_directory_files(path_buf.to_str().unwrap().to_string()).await?;
 
         window
@@ -36,17 +37,18 @@ pub async fn open_and_read_file(
 
         Ok((
             new_image_data,
+            exif_data,
             path_buf.to_str().unwrap().to_string(),
             directory_files,
         ))
     } else {
         // User cancelled the dialog. Return an empty string.
-        Ok(("".to_string(), "".to_string(), Vec::new()))
+        Ok(("".to_string(), "".to_string(), "".to_string(), Vec::new()))
     }
 }
 
 #[tauri::command]
-pub fn read_image_file(path: String) -> Result<String, String> {
+pub fn read_image_file(path: String) -> Result<(String, String), String> {
     let path_buf = PathBuf::from(path);
     let mime_type = mime_guess::from_path(&path_buf).first_or_octet_stream();
 
@@ -54,7 +56,23 @@ pub fn read_image_file(path: String) -> Result<String, String> {
         Ok(bytes) => {
             let base64_str = general_purpose::STANDARD.encode(&bytes);
             let data_url = format!("data:{};base64,{}", mime_type, base64_str);
-            Ok(data_url)
+
+            let exif_data =
+                match Reader::new().read_from_container(&mut std::io::Cursor::new(&bytes)) {
+                    Ok(exif) => {
+                        let mut exif_map = std::collections::HashMap::new();
+                        for field in exif.fields() {
+                            exif_map.insert(
+                                field.tag.to_string(),
+                                field.display_value().with_unit(&exif).to_string(),
+                            );
+                        }
+                        serde_json::to_string(&exif_map).unwrap_or_default()
+                    }
+                    Err(_) => "".to_string(),
+                };
+
+            Ok((data_url, exif_data))
         }
         Err(e) => Err(format!("Failed to read file: {}", e)),
     }
@@ -64,7 +82,7 @@ pub fn read_image_file(path: String) -> Result<String, String> {
 pub async fn change_image(
     current_path: String,
     direction: String,
-) -> Result<(String, String), String> {
+) -> Result<(String, String, String), String> {
     let files = get_directory_files(current_path.clone()).await?;
 
     if files.len() <= 1 {
@@ -83,7 +101,7 @@ pub async fn change_image(
     };
 
     let next_image_path = files[next_index].clone();
-    let new_image_data = read_image_file(next_image_path.clone())?;
+    let (new_image_data, exif_data) = read_image_file(next_image_path.clone())?;
 
-    Ok((new_image_data, next_image_path))
+    Ok((new_image_data, next_image_path, exif_data))
 }

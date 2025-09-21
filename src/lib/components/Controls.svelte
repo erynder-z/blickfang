@@ -1,6 +1,6 @@
 <script lang="ts">
   import { get } from "svelte/store";
-  import { imagePath, imageUrl, zoomLevel } from "$lib/store";
+  import { imagePath, imageUrl, imageExif, zoomLevel } from "$lib/store";
   import { invoke } from "@tauri-apps/api/core";
   import { listen } from "@tauri-apps/api/event";
   import { onMount } from "svelte";
@@ -13,9 +13,11 @@
 
   const openFile = async () => {
     try {
-      const [newImageData, newImagePath] = await invoke<[string, string]>("open_and_read_file");
+      const [newImageData, newImageExif, newImagePath] =
+        await invoke<[string, string, string]>("open_and_read_file");
       if (newImageData) {
         imageUrl.set(newImageData);
+        imageExif.set(newImageExif);
         imagePath.set(newImagePath);
       }
     } catch (error) {
@@ -28,12 +30,16 @@
     if (!currentPath) return;
 
     try {
-      const [newImageData, newImagePath] = await invoke<[string, string]>("change_image", {
-        currentPath,
-        direction,
-      });
+      const [newImageData, newImagePath, newImageExif] = await invoke<[string, string, string]>(
+        "change_image",
+        {
+          currentPath,
+          direction,
+        }
+      );
       imageUrl.set(newImageData);
       imagePath.set(newImagePath);
+      imageExif.set(newImageExif);
     } catch (error) {
       console.error("Failed to change image:", error);
     }
