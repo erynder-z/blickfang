@@ -20,5 +20,7 @@ pub async fn get_directory_files(path: String) -> Result<Vec<String>, String> {
         }
     }
 
+    image_files.sort();
+
     Ok(image_files)
 }
