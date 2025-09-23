@@ -6,7 +6,7 @@ type ZoomPanOptions = {
   imageUrlStore: Writable<string | null>;
 };
 
-export function zoomPan(canvas: HTMLCanvasElement, options: ZoomPanOptions) {
+export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
   const { zoomLevelStore, imageUrlStore } = options;
   const container = canvas.parentElement;
   if (!container) return;
@@ -32,7 +32,7 @@ export function zoomPan(canvas: HTMLCanvasElement, options: ZoomPanOptions) {
   let animationFrameId: number;
 
   // --- Drawing & Transformations ---
-  function draw() {
+  const draw = () => {
     animationFrameId = requestAnimationFrame(draw);
     if (!ctx || !canvas) return;
 
@@ -47,7 +47,7 @@ export function zoomPan(canvas: HTMLCanvasElement, options: ZoomPanOptions) {
     }
   }
 
-  function setInitialTransform() {
+  const setInitialTransform = () => {
     if (!image || !image.complete || !canvas || canvas.width === 0) return;
 
     const canvasAspect = canvas.width / canvas.height;
@@ -65,7 +65,7 @@ export function zoomPan(canvas: HTMLCanvasElement, options: ZoomPanOptions) {
     zoomLevelStore.set(1);
   }
 
-  function animateZoomTo(targetZoomLevel: number) {
+  const animateZoomTo = (targetZoomLevel: number) => {
     if (isAnimating) return;
     isAnimating = true;
 
@@ -74,7 +74,7 @@ export function zoomPan(canvas: HTMLCanvasElement, options: ZoomPanOptions) {
     const duration = 150; // duration in ms
     let startTime: number | null = null;
 
-    function frame(time: number) {
+    const frame = (time: number) => {
       if (startTime === null) startTime = time;
       const elapsed = time - startTime;
       const progress = Math.min(elapsed / duration, 1);
@@ -103,7 +103,7 @@ export function zoomPan(canvas: HTMLCanvasElement, options: ZoomPanOptions) {
   }
 
   // --- Event Handlers ---
-  function onMouseDown(event: MouseEvent) {
+  const onMouseDown = (event: MouseEvent) => {
     if (!image) return;
     isAnimating = false;
     isDragging = true;
@@ -111,18 +111,18 @@ export function zoomPan(canvas: HTMLCanvasElement, options: ZoomPanOptions) {
     startY = event.clientY - offsetY;
   }
 
-  function onMouseMove(event: MouseEvent) {
+  const onMouseMove = (event: MouseEvent) => {
     if (isDragging) {
       offsetX = event.clientX - startX;
       offsetY = event.clientY - startY;
     }
   }
 
-  function onMouseUp() {
+  const onMouseUp = () => {
     isDragging = false;
   }
 
-  function onWheel(event: WheelEvent) {
+  const onWheel = (event: WheelEvent) => {
     if (!image) return;
     event.preventDefault();
     isAnimating = false;
