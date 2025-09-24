@@ -1,4 +1,4 @@
-import { zoomLevel, imageUrl } from "$lib/store";
+import { edgeIndicators, indicatorsVisible } from "$lib/store";
 import type { Writable } from "svelte/store";
 
 type ZoomPanOptions = {
@@ -30,11 +30,27 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
 
   // --- Lifecycle ---
   let animationFrameId: number;
+  let interactionTimeoutId: ReturnType<typeof setTimeout> | null = null;
+
+  // --- Interaction Handling ---
+  const debounceIndicatorVisibility = () => {
+    if (interactionTimeoutId) {
+      clearTimeout(interactionTimeoutId);
+    }
+    indicatorsVisible.set(true);
+    interactionTimeoutId = setTimeout(() => {
+      indicatorsVisible.set(false);
+    }, 100);
+  };
 
   // --- Drawing & Transformations ---
   const draw = () => {
     animationFrameId = requestAnimationFrame(draw);
     if (!ctx || !canvas) return;
+
+    // --- Interaction check ---
+    const isInteracting = isDragging || isAnimating || Date.now() - lastWheelTime < 100;
+    if (isInteracting) debounceIndicatorVisibility();
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -45,7 +61,24 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
       ctx.drawImage(image, 0, 0);
       ctx.restore();
     }
-  }
+
+    updateEdgeIndicators();
+  };
+
+  const updateEdgeIndicators = () => {
+    if (!image || !canvas) return;
+
+    const imageWidth = image.naturalWidth * displayScale;
+    const imageHeight = image.naturalHeight * displayScale;
+
+    edgeIndicators.update((indicators) => ({
+      ...indicators,
+      left: offsetX < 0,
+      right: offsetX + imageWidth > canvas.width,
+      top: offsetY < 0,
+      bottom: offsetY + imageHeight > canvas.height,
+    }));
+  };
 
   const setInitialTransform = () => {
     if (!image || !image.complete || !canvas || canvas.width === 0) return;
@@ -63,7 +96,8 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
     offsetY = (canvas.height - image.naturalHeight * displayScale) / 2;
 
     zoomLevelStore.set(1);
-  }
+    updateEdgeIndicators();
+  };
 
   const animateZoomTo = (targetZoomLevel: number) => {
     if (isAnimating) return;
@@ -98,9 +132,10 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
         zoomLevelStore.set(targetZoomLevel);
         isAnimating = false;
       }
-    }
+      updateEdgeIndicators();
+    };
     requestAnimationFrame(frame);
-  }
+  };
 
   // --- Event Handlers ---
   const onMouseDown = (event: MouseEvent) => {
@@ -109,18 +144,18 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
     isDragging = true;
     startX = event.clientX - offsetX;
     startY = event.clientY - offsetY;
-  }
+  };
 
   const onMouseMove = (event: MouseEvent) => {
     if (isDragging) {
       offsetX = event.clientX - startX;
       offsetY = event.clientY - startY;
     }
-  }
+  };
 
   const onMouseUp = () => {
     isDragging = false;
-  }
+  };
 
   const onWheel = (event: WheelEvent) => {
     if (!image) return;
@@ -146,7 +181,7 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
     displayScale = newDisplayScale;
 
     zoomLevelStore.set(displayScale / baseScale);
-  }
+  };
 
   // --- Setup & Teardown ---
   container.addEventListener("mousedown", onMouseDown);
@@ -218,4 +253,4 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
       unSubZoomLevel();
     },
   };
-}
+};
