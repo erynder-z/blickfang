@@ -1,6 +1,6 @@
 <script lang="ts">
   import { get } from "svelte/store";
-  import { imagePath, imageUrl, imageExif, zoomLevel } from "$lib/store";
+  import { imagePath, imageUrl, imageExif, zoomLevel, isSidebarVisible } from "$lib/store";
   import { invoke } from "@tauri-apps/api/core";
   import { listen } from "@tauri-apps/api/event";
   import { onMount } from "svelte";
@@ -63,6 +63,10 @@
       return newLevel < 0.1 ? 0.1 : newLevel;
     });
   };
+
+  const toggleSidebar = () => {
+    isSidebarVisible.update((isOpen) => !isOpen);
+  };
 </script>
 
 <div class="controls-container">
@@ -80,6 +84,9 @@
   </button>
   <button on:click={zoomOut}>
     <img src="/zoom_out_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Zoom Out" />
+  </button>
+  <button on:click={toggleSidebar}>
+    <img src="/menu_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Toggle Sidebar" />
   </button>
 </div>
 

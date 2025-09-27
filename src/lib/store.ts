@@ -11,3 +11,4 @@ export const edgeIndicators = writable({
   right: false,
 });
 export const indicatorsVisible = writable(false);
+export const isSidebarVisible = writable<boolean>(true);

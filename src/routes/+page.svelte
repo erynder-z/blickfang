@@ -1,19 +1,41 @@
 <script lang="ts">
   import ImageView from "../lib/components/ImageView.svelte";
   import Controls from "../lib/components/Controls.svelte";
-  import Footer from "../lib/components/Footer.svelte";
+  import ImageNameDisplay from "$lib/components/ImageNameDisplay.svelte";
+  import { isSidebarVisible } from "$lib/store";
+  import ExifDisplaySidebar from "$lib/components/ExifDisplaySidebar.svelte";
 </script>
 
-<main>
-  <ImageView />
-  <Controls />
-  <Footer />
+<main class:sidebar-hidden={!$isSidebarVisible}>
+  <div class="image-section">
+    <ImageView />
+    <Controls />
+    <ImageNameDisplay />
+  </div>
+  <div class="sidebar-section"><ExifDisplaySidebar /></div>
 </main>
 
 <style>
   main {
     height: 100vh;
     position: relative;
+    display: grid;
+    grid-template-areas: "image-section sidebar-section";
+    grid-template-columns: 80% 20%;
+    grid-template-rows: minmax(0, 1fr);
+    transition: grid-template-columns 0.1s ease-in-out;
+  }
+
+  main.sidebar-hidden {
+    grid-template-columns: 100% 0;
+  }
+
+  .image-section {
+    position: relative;
+  }
+
+  .sidebar-section {
+    overflow: hidden;
   }
 
   :global(*, *:before, *:after) {
