@@ -6,36 +6,48 @@
   import ExifDisplaySidebar from "$lib/components/ExifDisplaySidebar.svelte";
 </script>
 
-<main class:sidebar-hidden={!$isSidebarVisible}>
+<main>
   <div class="image-section">
     <ImageView />
     <Controls />
     <ImageNameDisplay />
   </div>
-  <div class="sidebar-section"><ExifDisplaySidebar /></div>
+  <div class="sidebar-overlay" class:visible={$isSidebarVisible}>
+    <ExifDisplaySidebar />
+  </div>
 </main>
 
 <style>
   main {
     height: 100vh;
     position: relative;
-    display: grid;
-    grid-template-areas: "image-section sidebar-section";
-    grid-template-columns: 80% 20%;
-    grid-template-rows: minmax(0, 1fr);
-    transition: grid-template-columns 0.1s ease-in-out;
-  }
-
-  main.sidebar-hidden {
-    grid-template-columns: 100% 0;
+    overflow: hidden;
   }
 
   .image-section {
     position: relative;
+    height: 100%;
+    width: 100%;
   }
 
-  .sidebar-section {
-    overflow: hidden;
+  .sidebar-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 25%;
+    max-width: 350px;
+    min-width: 250px;
+    background-color: #241f2e;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 20;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+    border-left: 1px solid #444;
+  }
+
+  .sidebar-overlay.visible {
+    transform: translateX(0);
   }
 
   :global(*, *:before, *:after) {
