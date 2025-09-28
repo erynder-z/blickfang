@@ -1,6 +1,13 @@
 <script lang="ts">
   import { get } from "svelte/store";
-  import { imagePath, imageUrl, imageExif, zoomLevel, isSidebarVisible } from "$lib/store";
+  import {
+    imagePath,
+    imageUrl,
+    imageExif,
+    zoomLevel,
+    isExifSidebarVisible,
+    isOptionsSidebarVisible,
+  } from "$lib/store";
   import { invoke } from "@tauri-apps/api/core";
   import { listen } from "@tauri-apps/api/event";
   import { onMount } from "svelte";
@@ -64,12 +71,19 @@
     });
   };
 
-  const toggleSidebar = () => {
-    isSidebarVisible.update((isOpen) => !isOpen);
+  const toggleExifInfo = () => {
+    isExifSidebarVisible.update((isOpen) => !isOpen);
+  };
+
+  const toggleOptopns = () => {
+    isOptionsSidebarVisible.update((isOpen) => !isOpen);
   };
 </script>
 
 <div class="controls-container">
+  <button on:click={toggleOptopns}>
+    <img src="/menu_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Toggle Sidebar" />
+  </button>
   <button on:click={openFile}>
     <img src="/file_open_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Open" />
   </button>
@@ -85,8 +99,8 @@
   <button on:click={zoomOut}>
     <img src="/zoom_out_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Zoom Out" />
   </button>
-  <button on:click={toggleSidebar}>
-    <img src="/menu_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Toggle Sidebar" />
+  <button on:click={toggleExifInfo}>
+    <img src="/info_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz24.svg" alt="Toggle Sidebar" />
   </button>
 </div>
 

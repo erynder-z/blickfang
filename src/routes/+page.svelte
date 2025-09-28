@@ -2,8 +2,9 @@
   import ImageView from "../lib/components/ImageView.svelte";
   import Controls from "../lib/components/Controls.svelte";
   import ImageNameDisplay from "$lib/components/ImageNameDisplay.svelte";
-  import { isSidebarVisible } from "$lib/store";
+  import { isExifSidebarVisible, isOptionsSidebarVisible } from "$lib/store";
   import ExifDisplaySidebar from "$lib/components/ExifDisplaySidebar.svelte";
+  import OptionsDisplaySidebar from "$lib/components/OptionsDisplaySidebar.svelte";
 </script>
 
 <main>
@@ -12,8 +13,11 @@
     <Controls />
     <ImageNameDisplay />
   </div>
-  <div class="sidebar-overlay" class:visible={$isSidebarVisible}>
+  <div class="exif-sidebar-overlay" class:visible={$isExifSidebarVisible}>
     <ExifDisplaySidebar />
+  </div>
+  <div class="options-sidebar-overlay" class:visible={$isOptionsSidebarVisible}>
+    <OptionsDisplaySidebar />
   </div>
 </main>
 
@@ -30,7 +34,7 @@
     width: 100%;
   }
 
-  .sidebar-overlay {
+  .exif-sidebar-overlay {
     position: absolute;
     top: 0;
     right: 0;
@@ -38,7 +42,7 @@
     width: 25%;
     max-width: 350px;
     min-width: 250px;
-    background-color: #241f2e;
+    background-color: #372e49;
     transform: translateX(100%);
     transition: transform 0.3s ease-in-out;
     z-index: 20;
@@ -46,7 +50,24 @@
     border-left: 1px solid #444;
   }
 
-  .sidebar-overlay.visible {
+  .options-sidebar-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 25%;
+    max-width: 350px;
+    min-width: 250px;
+    background-color: #372e49;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 20;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+    border-left: 1px solid #444;
+  }
+
+  .exif-sidebar-overlay.visible,
+  .options-sidebar-overlay.visible {
     transform: translateX(0);
   }
 

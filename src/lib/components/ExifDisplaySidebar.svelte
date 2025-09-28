@@ -19,6 +19,7 @@
 
 <div class="exif-container">
   {#if exifData && Object.keys(exifData).length > 0}
+    <h1>Exif Data</h1>
     <div class="exif-grid">
       {#each Object.entries(exifData) as [tag, value]}
         <div class="exif-item">
