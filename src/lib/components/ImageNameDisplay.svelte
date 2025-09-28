@@ -8,8 +8,6 @@
 <div>
   {#if imageName}
     <p>{imageName}</p>
-  {:else}
-    <p>{$t["image-name.no-data"]}</p>
   {/if}
 </div>
 

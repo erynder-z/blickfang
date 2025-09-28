@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { imageExif } from "$lib/store";
+  import { imageExif, isExifSidebarVisible } from "$lib/store";
   import { t } from "$lib/i18n";
 
   let exifData: Record<string, string> | null = null;
@@ -18,23 +18,45 @@
   }
 </script>
 
-<div class="exif-container">
-  {#if exifData && Object.keys(exifData).length > 0}
-    <h1>{$t["exif.title"]}</h1>
-    <div class="exif-grid">
-      {#each Object.entries(exifData) as [tag, value]}
-        <div class="exif-item">
-          <span class="exif-tag">{tag}</span>
-          <span class="exif-value">{value}</span>
-        </div>
-      {/each}
-    </div>
-  {:else}
-    <p>{$t["exif.no-exif"]}</p>
-  {/if}
+<div class="exif-sidebar-overlay" class:visible={$isExifSidebarVisible}>
+  <div class="exif-container">
+    {#if exifData && Object.keys(exifData).length > 0}
+      <h1>{$t["exif.title"]}</h1>
+      <div class="exif-grid">
+        {#each Object.entries(exifData) as [tag, value]}
+          <div class="exif-item">
+            <span class="exif-tag">{tag}</span>
+            <span class="exif-value">{value}</span>
+          </div>
+        {/each}
+      </div>
+    {:else}
+      <p>{$t["exif.no-data"]}</p>
+    {/if}
+  </div>
 </div>
 
 <style>
+  .exif-sidebar-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 25%;
+    max-width: 33%;
+    min-width: 25%;
+    background-color: #372e49;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 20;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+    border-left: 1px solid #444;
+  }
+
+  .exif-sidebar-overlay.visible {
+    transform: translateX(0);
+  }
+
   .exif-container {
     padding: 1rem;
     color: #e3e3e3;
