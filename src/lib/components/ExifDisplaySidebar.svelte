@@ -1,5 +1,6 @@
 <script lang="ts">
   import { imageExif } from "$lib/store";
+  import { t } from "$lib/i18n";
 
   let exifData: Record<string, string> | null = null;
 
@@ -19,7 +20,7 @@
 
 <div class="exif-container">
   {#if exifData && Object.keys(exifData).length > 0}
-    <h1>Exif Data</h1>
+    <h1>{$t["exif.title"]}</h1>
     <div class="exif-grid">
       {#each Object.entries(exifData) as [tag, value]}
         <div class="exif-item">
@@ -29,7 +30,7 @@
       {/each}
     </div>
   {:else}
-    <p>No Exif data!</p>
+    <p>{$t["exif.no-exif"]}</p>
   {/if}
 </div>
 

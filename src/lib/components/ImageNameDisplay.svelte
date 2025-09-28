@@ -1,5 +1,6 @@
 <script lang="ts">
   import { imagePath } from "$lib/store";
+  import { t } from "$lib/i18n";
 
   $: imageName = $imagePath ? $imagePath.split("/").pop() : undefined;
 </script>
@@ -8,7 +9,7 @@
   {#if imageName}
     <p>{imageName}</p>
   {:else}
-    <p>No image selected.</p>
+    <p>{$t["image-name.no-data"]}</p>
   {/if}
 </div>
 

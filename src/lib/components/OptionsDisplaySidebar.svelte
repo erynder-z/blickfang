@@ -1,10 +1,11 @@
 <script lang="ts">
+  import { t } from "$lib/i18n";
 </script>
 
 <div class="options-container">
-  <h1>Options</h1>
-  <button>Hotkeys</button>
-  <button>Language</button>
+  <h1>{$t["options.title"]}</h1>
+  <button>{$t["options.hotkeys"]}</button>
+  <button>{$t["options.language"]}</button>
 </div>
 
 <style>

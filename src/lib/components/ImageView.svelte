@@ -3,6 +3,7 @@
   import Placeholder from "./Placeholder.svelte";
   import { zoomPan } from "$lib/actions/zoompan";
   import EdgeIndicators from "./EdgeIndicators.svelte";
+  import { t } from "$lib/i18n";
 
   let resizing = false;
 </script>
@@ -16,7 +17,7 @@
     ></canvas>
     <Placeholder {resizing} />
   {:else}
-    <p>Select an image to view</p>
+    <p>{$t["image-view.placeholder"]}</p>
   {/if}
 </div>
 
