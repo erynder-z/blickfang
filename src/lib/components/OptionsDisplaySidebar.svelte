@@ -1,11 +1,16 @@
 <script lang="ts">
   import { t } from "$lib/i18n";
+  import { isLanguageMenuVisible } from "$lib/store";
+
+  const showLanguageSelectOverlay = () => {
+    isLanguageMenuVisible.set(true);
+  };
 </script>
 
 <div class="options-container">
   <h1>{$t["options.title"]}</h1>
-  <button>{$t["options.hotkeys"]}</button>
-  <button>{$t["options.language"]}</button>
+  <button>{$t["options.button.hotkeys"]}</button>
+  <button on:click={showLanguageSelectOverlay}>{$t["options.button.language"]}</button>
 </div>
 
 <style>
