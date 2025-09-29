@@ -1,8 +1,7 @@
 <script lang="ts">
   import { imagePath } from "$lib/store";
-  import { t } from "$lib/i18n";
 
-  $: imageName = $imagePath ? $imagePath.split("/").pop() : undefined;
+  $: imageName = $imagePath ? $imagePath.split(/[/\\]/).pop() : undefined;
 </script>
 
 <div>
