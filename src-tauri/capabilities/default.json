@@ -20,6 +20,16 @@
     "permissions": ["core:event:allow-listen"]
   },
   {
+    "identifier": "fs:allow-appdata-read",
+    "allow": [{ "path": "$APPDATA" }],
+    "permissions": []
+  },
+  {
+    "identifier": "fs:allow-appdata-write",
+    "allow": [{ "path": "$APPDATA" }],
+    "permissions": []
+  },
+  {
     "identifier": "webview:devtools",
     "windows": ["main"],
     "permissions": ["core:webview:allow-internal-toggle-devtools"]
