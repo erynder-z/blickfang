@@ -24,12 +24,12 @@
     width: 25%;
     max-width: 33%;
     min-width: 25%;
-    background-color: #372e49;
+    background-color: var(--color-background);
     transform: translateX(-100%);
     transition: transform 0.3s ease-in-out;
     z-index: 20;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-    border-right: 1px solid #444;
+    box-shadow: 2px 0 5px var(--color-shadow);
+    border-right: 1px solid var(--color-accent);
   }
 
   .options-sidebar-overlay.visible {
@@ -37,17 +37,16 @@
   }
 
   .options-container {
-    padding: 1rem;
-    color: #e3e3e3;
+    color: var(--color-text-primary);
     height: 100%;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    padding: 1rem;
   }
 
   h1 {
-    margin: 0;
     text-align: center;
   }
 
@@ -55,8 +54,8 @@
     padding: 0.5rem;
     border: none;
     border-radius: 0.5rem;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: #e3e3e3;
+    background-color: var(--color-button);
+    color: var(--color-text);
     cursor: pointer;
     font-weight: bold;
   }

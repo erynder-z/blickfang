@@ -43,15 +43,15 @@
 
 <style>
   dialog {
-    background-color: #372e49;
-    border: 1px solid #ccc;
+    background-color: var(--color-background);
+    border: 1px solid var(--color-accent);
     border-radius: 8px;
     padding: 1.5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px var(--color-shadow);
   }
 
   dialog::backdrop {
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--color-accent);
   }
 
   .menu-content {
@@ -71,8 +71,8 @@
     padding: 0.5rem;
     border: none;
     border-radius: 0.5rem;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: #e3e3e3;
+    background-color: var(--color-button);
+    color: var(--color-text);
     cursor: pointer;
     font-weight: bold;
   }

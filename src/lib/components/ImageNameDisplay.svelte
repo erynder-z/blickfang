@@ -24,7 +24,7 @@
   }
 
   p {
-    background-color: rgba(0, 0, 0, 0.25);
+    background-color: var(--color-shadow);
     color: white;
     padding: 0.5rem 0.75rem;
     border-radius: 25%/100%;

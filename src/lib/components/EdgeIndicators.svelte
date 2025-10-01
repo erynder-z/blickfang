@@ -36,7 +36,7 @@
 
   .indicator {
     position: absolute;
-    background-color: rgba(255, 0, 255, 0.55);
+    background-color: var(--color-indicator);
     opacity: 0;
     transition: opacity 0.3s ease;
   }

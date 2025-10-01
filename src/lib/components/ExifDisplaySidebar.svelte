@@ -45,12 +45,12 @@
     width: 25%;
     max-width: 33%;
     min-width: 25%;
-    background-color: #372e49;
+    background-color: var(--color-background);
     transform: translateX(100%);
     transition: transform 0.3s ease-in-out;
     z-index: 20;
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
-    border-left: 1px solid #444;
+    border-left: 1px solid var(--color-accent);
   }
 
   .exif-sidebar-overlay.visible {
@@ -59,7 +59,7 @@
 
   .exif-container {
     padding: 1rem;
-    color: #e3e3e3;
+    color: var(--color-text-primary);
     height: 100%;
     overflow-y: auto;
   }
@@ -74,7 +74,7 @@
     flex: 1 1 10rem;
     display: flex;
     flex-direction: column;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: var(--color-accent);
     padding: 0.75rem;
     border-radius: 4px;
   }
@@ -82,13 +82,14 @@
   .exif-tag {
     font-weight: bold;
     font-size: 0.9rem;
-    color: #aaa;
+    color: var(--color-text-secondary);
     margin-bottom: 0.25rem;
     word-break: break-all;
   }
 
   .exif-value {
     font-size: 1rem;
+    color: var(--color-text-primary);
     word-break: break-all;
   }
 

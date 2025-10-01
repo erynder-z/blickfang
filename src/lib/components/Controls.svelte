@@ -118,7 +118,7 @@
   }
 
   button {
-    background-color: rgba(67, 67, 67, 0.5);
+    background-color: var(--color-background);
     border: none;
     cursor: pointer;
     padding: 0.5rem;
