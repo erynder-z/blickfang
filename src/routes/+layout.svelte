@@ -4,6 +4,7 @@
   import { lang } from "$lib/actions/lang";
   import { locale, setLocale } from "$lib/i18n";
   import LanguageMenu from "$lib/components/LanguageMenu.svelte";
+  import ThemeMenu from "$lib/components/ThemeMenu.svelte";
   import ExifDisplaySidebar from "$lib/components/ExifDisplaySidebar.svelte";
   import OptionsDisplaySidebar from "$lib/components/OptionsDisplaySidebar.svelte";
   import { appConfig } from "$lib/store";
@@ -26,6 +27,7 @@
 <svelte:body use:lang={$locale} />
 
 <LanguageMenu />
+<ThemeMenu />
 
 <div class="app-container">
   <ExifDisplaySidebar />

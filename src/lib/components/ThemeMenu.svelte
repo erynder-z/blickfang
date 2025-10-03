@@ -1,15 +1,14 @@
 <script lang="ts">
-  import { isLanguageMenuVisible } from "$lib/store";
-  import { locale, setLocale, t, locales } from "$lib/i18n";
+  import { isThemeMenuVisible, appConfig } from "$lib/store";
+  import { t } from "$lib/i18n";
   import { invoke } from "@tauri-apps/api/core";
+  import themes from "$lib/themes.json";
 
-  type i18nLanguage = [string, Record<string, string>];
-
-  const languages: i18nLanguage[] = Object.entries(locales);
+  const themeNames = Object.keys(themes);
 
   let dialog: HTMLDialogElement;
 
-  isLanguageMenuVisible.subscribe((visible) => {
+  isThemeMenuVisible.subscribe((visible) => {
     if (visible) {
       dialog?.showModal();
     } else {
@@ -17,33 +16,32 @@
     }
   });
 
-  const saveLanguage = async (lang: string) => {
+  const saveTheme = async (theme: string) => {
     try {
-      await invoke("update_language_command", { language: lang });
+      await invoke("update_theme_command", { theme: theme });
     } catch (error) {
-      console.error("Failed to save language:", error);
+      console.error("Failed to save theme:", error);
     }
   };
 
-  const handleButtonClick = (lang: string) => {
-    setLocale(lang);
-    saveLanguage(lang);
+  const handleButtonClick = (theme: string) => {
+    saveTheme(theme);
     handleClose();
   };
 
   const handleClose = () => {
-    isLanguageMenuVisible.set(false);
+    isThemeMenuVisible.set(false);
   };
 </script>
 
 <dialog bind:this={dialog} on:close={handleClose}>
   <div class="menu-content">
-    <h1>{$t["options.language.heading"]}</h1>
+    <h1>{$t["options.theme.heading"]}</h1>
 
-    {#each languages as [lang, translations]}
+    {#each themeNames as theme}
       <!-- svelte-ignore a11y_autofocus -->
-      <button on:click={() => handleButtonClick(lang)} autofocus={$locale === lang}>
-        {translations["language.name"]}
+      <button on:click={() => handleButtonClick(theme)} autofocus={$appConfig.theme === theme}>
+        {theme}
       </button>
     {/each}
 
@@ -85,6 +83,7 @@
     color: var(--color-text-primary);
     cursor: pointer;
     font-weight: bold;
+    text-transform: capitalize;
   }
 
   .close-button {

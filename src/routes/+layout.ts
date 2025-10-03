@@ -12,12 +12,7 @@ export const ssr = false;
 export async function load() {
   try {
     const configStr: string = await invoke("read_config_command");
-    let config: AppConfig = JSON.parse(configStr);
-    config = {
-      language: "en",
-      theme: "default",
-      ...config,
-    };
+    const config: AppConfig = JSON.parse(configStr);
     appConfig.set(config);
     setLocale(config.language);
   } catch (error) {

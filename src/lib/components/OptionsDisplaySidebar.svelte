@@ -1,9 +1,13 @@
 <script lang="ts">
   import { t } from "$lib/i18n";
-  import { isLanguageMenuVisible, isOptionsSidebarVisible } from "$lib/store";
+  import { isLanguageMenuVisible, isOptionsSidebarVisible, isThemeMenuVisible } from "$lib/store";
 
   const showLanguageSelectOverlay = () => {
     isLanguageMenuVisible.set(true);
+  };
+
+  const showThemeSelectOverlay = () => {
+    isThemeMenuVisible.set(true);
   };
 </script>
 
@@ -12,6 +16,7 @@
     <h1>{$t["options.title"]}</h1>
     <button>{$t["options.button.hotkeys"]}</button>
     <button on:click={showLanguageSelectOverlay}>{$t["options.button.language"]}</button>
+    <button on:click={showThemeSelectOverlay}>{$t["options.button.theme"]}</button>
   </div>
 </div>
 
@@ -55,7 +60,7 @@
     border: none;
     border-radius: 0.5rem;
     background-color: var(--color-button);
-    color: var(--color-text);
+    color: var(--color-text-primary);
     cursor: pointer;
     font-weight: bold;
   }

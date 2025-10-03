@@ -5,15 +5,25 @@ use tauri::{AppHandle, Manager};
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Config {
+    #[serde(default = "default_language")]
     pub language: String,
+    #[serde(default = "default_theme")]
     pub theme: String,
+}
+
+fn default_language() -> String {
+    "en".to_string()
+}
+
+fn default_theme() -> String {
+    "default".to_string()
 }
 
 impl Default for Config {
     fn default() -> Self {
         Self {
-            language: "en".to_string(),
-            theme: "default".to_string(),
+            language: default_language(),
+            theme: default_theme(),
         }
     }
 }
