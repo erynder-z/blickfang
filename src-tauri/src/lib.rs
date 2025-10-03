@@ -16,7 +16,8 @@ pub fn run() {
             commands::file_operations::change_image,
             commands::config_commands::read_config_command,
             commands::config_commands::write_config_command,
-            commands::config_commands::update_language_command
+            commands::config_commands::update_language_command,
+            commands::config_commands::update_theme_command
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

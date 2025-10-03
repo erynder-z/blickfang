@@ -6,34 +6,20 @@
   import LanguageMenu from "$lib/components/LanguageMenu.svelte";
   import ExifDisplaySidebar from "$lib/components/ExifDisplaySidebar.svelte";
   import OptionsDisplaySidebar from "$lib/components/OptionsDisplaySidebar.svelte";
-  import colors from "$lib/colors.json";
   import { appConfig } from "$lib/store";
   import type { AppConfig } from "$lib/store";
+  import { initThemeManager } from "$lib/themeManager";
 
-  const setColors = async () => {
-    for (const [key, value] of Object.entries(colors)) {
-      document.documentElement.style.setProperty(`--color-${key}`, value as string);
-    }
-  };
-
-  const getConfigData = async () => {
-    let unlisten: (() => void) | undefined;
-
-    (async () => {
-      unlisten = await listen<AppConfig>("config-updated", (event) => {
-        appConfig.set(event.payload);
-        setLocale(event.payload.language);
-      });
-    })();
-
-    return () => {
-      if (unlisten) unlisten();
-    };
-  };
+  initThemeManager();
 
   onMount(() => {
-    getConfigData();
-    setColors();
+    const unlistenPromise = listen<AppConfig>("config-updated", (event) => {
+      appConfig.set(event.payload);
+      setLocale(event.payload.language);
+    });
+    return () => {
+      unlistenPromise.then((unlisten) => unlisten());
+    };
   });
 </script>
 

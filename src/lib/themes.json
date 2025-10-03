@@ -1,0 +1,12 @@
+{
+  "default": {
+    "background": "#372e49",
+    "accent": "#4F4268",
+    "text-primary": "#E3E3E3",
+    "text-secondary": "#727272",
+    "border": "#444444ff",
+    "indicator": "#ff00ff8c",
+    "shadow": "#00000026",
+    "button": "#49372E"
+  }
+}

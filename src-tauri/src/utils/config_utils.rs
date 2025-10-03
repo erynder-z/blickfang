@@ -3,15 +3,17 @@ use std::fs;
 use std::path::PathBuf;
 use tauri::{AppHandle, Manager};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct Config {
     pub language: String,
+    pub theme: String,
 }
 
 impl Default for Config {
     fn default() -> Self {
         Self {
             language: "en".to_string(),
+            theme: "default".to_string(),
         }
     }
 }

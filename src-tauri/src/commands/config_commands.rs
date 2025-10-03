@@ -23,3 +23,15 @@ pub fn update_language_command(app: AppHandle, language: String) {
         }
     }
 }
+
+#[tauri::command]
+pub fn update_theme_command(app: AppHandle, theme: String) {
+    let config_str = read_config(&app);
+    if let Ok(mut config) = serde_json::from_str::<Config>(&config_str) {
+        config.theme = theme;
+        if let Ok(new_config_str) = serde_json::to_string(&config) {
+            write_config(&app, &new_config_str);
+            app.emit("config-updated", &config).unwrap();
+        }
+    }
+}
