@@ -1,4 +1,7 @@
 import { writable } from "svelte/store";
+export interface AppConfig {
+  language: string;
+}
 
 export const imageUrl = writable<string | null>(null);
 export const imagePath = writable<string | null>(null);
@@ -14,3 +17,4 @@ export const indicatorsVisible = writable(false);
 export const isExifSidebarVisible = writable<boolean>(false);
 export const isOptionsSidebarVisible = writable<boolean>(false);
 export const isLanguageMenuVisible = writable<boolean>(false);
+export const appConfig = writable<AppConfig>({ language: "en" });

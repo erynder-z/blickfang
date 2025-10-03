@@ -1,6 +1,7 @@
 <script lang="ts">
   import { isLanguageMenuVisible } from "$lib/store";
   import { locale, setLocale, t, locales } from "$lib/i18n";
+  import { invoke } from "@tauri-apps/api/core";
 
   type i18nLanguage = [string, Record<string, string>];
 
@@ -16,8 +17,17 @@
     }
   });
 
+  const saveLanguage = async (lang: string) => {
+    try {
+      await invoke("update_language_command", { language: lang });
+    } catch (error) {
+      console.error("Failed to save language:", error);
+    }
+  };
+
   const handleButtonClick = (lang: string) => {
     setLocale(lang);
+    saveLanguage(lang);
     handleClose();
   };
 
