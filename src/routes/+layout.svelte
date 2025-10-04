@@ -10,6 +10,8 @@
   import { appConfig } from "$lib/store";
   import type { AppConfig } from "$lib/store";
   import { initThemeManager } from "$lib/themeManager";
+  import { handleKeyDown } from "$lib/shortcuts";
+  import HotkeysMenu from "$lib/components/HotkeysMenu.svelte";
 
   initThemeManager();
 
@@ -24,8 +26,10 @@
   });
 </script>
 
+<svelte:window on:keydown={handleKeyDown} />
 <svelte:body use:lang={$locale} />
 
+<HotkeysMenu />
 <LanguageMenu />
 <ThemeMenu />
 

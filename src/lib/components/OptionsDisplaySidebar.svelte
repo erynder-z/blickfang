@@ -1,6 +1,11 @@
 <script lang="ts">
   import { t } from "$lib/i18n";
-  import { isLanguageMenuVisible, isOptionsSidebarVisible, isThemeMenuVisible } from "$lib/store";
+  import {
+    isLanguageMenuVisible,
+    isOptionsSidebarVisible,
+    isThemeMenuVisible,
+    isHotkeysMenuVisible,
+  } from "$lib/store";
 
   const showLanguageSelectOverlay = () => {
     isLanguageMenuVisible.set(true);
@@ -9,12 +14,16 @@
   const showThemeSelectOverlay = () => {
     isThemeMenuVisible.set(true);
   };
+
+  const showHotkeysOverlay = () => {
+    isHotkeysMenuVisible.set(true);
+  };
 </script>
 
 <div class="options-sidebar-overlay" class:visible={$isOptionsSidebarVisible}>
   <div class="options-container">
     <h1>{$t["options.title"]}</h1>
-    <button>{$t["options.button.hotkeys"]}</button>
+    <button on:click={showHotkeysOverlay}>{$t["options.button.hotkeys"]}</button>
     <button on:click={showLanguageSelectOverlay}>{$t["options.button.language"]}</button>
     <button on:click={showThemeSelectOverlay}>{$t["options.button.theme"]}</button>
   </div>
