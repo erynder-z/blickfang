@@ -1,4 +1,4 @@
-use crate::utils::config_utils::{read_config, write_config, Config};
+use crate::utils::config_utils::{read_config, write_config, Config, default_shortcuts, Shortcuts};
 use serde_json;
 use tauri::{AppHandle, Emitter};
 
@@ -34,4 +34,9 @@ pub fn update_theme_command(app: AppHandle, theme: String) {
             app.emit("config-updated", &config).unwrap();
         }
     }
+}
+
+#[tauri::command]
+pub fn get_default_shortcuts_command() -> Shortcuts {
+    default_shortcuts()
 }

@@ -37,16 +37,17 @@ export const isOptionsSidebarVisible = writable<boolean>(false);
 export const isLanguageMenuVisible = writable<boolean>(false);
 export const isThemeMenuVisible = writable<boolean>(false);
 export const isHotkeysMenuVisible = writable<boolean>(false);
+export const isRemapping = writable<boolean>(false);
 export const appConfig = writable<AppConfig>({
   language: "en",
   theme: "default",
   shortcuts: {
-    openFile: { keys: ["o"], label: "O" },
-    previousImage: { keys: ["Arrow Left"], label: "←" },
-    nextImage: { keys: ["Arrow Right"], label: "→" },
-    zoomIn: { keys: ["+", "=", "Arrow Up"], label: "+ / ↑" },
-    zoomOut: { keys: ["-", "_", "Arrow Down"], label: "- / ↓" },
-    toggleExif: { keys: ["i"], label: "I" },
-    toggleOptions: { keys: ["m"], label: "M" },
+    openFile: { keys: [], label: "" },
+    previousImage: { keys: [], label: "" },
+    nextImage: { keys: [], label: "" },
+    zoomIn: { keys: [], label: "" },
+    zoomOut: { keys: [], label: "" },
+    toggleExif: { keys: [], label: "" },
+    toggleOptions: { keys: [], label: "" },
   },
 });

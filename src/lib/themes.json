@@ -7,7 +7,8 @@
     "border": "#444444ff",
     "indicator": "#ff00ff8c",
     "shadow": "#00000026",
-    "button": "#49372E"
+    "button": "#49372E",
+    "error": "#FF0000"
   },
   "catppuccin-frappe": {
     "background": "#303446",
@@ -17,7 +18,8 @@
     "border": "#292c3c",
     "indicator": "#ca9ee6",
     "shadow": "#00000026",
-    "button": "#414559"
+    "button": "#414559",
+    "error": "#e78284"
   },
   "catppuccin-macchiato": {
     "background": "#24273a",
@@ -27,7 +29,8 @@
     "border": "#1e2030",
     "indicator": "#c6a0f6",
     "shadow": "#00000026",
-    "button": "#363a4f"
+    "button": "#363a4f",
+    "error": "#ed8796"
   },
   "catppuccin-mocha": {
     "background": "#1e1e2e",
@@ -37,6 +40,7 @@
     "border": "#181825",
     "indicator": "#cba6f7",
     "shadow": "#00000026",
-    "button": "#313244"
+    "button": "#313244",
+    "error": "#f38ba8"
   }
 }

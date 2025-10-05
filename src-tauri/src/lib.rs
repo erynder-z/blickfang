@@ -17,7 +17,8 @@ pub fn run() {
             commands::config_commands::read_config_command,
             commands::config_commands::write_config_command,
             commands::config_commands::update_language_command,
-            commands::config_commands::update_theme_command
+            commands::config_commands::update_theme_command,
+            commands::config_commands::get_default_shortcuts_command
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

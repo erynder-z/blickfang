@@ -39,11 +39,11 @@ fn default_theme() -> String {
     "default".to_string()
 }
 
-fn default_shortcuts() -> Shortcuts {
+pub fn default_shortcuts() -> Shortcuts {
     Shortcuts {
         open_file: Shortcut {
             keys: vec!["o".to_string()],
-            label: "O".to_string(),
+            label: "o".to_string(),
         },
         previous_image: Shortcut {
             keys: vec!["ArrowLeft".to_string()],
@@ -63,11 +63,11 @@ fn default_shortcuts() -> Shortcuts {
         },
         toggle_exif: Shortcut {
             keys: vec!["i".to_string()],
-            label: "I".to_string(),
+            label: "i".to_string(),
         },
         toggle_options: Shortcut {
             keys: vec!["m".to_string()],
-            label: "M".to_string(),
+            label: "m".to_string(),
         },
     }
 }
@@ -107,3 +107,5 @@ pub fn write_config(app: &AppHandle, content: &str) {
     let config_path = get_config_path(app);
     fs::write(config_path, content).unwrap();
 }
+
+

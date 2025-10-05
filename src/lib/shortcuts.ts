@@ -74,6 +74,8 @@ const actions: Record<string, () => void> = {
 };
 
 export const handleKeyDown = (event: KeyboardEvent) => {
+  if (event.ctrlKey || event.altKey || event.metaKey) return;
+
   const shortcuts = get(appConfig).shortcuts;
   for (const actionName in shortcuts) {
     const shortcut = shortcuts[actionName as keyof typeof shortcuts];
