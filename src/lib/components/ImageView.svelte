@@ -17,7 +17,16 @@
     ></canvas>
     <Placeholder {resizing} />
   {:else}
-    <p>{$t["image-view.placeholder"]}</p>
+    <div class="empty-canvas">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
+        <path
+          d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2Zm-2 0H5V5h14v14ZM8.9 13.98l2.1 2.52 3-3.76 3.9 5.26H6l2.9-4.02Z"
+          fill="currentColor"
+        />
+      </svg>
+
+      {$t["image-view.placeholder"]}
+    </div>
   {/if}
 </div>
 
@@ -36,5 +45,19 @@
   canvas {
     width: 100%;
     height: 100%;
+  }
+
+  .empty-canvas {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    color: var(--color-text-secondary);
+  }
+
+  svg {
+    width: 3rem;
+    height: 3rem;
   }
 </style>
