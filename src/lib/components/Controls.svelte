@@ -201,16 +201,4 @@
     filter: brightness(1.3);
     transform: scale(1.05);
   }
-
-  .icon {
-    width: 24px;
-    height: 24px;
-    fill: currentColor;
-    color: var(--color-text-primary);
-    transition: color 0.2s ease;
-  }
-
-  button:hover .icon {
-    color: var(--color-accent);
-  }
 </style>
