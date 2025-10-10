@@ -12,7 +12,8 @@
   "app": {
     "windows": [
       {
-        "title": "simple-image-viewer"
+        "title": "simple-image-viewer",
+        "visible": false
       }
     ],
     "security": {

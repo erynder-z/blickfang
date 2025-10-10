@@ -22,6 +22,7 @@ pub fn run() {
 
                 window.set_size(PhysicalSize::new(new_width, new_height))?;
                 window.set_position(PhysicalPosition::new(50, 50))?;
+                window.show()?;
             }
             Ok(())
         })
