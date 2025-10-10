@@ -56,8 +56,7 @@
     right: 0;
     height: 100%;
     width: 25%;
-    max-width: 33%;
-    min-width: 25%;
+    max-width: 30ch;
     background-color: var(--color-background);
     transform: translateX(100%);
     transition: transform 0.3s ease-in-out;

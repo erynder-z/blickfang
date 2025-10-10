@@ -12,9 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "simple-image-viewer",
-        "width": 800,
-        "height": 600
+        "title": "simple-image-viewer"
       }
     ],
     "security": {
