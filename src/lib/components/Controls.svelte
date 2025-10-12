@@ -70,14 +70,14 @@
     isExifSidebarVisible.update((isOpen) => !isOpen);
   };
 
-  const toggleOptopns = () => {
+  const toggleOptions = () => {
     isOptionsSidebarVisible.update((isOpen) => !isOpen);
   };
 </script>
 
 <div class="controls-container">
   <!-- Menu -->
-  <button on:click={toggleOptopns} aria-label="Toggle Options">
+  <button on:click={toggleOptions} aria-label="Toggle Options">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       height="1.75rem"
