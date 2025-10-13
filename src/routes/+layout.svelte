@@ -9,7 +9,7 @@
   import ThemeMenu from "$lib/components/ThemeMenu.svelte";
   import ExifDisplaySidebar from "$lib/components/ExifDisplaySidebar.svelte";
   import OptionsDisplaySidebar from "$lib/components/OptionsDisplaySidebar.svelte";
-  import { appConfig, isRemapping } from "$lib/store";
+  import { appConfig, isRemapping, imageUrl, imagePath, imageExif } from "$lib/store";
   import type { AppConfig } from "$lib/store";
   import { initThemeManager } from "$lib/themeManager";
   import { handleKeyDown as originalHandleKeyDown } from "$lib/shortcuts";
@@ -23,7 +23,16 @@
 
     (async () => {
       unlistenImageSource = await listen<string[]>("image-source", (event) => {
-        console.log("Paths received:", event.payload);
+        const paths = event.payload;
+        if (paths.length > 0) {
+          const path = paths[0];
+          imagePath.set(path);
+          invoke("read_image_file", { path }).then((res) => {
+            const [dataUrl, exifData] = res as [string, string];
+            imageUrl.set(dataUrl);
+            imageExif.set(exifData);
+          });
+        }
       });
 
       await invoke("frontend_is_ready");
