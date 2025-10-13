@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { get } from "svelte/store";
   import { listen } from "@tauri-apps/api/event";
+  import { invoke } from "@tauri-apps/api/core";
   import { lang } from "$lib/actions/lang";
   import { locale, setLocale } from "$lib/i18n";
   import LanguageMenu from "$lib/components/LanguageMenu.svelte";
@@ -17,12 +18,27 @@
   initThemeManager();
 
   onMount(() => {
-    const unlistenPromise = listen<AppConfig>("config-updated", (event) => {
-      appConfig.set(event.payload);
-      setLocale(event.payload.language);
-    });
+    let unlistenImageSource: () => void;
+    let unlistenConfig: () => void;
 
-    return () => unlistenPromise.then((unlisten) => unlisten());
+    (async () => {
+      unlistenImageSource = await listen<string[]>("image-source", (event) => {
+        console.log("Paths received:", event.payload);
+      });
+
+      await invoke("frontend_is_ready");
+
+      unlistenConfig = await listen<AppConfig>("config-updated", (event) => {
+        appConfig.set(event.payload);
+        setLocale(event.payload.language);
+      });
+    })();
+
+    // synchronous cleanup function
+    return () => {
+      unlistenImageSource?.();
+      unlistenConfig?.();
+    };
   });
 
   const handleGlobalKeyDown = (event: KeyboardEvent) => {
