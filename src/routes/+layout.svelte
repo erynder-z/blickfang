@@ -43,7 +43,10 @@
       });
     })();
 
-    // synchronous cleanup function
+    setTimeout(() => {
+      invoke("show_window");
+    }, 150);
+
     return () => {
       unlistenImageSource?.();
       unlistenConfig?.();

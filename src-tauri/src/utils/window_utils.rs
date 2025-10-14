@@ -15,7 +15,11 @@ pub fn setup_main_window(app: &mut App) -> Result<(), Box<dyn Error>> {
 
         window.set_size(PhysicalSize::new(new_width, new_height))?;
         window.set_position(PhysicalPosition::new(50, 50))?;
-        window.show()?;
     }
     Ok(())
+}
+
+#[tauri::command]
+pub fn show_window(window: tauri::Window) {
+    window.show().unwrap();
 }

@@ -25,6 +25,7 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .invoke_handler(tauri::generate_handler![
+            utils::window_utils::show_window,
             utils::startup_handler::frontend_is_ready,
             commands::file_operations::open_and_read_file,
             commands::file_operations::read_image_file,
