@@ -1,18 +1,28 @@
 import { get } from "svelte/store";
-import { appConfig } from "$lib/store";
-import * as appActions from "$lib/actions";
+import { appConfig, isRemapping } from "$lib/store";
+import {
+  openFile,
+  previousImage,
+  nextImage,
+  toggleExif,
+  toggleOptions,
+  startZoomIn,
+  startZoomOut,
+  stopContinuousZoom,
+} from "./commands";
 
 const singleShotActions: Record<string, () => void> = {
-  openFile: appActions.openFile,
-  previousImage: appActions.previousImage,
-  nextImage: appActions.nextImage,
-  toggleExif: appActions.toggleExif,
-  toggleOptions: appActions.toggleOptions,
+  openFile,
+  previousImage,
+  nextImage,
+  toggleExif,
+  toggleOptions,
 };
 
 let activeContinuousKey: string | null = null;
 
 export const handleKeyDown = (event: KeyboardEvent) => {
+  if (get(isRemapping)) return;
   if (event.repeat || activeContinuousKey) return;
 
   const shortcuts = get(appConfig).shortcuts;
@@ -20,10 +30,10 @@ export const handleKeyDown = (event: KeyboardEvent) => {
     const shortcut = shortcuts[actionName as keyof typeof shortcuts];
     if (shortcut.keys.includes(event.key)) {
       if (actionName === "zoomIn") {
-        appActions.startZoomIn();
+        startZoomIn();
         activeContinuousKey = event.key;
       } else if (actionName === "zoomOut") {
-        appActions.startZoomOut();
+        startZoomOut();
         activeContinuousKey = event.key;
       } else {
         const action = singleShotActions[actionName];
@@ -36,8 +46,9 @@ export const handleKeyDown = (event: KeyboardEvent) => {
 };
 
 export const handleKeyUp = (event: KeyboardEvent) => {
+  if (get(isRemapping)) return;
   if (event.key === activeContinuousKey) {
-    appActions.stopContinuousZoom();
+    stopContinuousZoom();
     activeContinuousKey = null;
     event.preventDefault();
   }

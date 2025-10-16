@@ -1,4 +1,5 @@
-import { edgeIndicators, indicatorsVisible, activeActions } from "$lib/store";
+import { triggerWheelZoom } from "$lib/commands";
+import { edgeIndicators, indicatorsVisible } from "$lib/store";
 import type { Writable } from "svelte/store";
 
 type ZoomPanOptions = {
@@ -157,38 +158,13 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
     isDragging = false;
   };
 
-  let wheelTimeout: ReturnType<typeof setTimeout> | null = null;
-  let lastZoomDirection: "in" | "out" | null = null;
-
   const onWheel = (event: WheelEvent) => {
     if (!image) return;
     event.preventDefault();
     isAnimating = false;
     lastWheelTime = Date.now();
 
-    const zoomDirection = event.deltaY < 0 ? "in" : "out";
-
-    if (wheelTimeout) {
-      clearTimeout(wheelTimeout);
-      if (lastZoomDirection !== zoomDirection) {
-        activeActions.update((actions) =>
-          actions.filter((a) => a !== "zoomIn" && a !== "zoomOut")
-        );
-        activeActions.update((actions) => [...actions, `zoom${zoomDirection === "in" ? "In" : "Out"}`]);
-        lastZoomDirection = zoomDirection;
-      }
-    } else {
-      lastZoomDirection = zoomDirection;
-      activeActions.update((actions) => [...actions, `zoom${zoomDirection === "in" ? "In" : "Out"}`]);
-    }
-
-    wheelTimeout = setTimeout(() => {
-      activeActions.update((actions) =>
-        actions.filter((a) => a !== "zoomIn" && a !== "zoomOut")
-      );
-      wheelTimeout = null;
-      lastZoomDirection = null;
-    }, 150);
+    triggerWheelZoom(event.deltaY < 0 ? "in" : "out");
 
     const mouseX = event.offsetX;
     const mouseY = event.offsetY;

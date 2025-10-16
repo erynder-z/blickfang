@@ -10,15 +10,26 @@ import {
 } from "$lib/store";
 import { invoke } from "@tauri-apps/api/core";
 
-const triggerFeedback = (actionName: string) => {
-  activeActions.update((actions) => [...actions, actionName]);
-  setTimeout(() => {
-    activeActions.update((actions) => actions.filter((a) => a !== actionName));
-  }, 200);
+// --- Feedback Management ---
+
+const startFeedback = (actionName: string) => {
+  activeActions.update((actions) => [...new Set([...actions, actionName])]);
 };
 
+const stopFeedback = (actionName: string) => {
+  activeActions.update((actions) => actions.filter((a) => a !== actionName));
+};
+
+const singleShotFeedback = (actionName: string) => {
+  startFeedback(actionName);
+  setTimeout(() => stopFeedback(actionName), 150);
+};
+
+// --- Actions ---
+
+// --- File Actions ---
 export const openFile = async () => {
-  activeActions.update((actions) => [...actions, "openFile"]);
+  startFeedback("openFile");
   try {
     const [newImageData, newImageExif, newImagePath] =
       await invoke<[string, string, string]>("open_and_read_file");
@@ -30,10 +41,11 @@ export const openFile = async () => {
   } catch (error) {
     console.error("Failed to open and read file:", error);
   } finally {
-    activeActions.update((actions) => actions.filter((a) => a !== "openFile"));
+    stopFeedback("openFile");
   }
 };
 
+// --- Image Navigation ---
 const changeImage = async (direction: "next" | "previous") => {
   const currentPath = get(imagePath);
   if (!currentPath) return;
@@ -55,38 +67,32 @@ const changeImage = async (direction: "next" | "previous") => {
 };
 
 export const previousImage = () => {
-  triggerFeedback("previousImage");
+  singleShotFeedback("previousImage");
   changeImage("previous");
 };
 
 export const nextImage = () => {
-  triggerFeedback("nextImage");
+  singleShotFeedback("nextImage");
   changeImage("next");
 };
 
+// --- Zoom Actions ---
+
+// For single-step zoom (hotkeys)
 export const zoomIn = () => {
-  triggerFeedback("zoomIn");
+  singleShotFeedback("zoomIn");
   zoomLevel.update((level) => level + 0.25);
 };
 
 export const zoomOut = () => {
-  triggerFeedback("zoomOut");
+  singleShotFeedback("zoomOut");
   zoomLevel.update((level) => {
     const newLevel = level - 0.25;
     return newLevel < 0.1 ? 0.1 : newLevel;
   });
 };
 
-export const toggleExif = () => {
-  triggerFeedback("toggleExif");
-  isExifSidebarVisible.update((isOpen) => !isOpen);
-};
-
-export const toggleOptions = () => {
-  triggerFeedback("toggleOptions");
-  isOptionsSidebarVisible.update((isOpen) => !isOpen);
-};
-
+// For continuous zoom (holding button/key)
 let zoomInterval: ReturnType<typeof setInterval> | null = null;
 
 export const stopContinuousZoom = () => {
@@ -94,12 +100,13 @@ export const stopContinuousZoom = () => {
     clearInterval(zoomInterval);
     zoomInterval = null;
   }
-  activeActions.update((actions) => actions.filter((a) => a !== "zoomIn" && a !== "zoomOut"));
+  stopFeedback("zoomIn");
+  stopFeedback("zoomOut");
 };
 
 export const startZoomIn = () => {
   stopContinuousZoom();
-  activeActions.update((actions) => [...actions, "zoomIn"]);
+  startFeedback("zoomIn");
   zoomLevel.update((level) => level + 0.1);
   zoomInterval = setInterval(() => {
     zoomLevel.update((level) => level + 0.1);
@@ -108,7 +115,7 @@ export const startZoomIn = () => {
 
 export const startZoomOut = () => {
   stopContinuousZoom();
-  activeActions.update((actions) => [...actions, "zoomOut"]);
+  startFeedback("zoomOut");
   zoomLevel.update((level) => {
     const newLevel = level - 0.1;
     return newLevel < 0.1 ? 0.1 : newLevel;
@@ -119,4 +126,32 @@ export const startZoomOut = () => {
       return newLevel < 0.1 ? 0.1 : newLevel;
     });
   }, 50);
+};
+
+// For wheel zoom
+let wheelZoomTimeout: ReturnType<typeof setTimeout> | null = null;
+const stopWheelZoom = () => {
+  stopFeedback("zoomIn");
+  stopFeedback("zoomOut");
+};
+
+export const triggerWheelZoom = (direction: "in" | "out") => {
+  if (wheelZoomTimeout) {
+    clearTimeout(wheelZoomTimeout);
+  }
+  stopFeedback(direction === "in" ? "zoomOut" : "zoomIn");
+  startFeedback(direction === "in" ? "zoomIn" : "zoomOut");
+  wheelZoomTimeout = setTimeout(stopWheelZoom, 150);
+};
+
+// --- UI Toggle Actions ---
+
+export const toggleExif = () => {
+  singleShotFeedback("toggleExif");
+  isExifSidebarVisible.update((isOpen) => !isOpen);
+};
+
+export const toggleOptions = () => {
+  singleShotFeedback("toggleOptions");
+  isOptionsSidebarVisible.update((isOpen) => !isOpen);
 };

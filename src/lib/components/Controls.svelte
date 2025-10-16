@@ -1,12 +1,21 @@
 <script lang="ts">
   import { activeActions } from "$lib/store";
-  import * as appActions from "$lib/actions";
+  import {
+    nextImage,
+    openFile,
+    previousImage,
+    startZoomIn,
+    startZoomOut,
+    stopContinuousZoom,
+    toggleExif,
+    toggleOptions,
+  } from "$lib/commands";
 </script>
 
 <div class="controls-container">
   <!-- Menu -->
   <button
-    on:click={appActions.toggleOptions}
+    on:click={toggleOptions}
     aria-label="Toggle Options"
     class:active={$activeActions.includes("toggleOptions")}
   >
@@ -24,7 +33,7 @@
 
   <!-- Open File -->
   <button
-    on:click={appActions.openFile}
+    on:click={openFile}
     aria-label="Open File"
     class:active={$activeActions.includes("openFile")}
   >
@@ -42,7 +51,7 @@
 
   <!-- Previous -->
   <button
-    on:click={appActions.previousImage}
+    on:click={previousImage}
     aria-label="Previous Image"
     class:active={$activeActions.includes("previousImage")}
   >
@@ -58,7 +67,7 @@
 
   <!-- Next -->
   <button
-    on:click={appActions.nextImage}
+    on:click={nextImage}
     aria-label="Next Image"
     class:active={$activeActions.includes("nextImage")}
   >
@@ -74,9 +83,9 @@
 
   <!-- Zoom In -->
   <button
-    on:mousedown={appActions.startZoomIn}
-    on:mouseup={appActions.stopContinuousZoom}
-    on:mouseleave={appActions.stopContinuousZoom}
+    on:mousedown={startZoomIn}
+    on:mouseup={stopContinuousZoom}
+    on:mouseleave={stopContinuousZoom}
     aria-label="Zoom In"
     class:active={$activeActions.includes("zoomIn")}
   >
@@ -94,9 +103,9 @@
 
   <!-- Zoom Out -->
   <button
-    on:mousedown={appActions.startZoomOut}
-    on:mouseup={appActions.stopContinuousZoom}
-    on:mouseleave={appActions.stopContinuousZoom}
+    on:mousedown={startZoomOut}
+    on:mouseup={stopContinuousZoom}
+    on:mouseleave={stopContinuousZoom}
     aria-label="Zoom Out"
     class:active={$activeActions.includes("zoomOut")}
   >
@@ -114,7 +123,7 @@
 
   <!-- Info -->
   <button
-    on:click={appActions.toggleExif}
+    on:click={toggleExif}
     aria-label="Toggle Info"
     class:active={$activeActions.includes("toggleExif")}
   >
