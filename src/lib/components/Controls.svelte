@@ -1,83 +1,15 @@
 <script lang="ts">
-  import { get } from "svelte/store";
-  import {
-    imagePath,
-    imageUrl,
-    imageExif,
-    zoomLevel,
-    isExifSidebarVisible,
-    isOptionsSidebarVisible,
-  } from "$lib/store";
-  import { invoke } from "@tauri-apps/api/core";
-  import { listen } from "@tauri-apps/api/event";
-  import { onMount } from "svelte";
-
-  onMount(async () => {
-    await listen<string>("new_image_path", (event) => {
-      imagePath.set(event.payload);
-    });
-  });
-
-  const openFile = async () => {
-    try {
-      const [newImageData, newImageExif, newImagePath] =
-        await invoke<[string, string, string]>("open_and_read_file");
-      if (newImageData) {
-        imageUrl.set(newImageData);
-        imageExif.set(newImageExif);
-        imagePath.set(newImagePath);
-      }
-    } catch (error) {
-      console.error("Failed to open and read file:", error);
-    }
-  };
-
-  const changeImage = async (direction: "next" | "previous") => {
-    const currentPath = get(imagePath);
-    if (!currentPath) return;
-
-    try {
-      const [newImageData, newImagePath, newImageExif] = await invoke<[string, string, string]>(
-        "change_image",
-        {
-          currentPath,
-          direction,
-        }
-      );
-      imageUrl.set(newImageData);
-      imagePath.set(newImagePath);
-      imageExif.set(newImageExif);
-    } catch (error) {
-      console.error("Failed to change image:", error);
-    }
-  };
-
-  const previous = () => changeImage("previous");
-  const next = () => changeImage("next");
-
-  const zoomIn = () => {
-    zoomLevel.update((level) => level + 0.25);
-  };
-
-  const zoomOut = () => {
-    zoomLevel.update((level) => {
-      const newLevel = level - 0.25;
-      return newLevel < 0.1 ? 0.1 : newLevel;
-    });
-  };
-
-  const toggleExifInfo = () => {
-    isExifSidebarVisible.update((isOpen) => !isOpen);
-  };
-
-  const toggleOptions = () => {
-    isOptionsSidebarVisible.update((isOpen) => !isOpen);
-  };
+  import { activeActions } from "$lib/store";
+  import * as appActions from "$lib/actions";
 </script>
 
 <div class="controls-container">
   <!-- Menu -->
-  <button on:click={toggleOptions} aria-label="Toggle Options">
+  <button
+    on:click={appActions.toggleOptions}
+    aria-label="Toggle Options"
+    class:active={$activeActions.includes("toggleOptions")}
+  >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       height="1.75rem"
@@ -91,7 +23,11 @@
   </button>
 
   <!-- Open File -->
-  <button on:click={openFile} aria-label="Open File">
+  <button
+    on:click={appActions.openFile}
+    aria-label="Open File"
+    class:active={$activeActions.includes("openFile")}
+  >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       height="1.75rem"
@@ -105,7 +41,11 @@
   </button>
 
   <!-- Previous -->
-  <button on:click={previous} aria-label="Previous Image">
+  <button
+    on:click={appActions.previousImage}
+    aria-label="Previous Image"
+    class:active={$activeActions.includes("previousImage")}
+  >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       height="1.75rem"
@@ -117,7 +57,11 @@
   </button>
 
   <!-- Next -->
-  <button on:click={next} aria-label="Next Image">
+  <button
+    on:click={appActions.nextImage}
+    aria-label="Next Image"
+    class:active={$activeActions.includes("nextImage")}
+  >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       height="1.75rem"
@@ -129,7 +73,13 @@
   </button>
 
   <!-- Zoom In -->
-  <button on:click={zoomIn} aria-label="Zoom In">
+  <button
+    on:mousedown={appActions.startZoomIn}
+    on:mouseup={appActions.stopContinuousZoom}
+    on:mouseleave={appActions.stopContinuousZoom}
+    aria-label="Zoom In"
+    class:active={$activeActions.includes("zoomIn")}
+  >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       height="1.75rem"
@@ -143,7 +93,13 @@
   </button>
 
   <!-- Zoom Out -->
-  <button on:click={zoomOut} aria-label="Zoom Out">
+  <button
+    on:mousedown={appActions.startZoomOut}
+    on:mouseup={appActions.stopContinuousZoom}
+    on:mouseleave={appActions.stopContinuousZoom}
+    aria-label="Zoom Out"
+    class:active={$activeActions.includes("zoomOut")}
+  >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       height="1.75rem"
@@ -157,7 +113,11 @@
   </button>
 
   <!-- Info -->
-  <button on:click={toggleExifInfo} aria-label="Toggle Info">
+  <button
+    on:click={appActions.toggleExif}
+    aria-label="Toggle Info"
+    class:active={$activeActions.includes("toggleExif")}
+  >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       height="1.75rem"
@@ -200,5 +160,9 @@
   button:hover {
     filter: brightness(1.3);
     transform: scale(1.05);
+  }
+
+  button.active {
+    background-color: var(--color-accent);
   }
 </style>

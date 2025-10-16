@@ -9,7 +9,7 @@
   import OptionsDisplaySidebar from "$lib/components/OptionsDisplaySidebar.svelte";
   import { isRemapping } from "$lib/store";
   import { initThemeManager } from "$lib/themeManager";
-  import { handleKeyDown } from "$lib/shortcuts";
+  import { handleKeyDown, handleKeyUp } from "$lib/shortcuts";
   import HotkeysMenu from "$lib/components/HotkeysMenu.svelte";
   import { initializeApp } from "$lib/appManager";
 
@@ -20,6 +20,11 @@
     handleKeyDown(event);
   };
 
+  const handleGlobalKeyUp = (event: KeyboardEvent) => {
+    if (get(isRemapping)) return;
+    handleKeyUp(event);
+  };
+
   onMount(() => {
     const unlisten = initializeApp();
 
@@ -27,7 +32,7 @@
   });
 </script>
 
-<svelte:window on:keydown={handleGlobalKeyDown} />
+<svelte:window on:keydown={handleGlobalKeyDown} on:keyup={handleGlobalKeyUp} />
 <svelte:body use:lang={$locale} />
 
 <HotkeysMenu />
