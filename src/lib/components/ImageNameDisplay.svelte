@@ -27,6 +27,6 @@
     background-color: var(--color-shadow);
     color: white;
     padding: 0.5rem 0.75rem;
-    border-radius: 25%/100%;
+    border-radius: 4rem;
   }
 </style>

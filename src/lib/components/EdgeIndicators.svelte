@@ -36,7 +36,8 @@
 
   .indicator {
     position: absolute;
-    background-color: var(--color-indicator);
+    width: 0;
+    height: 0;
     opacity: 0;
     transition: opacity 0.3s ease;
   }
@@ -49,30 +50,38 @@
   }
 
   .indicator.top {
-    width: 50%;
-    height: 0.5ch;
-    left: 25%;
-    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0.5ch;
+    border-left: 1ch solid transparent;
+    border-right: 1ch solid transparent;
+    border-bottom: 1ch solid var(--color-indicator);
   }
 
   .indicator.bottom {
-    width: 50%;
-    height: 0.5ch;
-    left: 25%;
-    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0.5ch;
+    border-left: 1ch solid transparent;
+    border-right: 1ch solid transparent;
+    border-top: 1ch solid var(--color-indicator);
   }
 
   .indicator.left {
-    width: 0.5ch;
-    height: 33%;
-    top: 33.33%;
-    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0.5ch;
+    border-top: 1ch solid transparent;
+    border-bottom: 1ch solid transparent;
+    border-right: 1ch solid var(--color-indicator);
   }
 
   .indicator.right {
-    width: 0.5ch;
-    height: 33%;
-    top: 33.33%;
-    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0.5ch;
+    border-top: 1ch solid transparent;
+    border-bottom: 1ch solid transparent;
+    border-left: 1ch solid var(--color-indicator);
   }
 </style>
