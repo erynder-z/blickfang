@@ -36,12 +36,10 @@ pub fn handle_run_event(app_handle: &AppHandle, event: &RunEvent) {
 
         let paths_to_process: Vec<String> = urls
             .iter()
-            .map(|url| {
-                let url_str = url.as_str();
-                url_str
-                    .strip_prefix("file://")
-                    .map(|s| s.to_string())
-                    .unwrap_or_else(|| url_str.to_string())
+            .filter_map(|url| {
+                url.to_file_path()
+                    .ok()
+                    .and_then(|path| path.to_str().map(String::from))
             })
             .collect();
 
