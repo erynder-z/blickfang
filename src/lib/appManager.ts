@@ -3,16 +3,18 @@ import { invoke } from "@tauri-apps/api/core";
 import { setLocale } from "$lib/i18n";
 import { appConfig, imageUrl, imagePath, imageExif } from "$lib/store";
 import type { AppConfig } from "$lib/store";
+import { processImage } from "./imageProcessor";
 
 const handleImageSourceEvent = async (event: { payload: string[] }) => {
   const paths = event.payload;
   if (paths.length > 0) {
     const path = paths[0];
     imagePath.set(path);
-    invoke("read_image_file", { path }).then((res) => {
+
+    invoke("read_image_file", { path }).then(async (res) => {
       const [dataUrl, exifData] = res as [string, string];
       imageUrl.set(dataUrl);
-      imageExif.set(exifData);
+      processImage(dataUrl, path, exifData);
     });
   }
 };

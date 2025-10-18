@@ -9,6 +9,7 @@ import {
   activeActions,
 } from "$lib/store";
 import { invoke } from "@tauri-apps/api/core";
+import { processImage } from "./imageProcessor";
 
 // --- Feedback Management ---
 
@@ -31,12 +32,13 @@ const singleShotFeedback = (actionName: string) => {
 export const openFile = async () => {
   startFeedback("openFile");
   try {
-    const [newImageData, newImageExif, newImagePath] =
-      await invoke<[string, string, string]>("open_and_read_file");
+    const [newImageData, newImageExif, newImagePath, _] = await invoke<
+      [string, string, string, string[]]
+    >("open_and_read_file");
     if (newImageData) {
       imageUrl.set(newImageData);
-      imageExif.set(newImageExif);
       imagePath.set(newImagePath);
+      processImage(newImageData, newImagePath, newImageExif);
     }
   } catch (error) {
     console.error("Failed to open and read file:", error);
@@ -51,16 +53,15 @@ const changeImage = async (direction: "next" | "previous") => {
   if (!currentPath) return;
 
   try {
-    const [newImageData, newImagePath, newImageExif] = await invoke<[string, string, string]>(
-      "change_image",
-      {
-        currentPath,
-        direction,
-      }
-    );
+    const [newImageData, newImagePath, newImageExif] = await invoke<
+      [string, string, string]
+    >("change_image", {
+      currentPath,
+      direction,
+    });
     imageUrl.set(newImageData);
     imagePath.set(newImagePath);
-    imageExif.set(newImageExif);
+    processImage(newImageData, newImagePath, newImageExif);
   } catch (error) {
     console.error("Failed to change image:", error);
   }
