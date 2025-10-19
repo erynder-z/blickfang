@@ -7,10 +7,13 @@
   const themeNames = Object.keys(themes);
 
   let dialog: HTMLDialogElement;
+  let buttons: HTMLButtonElement[] = [];
 
   isThemeMenuVisible.subscribe((visible) => {
     if (visible) {
       dialog?.showModal();
+      const currentIndex = themeNames.indexOf($appConfig.theme);
+      if (currentIndex !== -1) buttons[currentIndex]?.focus();
     } else {
       dialog?.close();
     }
@@ -38,9 +41,8 @@
   <div class="menu-content">
     <h1>{$t["options.theme.heading"]}</h1>
 
-    {#each themeNames as theme}
-      <!-- svelte-ignore a11y_autofocus -->
-      <button on:click={() => handleButtonClick(theme)} autofocus={$appConfig.theme === theme}>
+    {#each themeNames as theme, i}
+      <button bind:this={buttons[i]} on:click={() => handleButtonClick(theme)}>
         {theme}
       </button>
     {/each}
@@ -84,6 +86,11 @@
     cursor: pointer;
     font-weight: bold;
     text-transform: capitalize;
+  }
+
+  button:focus {
+    outline: none;
+    background-color: var(--color-accent);
   }
 
   .close-button {

@@ -6,12 +6,16 @@
   type i18nLanguage = [string, Record<string, string>];
 
   const languages: i18nLanguage[] = Object.entries(locales);
+  const langCodes = languages.map(([langCode]) => langCode);
 
   let dialog: HTMLDialogElement;
+  let buttons: HTMLButtonElement[] = [];
 
   isLanguageMenuVisible.subscribe((visible) => {
     if (visible) {
       dialog?.showModal();
+      const currentIndex = langCodes.indexOf($locale);
+      if (currentIndex !== -1) buttons[currentIndex]?.focus();
     } else {
       dialog?.close();
     }
@@ -40,9 +44,8 @@
   <div class="menu-content">
     <h1>{$t["options.language.heading"]}</h1>
 
-    {#each languages as [lang, translations]}
-      <!-- svelte-ignore a11y_autofocus -->
-      <button on:click={() => handleButtonClick(lang)} autofocus={$locale === lang}>
+    {#each languages as [lang, translations], i}
+      <button bind:this={buttons[i]} on:click={() => handleButtonClick(lang)}>
         {translations["language.name"]}
       </button>
     {/each}
@@ -85,6 +88,11 @@
     color: var(--color-text-primary);
     cursor: pointer;
     font-weight: bold;
+  }
+
+  button:focus {
+    outline: none;
+    background-color: var(--color-accent);
   }
 
   .close-button {

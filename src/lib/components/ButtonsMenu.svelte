@@ -6,10 +6,13 @@
   const buttonSizes = ["large", "small", "hidden"];
 
   let dialog: HTMLDialogElement;
+  let buttons: HTMLButtonElement[] = [];
 
   isButtonMenuVisible.subscribe((visible) => {
     if (visible) {
       dialog?.showModal();
+      const currentIndex = buttonSizes.indexOf($appConfig.buttonSize);
+      if (currentIndex !== -1) buttons[currentIndex]?.focus();
     } else {
       dialog?.close();
     }
@@ -35,11 +38,10 @@
 
 <dialog bind:this={dialog} on:close={handleClose}>
   <div class="menu-content">
-    <h1>{$t["options.buttons.heading"]}</h1>
+    <h1>{$t["options.button.heading"]}</h1>
 
-    {#each buttonSizes as size}
-      <!-- svelte-ignore a11y_autofocus -->
-      <button on:click={() => handleButtonClick(size)} autofocus={$appConfig.buttonSize === size}>
+    {#each buttonSizes as size, i}
+      <button bind:this={buttons[i]} on:click={() => handleButtonClick(size)}>
         {$t[`options.UI_buttons.${size}`]}
       </button>
     {/each}
@@ -83,6 +85,11 @@
     cursor: pointer;
     font-weight: bold;
     text-transform: capitalize;
+  }
+
+  button:focus {
+    outline: none;
+    background-color: var(--color-accent);
   }
 
   .close-button {
