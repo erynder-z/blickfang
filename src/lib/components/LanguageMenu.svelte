@@ -47,7 +47,7 @@
       </button>
     {/each}
 
-    <button on:click={handleClose} class="close-button">Close</button>
+    <button on:click={handleClose} class="close-button">{$t["options.button.close"]}</button>
   </div>
 </dialog>
 

@@ -39,15 +39,12 @@
 
     {#each buttonSizes as size}
       <!-- svelte-ignore a11y_autofocus -->
-      <button
-        on:click={() => handleButtonClick(size)}
-        autofocus={$appConfig.buttonSize.toLocaleLowerCase() === size.toLocaleLowerCase()}
-      >
+      <button on:click={() => handleButtonClick(size)} autofocus={$appConfig.buttonSize === size}>
         {$t[`options.UI_buttons.${size}`]}
       </button>
     {/each}
 
-    <button on:click={handleClose} class="close-button">Close</button>
+    <button on:click={handleClose} class="close-button">{$t["options.button.close"]}</button>
   </div>
 </dialog>
 

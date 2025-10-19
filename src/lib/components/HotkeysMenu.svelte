@@ -2,7 +2,7 @@
   import { isHotkeysMenuVisible, appConfig, type Shortcuts, isRemapping } from "$lib/store";
   import { t } from "$lib/i18n";
   import { invoke } from "@tauri-apps/api/core";
-  import RemapDialog from './RemapDialog.svelte';
+  import RemapDialog from "./RemapDialog.svelte";
 
   let dialog: HTMLDialogElement;
 
@@ -49,7 +49,7 @@
     <button on:click={handleRestoreDefaults} class="restore-button"
       >{$t["hotkeys.button.restore_defaults"]}</button
     >
-    <button on:click={handleClose} class="close-button">{$t["hotkeys.button.close"]}</button>
+    <button on:click={handleClose} class="close-button">{$t["options.button.close"]}</button>
   </div>
 </dialog>
 
