@@ -21,7 +21,11 @@
   "image.resolution": "解像度",
   "image.aspectRatio": "アスペクト比",
   "hotkeys.heading": "ショートカットキー",
-  "hotkeys.button.remap": "キーを再割り当て",
+  "hotkeys.button.default_hotkeys": "デフォルトのショートカットキー",
+  "hotkeys.button.custom_hotkeys": "カスタムショートカットキー",
+  "hotkeys.button.remap": "カスタムショートカットキーを設定",
+  "hotkeys.button.save": "保存",
+  "hotkeys.button.cancel": "キャンセル",
   "hotkeys.openFile": "ファイルを開く",
   "hotkeys.previousImage": "前の画像",
   "hotkeys.nextImage": "次の画像",
@@ -32,8 +36,5 @@
   "hotkeys.remap.title": "ショートカットキーの再割り当て",
   "hotkeys.remap.press_key_for": "のキーを押してください",
   "hotkeys.remap.finished": "すべてのキーが再割り当てされました。",
-  "hotkeys.button.save": "保存",
-  "hotkeys.button.cancel": "キャンセル",
-  "hotkeys.button.restore_defaults": "デフォルトに戻す",
   "hotkeys.remap.error.key_in_use": "キー '{key}' は既に使用されています。"
 }

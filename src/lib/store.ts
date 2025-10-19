@@ -19,6 +19,7 @@ export interface AppConfig {
   language: string;
   theme: string;
   shortcuts: Shortcuts;
+  customShortcuts: Shortcuts;
   buttonSize: "large" | "small" | "hidden";
 }
 
@@ -49,6 +50,15 @@ export const appConfig = writable<AppConfig>({
   theme: "default",
   buttonSize: "large",
   shortcuts: {
+    openFile: { keys: [], label: "" },
+    previousImage: { keys: [], label: "" },
+    nextImage: { keys: [], label: "" },
+    zoomIn: { keys: [], label: "" },
+    zoomOut: { keys: [], label: "" },
+    toggleExif: { keys: [], label: "" },
+    toggleOptions: { keys: [], label: "" },
+  },
+  customShortcuts: {
     openFile: { keys: [], label: "" },
     previousImage: { keys: [], label: "" },
     nextImage: { keys: [], label: "" },

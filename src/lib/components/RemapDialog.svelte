@@ -30,9 +30,7 @@
   };
 
   const handleSaveRemap = async () => {
-    const newConfig = { ...$appConfig, shortcuts: tempShortcuts };
-    appConfig.set(newConfig);
-    await invoke("write_config_command", { content: JSON.stringify(newConfig) });
+    await invoke("update_custom_shortcuts_command", { newShortcuts: tempShortcuts });
     handleClose();
   };
 

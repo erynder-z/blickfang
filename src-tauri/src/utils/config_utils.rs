@@ -32,6 +32,8 @@ pub struct Config {
     pub shortcuts: Shortcuts,
     #[serde(default = "default_button_size")]
     pub button_size: String,
+    #[serde(default = "default_shortcuts")]
+    pub custom_shortcuts: Shortcuts,
 }
 
 fn default_language() -> String {
@@ -84,8 +86,9 @@ impl Default for Config {
         Self {
             language: default_language(),
             theme: default_theme(),
-            shortcuts: default_shortcuts(),
             button_size: default_button_size(),
+            shortcuts: default_shortcuts(),
+            custom_shortcuts: default_shortcuts(),
         }
     }
 }

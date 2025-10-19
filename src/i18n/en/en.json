@@ -21,7 +21,11 @@
   "image.resolution": "Resolution",
   "image.aspectRatio": "Aspect Ratio",
   "hotkeys.heading": "Hotkeys",
-  "hotkeys.button.remap": "Remap keys",
+  "hotkeys.button.default_hotkeys": "Default hotkeys",
+  "hotkeys.button.custom_hotkeys": "Custom hotkeys",
+  "hotkeys.button.remap": "Map custom hotkeys",
+  "hotkeys.button.save": "Save",
+  "hotkeys.button.cancel": "Cancel",
   "hotkeys.openFile": "Open file",
   "hotkeys.previousImage": "Previous image",
   "hotkeys.nextImage": "Next image",
@@ -32,8 +36,5 @@
   "hotkeys.remap.title": "Remap Hotkeys",
   "hotkeys.remap.press_key_for": "Press a key for",
   "hotkeys.remap.finished": "All keys have been remapped.",
-  "hotkeys.button.save": "Save",
-  "hotkeys.button.cancel": "Cancel",
-  "hotkeys.button.restore_defaults": "Restore Defaults",
   "hotkeys.remap.error.key_in_use": "Key '{key}' is already in use."
 }

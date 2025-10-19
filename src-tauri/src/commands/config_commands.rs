@@ -1,4 +1,4 @@
-use crate::utils::config_utils::{read_config, write_config, Config, default_shortcuts, Shortcuts};
+use crate::utils::config_utils::{default_shortcuts, read_config, write_config, Config, Shortcuts};
 use serde_json;
 use tauri::{AppHandle, Emitter};
 
@@ -51,4 +51,41 @@ pub fn update_button_size_command(app: AppHandle, button_size: String) {
 #[tauri::command]
 pub fn get_default_shortcuts_command() -> Shortcuts {
     default_shortcuts()
+}
+
+#[tauri::command]
+pub fn update_custom_shortcuts_command(app: AppHandle, new_shortcuts: Shortcuts) {
+    let config_str = read_config(&app);
+    if let Ok(mut config) = serde_json::from_str::<Config>(&config_str) {
+        config.shortcuts = new_shortcuts.clone();
+        config.custom_shortcuts = new_shortcuts;
+        if let Ok(new_config_str) = serde_json::to_string(&config) {
+            write_config(&app, &new_config_str);
+            app.emit("config-updated", &config).unwrap();
+        }
+    }
+}
+
+#[tauri::command]
+pub fn set_active_shortcuts_to_default(app: AppHandle) {
+    let config_str = read_config(&app);
+    if let Ok(mut config) = serde_json::from_str::<Config>(&config_str) {
+        config.shortcuts = default_shortcuts();
+        if let Ok(new_config_str) = serde_json::to_string(&config) {
+            write_config(&app, &new_config_str);
+            app.emit("config-updated", &config).unwrap();
+        }
+    }
+}
+
+#[tauri::command]
+pub fn set_active_shortcuts_to_custom(app: AppHandle) {
+    let config_str = read_config(&app);
+    if let Ok(mut config) = serde_json::from_str::<Config>(&config_str) {
+        config.shortcuts = config.custom_shortcuts.clone();
+        if let Ok(new_config_str) = serde_json::to_string(&config) {
+            write_config(&app, &new_config_str);
+            app.emit("config-updated", &config).unwrap();
+        }
+    }
 }

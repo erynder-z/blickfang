@@ -21,7 +21,11 @@
   "image.resolution": "Auflösung",
   "image.aspectRatio": "Seitenverhältnis",
   "hotkeys.heading": "Hotkeys",
-  "hotkeys.button.remap": "Tasten neu zuweisen",
+  "hotkeys.button.default_hotkeys": "Standard hotkeys",
+  "hotkeys.button.custom_hotkeys": "Custom hotkeys",
+  "hotkeys.button.remap": "Custom Hotkeys zuweisen",
+  "hotkeys.button.save": "Speichern",
+  "hotkeys.button.cancel": "Abbrechen",
   "hotkeys.openFile": "Datei öffnen",
   "hotkeys.previousImage": "Voriges Bild",
   "hotkeys.nextImage": "Nächstes Bild",
@@ -32,8 +36,5 @@
   "hotkeys.remap.title": "Hotkeys neu zuweisen",
   "hotkeys.remap.press_key_for": "Taste drücken für",
   "hotkeys.remap.finished": "Alle Tasten wurden neu zugewiesen.",
-  "hotkeys.button.save": "Speichern",
-  "hotkeys.button.cancel": "Abbrechen",
-  "hotkeys.button.restore_defaults": "Standard-Hotkeys wiederherstellen",
   "hotkeys.remap.error.key_in_use": "Taste '{key}' wird bereits verwendet."
 }
