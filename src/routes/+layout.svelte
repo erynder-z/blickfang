@@ -10,6 +10,7 @@
   import { handleKeyDown, handleKeyUp } from "$lib/keyboardInputManager";
   import HotkeysMenu from "$lib/components/HotkeysMenu.svelte";
   import { initializeApp } from "$lib/appManager";
+  import ButtonsMenu from "$lib/components/ButtonsMenu.svelte";
 
   initThemeManager();
 
@@ -26,6 +27,7 @@
 <HotkeysMenu />
 <LanguageMenu />
 <ThemeMenu />
+<ButtonsMenu />
 
 <div class="app-container">
   <InfoSidebar />

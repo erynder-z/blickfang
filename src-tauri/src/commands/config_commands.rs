@@ -37,6 +37,18 @@ pub fn update_theme_command(app: AppHandle, theme: String) {
 }
 
 #[tauri::command]
+pub fn update_button_size_command(app: AppHandle, button_size: String) {
+    let config_str = read_config(&app);
+    if let Ok(mut config) = serde_json::from_str::<Config>(&config_str) {
+        config.button_size = button_size;
+        if let Ok(new_config_str) = serde_json::to_string(&config) {
+            write_config(&app, &new_config_str);
+            app.emit("config-updated", &config).unwrap();
+        }
+    }
+}
+
+#[tauri::command]
 pub fn get_default_shortcuts_command() -> Shortcuts {
     default_shortcuts()
 }

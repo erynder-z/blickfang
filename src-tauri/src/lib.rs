@@ -34,6 +34,7 @@ pub fn run() {
             commands::config_commands::write_config_command,
             commands::config_commands::update_language_command,
             commands::config_commands::update_theme_command,
+            commands::config_commands::update_button_size_command,
             commands::config_commands::get_default_shortcuts_command
         ])
         .build(context)

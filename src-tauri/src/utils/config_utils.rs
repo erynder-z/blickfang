@@ -22,6 +22,7 @@ pub struct Shortcuts {
 }
 
 #[derive(Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
 pub struct Config {
     #[serde(default = "default_language")]
     pub language: String,
@@ -29,6 +30,8 @@ pub struct Config {
     pub theme: String,
     #[serde(default = "default_shortcuts")]
     pub shortcuts: Shortcuts,
+    #[serde(default = "default_button_size")]
+    pub button_size: String,
 }
 
 fn default_language() -> String {
@@ -37,6 +40,10 @@ fn default_language() -> String {
 
 fn default_theme() -> String {
     "default".to_string()
+}
+
+fn default_button_size() -> String {
+    "large".to_string()
 }
 
 pub fn default_shortcuts() -> Shortcuts {
@@ -78,6 +85,7 @@ impl Default for Config {
             language: default_language(),
             theme: default_theme(),
             shortcuts: default_shortcuts(),
+            button_size: default_button_size(),
         }
     }
 }

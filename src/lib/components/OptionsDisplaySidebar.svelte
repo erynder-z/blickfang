@@ -5,6 +5,7 @@
     isOptionsSidebarVisible,
     isThemeMenuVisible,
     isHotkeysMenuVisible,
+    isButtonMenuVisible,
   } from "$lib/store";
 
   const showLanguageSelectOverlay = () => {
@@ -18,6 +19,10 @@
   const showHotkeysOverlay = () => {
     isHotkeysMenuVisible.set(true);
   };
+
+  const showUIButtonOptionsOverlay = () => {
+    isButtonMenuVisible.set(true);
+  };
 </script>
 
 <div class="options-sidebar-overlay" class:visible={$isOptionsSidebarVisible}>
@@ -26,6 +31,7 @@
     <button on:click={showHotkeysOverlay}>{$t["options.button.hotkeys"]}</button>
     <button on:click={showLanguageSelectOverlay}>{$t["options.button.language"]}</button>
     <button on:click={showThemeSelectOverlay}>{$t["options.button.theme"]}</button>
+    <button on:click={showUIButtonOptionsOverlay}>{$t["options.button.UI_buttons"]}</button>
   </div>
 </div>
 

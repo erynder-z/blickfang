@@ -19,15 +19,14 @@ export interface AppConfig {
   language: string;
   theme: string;
   shortcuts: Shortcuts;
+  buttonSize: "large" | "small" | "hidden";
 }
 
 export const imageUrl = writable<string | null>(null);
 export const imagePath = writable<string | null>(null);
 export const imageExif = writable<string | null>(null);
 export const imageFormat = writable<string | null>(null);
-export const imageResolution = writable<{ width: number; height: number } | null>(
-  null,
-);
+export const imageResolution = writable<{ width: number; height: number } | null>(null);
 export const imageAspectRatio = writable<string | null>(null);
 export const zoomLevel = writable<number>(1);
 export const edgeIndicators = writable({
@@ -42,11 +41,13 @@ export const isOptionsSidebarVisible = writable<boolean>(false);
 export const isLanguageMenuVisible = writable<boolean>(false);
 export const isThemeMenuVisible = writable<boolean>(false);
 export const isHotkeysMenuVisible = writable<boolean>(false);
+export const isButtonMenuVisible = writable<boolean>(false);
 export const isRemapping = writable<boolean>(false);
 export const activeActions = writable<string[]>([]);
 export const appConfig = writable<AppConfig>({
   language: "en",
   theme: "default",
+  buttonSize: "large",
   shortcuts: {
     openFile: { keys: [], label: "" },
     previousImage: { keys: [], label: "" },
