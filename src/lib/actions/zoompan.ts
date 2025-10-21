@@ -200,9 +200,23 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
     const { width, height } = entry.contentRect;
 
     if (canvas.width !== width || canvas.height !== height) {
+      const prevCanvasWidth = canvas.width;
+      const prevCanvasHeight = canvas.height;
+
+      const centerX = (canvas.width / 2 - offsetX) / displayScale;
+      const centerY = (canvas.height / 2 - offsetY) / displayScale;
+
       canvas.width = width;
       canvas.height = height;
-      setInitialTransform();
+
+      offsetX = canvas.width / 2 - centerX * displayScale;
+      offsetY = canvas.height / 2 - centerY * displayScale;
+
+      updateEdgeIndicators();
+      indicatorsVisible.set(true);
+      if (interactionTimeoutId) clearTimeout(interactionTimeoutId);
+      interactionTimeoutId = setTimeout(() => indicatorsVisible.set(false), 100);
+
       draw();
     }
   });
