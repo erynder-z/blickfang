@@ -11,6 +11,7 @@
   import HotkeysMenu from "$lib/components/HotkeysMenu.svelte";
   import { initializeApp } from "$lib/appManager";
   import ButtonsMenu from "$lib/components/ButtonsMenu.svelte";
+  import ImageNameDisplayMenu from "$lib/components/ImageNameDisplayMenu.svelte";
 
   initThemeManager();
 
@@ -28,6 +29,7 @@
 <LanguageMenu />
 <ThemeMenu />
 <ButtonsMenu />
+<ImageNameDisplayMenu />
 
 <div class="app-container">
   <InfoSidebar />

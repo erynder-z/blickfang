@@ -49,6 +49,18 @@ pub fn update_button_size_command(app: AppHandle, button_size: String) {
 }
 
 #[tauri::command]
+pub fn update_image_name_display_mode_command(app: AppHandle, mode: String) {
+    let config_str = read_config(&app);
+    if let Ok(mut config) = serde_json::from_str::<Config>(&config_str) {
+        config.image_name_display_mode = mode;
+        if let Ok(new_config_str) = serde_json::to_string(&config) {
+            write_config(&app, &new_config_str);
+            app.emit("config-updated", &config).unwrap();
+        }
+    }
+}
+
+#[tauri::command]
 pub fn get_default_shortcuts_command() -> Shortcuts {
     default_shortcuts()
 }

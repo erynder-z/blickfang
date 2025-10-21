@@ -1,14 +1,37 @@
 <script lang="ts">
-  import { imagePath } from "$lib/store";
+  import { imagePath, appConfig } from "$lib/store";
+  import { quintOut } from "svelte/easing";
+  import { fade } from "svelte/transition";
+
+  let timeoutId: number | undefined;
+  let isVisible: boolean = true;
 
   $: imageName = $imagePath ? $imagePath.split(/[/\\]/).pop() : undefined;
+
+  $: {
+    const timeoutInMilliseconds = 3000;
+
+    if ($appConfig.imageNameDisplayMode === "hide") {
+      isVisible = false;
+    } else if ($appConfig.imageNameDisplayMode === "show") {
+      isVisible = true;
+    } else if ($appConfig.imageNameDisplayMode === "fade") {
+      isVisible = true;
+      clearTimeout(timeoutId);
+      if (imageName) {
+        timeoutId = setTimeout(() => {
+          isVisible = false;
+        }, timeoutInMilliseconds);
+      }
+    }
+  }
 </script>
 
-<div>
-  {#if imageName}
+{#if imageName && isVisible && $appConfig.imageNameDisplayMode !== "hide"}
+  <div in:fade={{ duration: 200, easing: quintOut }} out:fade={{ duration: 500, easing: quintOut }}>
     <p>{imageName}</p>
-  {/if}
-</div>
+  </div>
+{/if}
 
 <style>
   div {
