@@ -1,11 +1,8 @@
 <script lang="ts">
   import { imageUrl, zoomLevel } from "$lib/store";
-  import Placeholder from "./Placeholder.svelte";
   import { zoomPan } from "$lib/actions/zoompan";
   import EdgeIndicators from "./EdgeIndicators.svelte";
   import { t } from "$lib/i18n";
-
-  let resizing = false;
 </script>
 
 <div class="image-view-container">
@@ -13,9 +10,7 @@
   {#if $imageUrl}
     <canvas
       use:zoomPan={{ imageUrlStore: imageUrl, zoomLevelStore: zoomLevel }}
-      on:resizing={(e) => (resizing = e.detail)}
     ></canvas>
-    <Placeholder {resizing} />
   {:else}
     <div class="empty-canvas">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">

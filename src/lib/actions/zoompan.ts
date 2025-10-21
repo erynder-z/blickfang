@@ -193,27 +193,18 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
   container.addEventListener("mouseleave", onMouseUp);
   container.addEventListener("wheel", onWheel);
 
-  let resizeTimeout: ReturnType<typeof setTimeout> | null = null;
-
   const resizeObserver = new ResizeObserver((entries) => {
     if (!ctx || !canvas || !image || !image.complete) return;
     const entry = entries[0];
     if (!entry) return;
     const { width, height } = entry.contentRect;
 
-    if (resizeTimeout) clearTimeout(resizeTimeout);
-
-    canvas.dispatchEvent(new CustomEvent("resizing", { detail: true }));
-
-    resizeTimeout = setTimeout(() => {
-      if (canvas.width !== width || canvas.height !== height) {
-        canvas.width = width;
-        canvas.height = height;
-        setInitialTransform();
-      }
-
-      canvas.dispatchEvent(new CustomEvent("resizing", { detail: false }));
-    }, 150); // debounce delay
+    if (canvas.width !== width || canvas.height !== height) {
+      canvas.width = width;
+      canvas.height = height;
+      setInitialTransform();
+      draw();
+    }
   });
 
   resizeObserver.observe(container);
