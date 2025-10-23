@@ -19,10 +19,7 @@
   $: size = buttonSizes[$appConfig.buttonSize];
 </script>
 
-<div
-  class="controls-container"
-  style:display={$appConfig.buttonSize === "hidden" ? "none" : "flex"}
->
+<div class="controls-container" style:display={$appConfig.buttonSize === "hide" ? "none" : "flex"}>
   <!-- Menu -->
   <button
     on:click={toggleOptions}

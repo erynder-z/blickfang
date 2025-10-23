@@ -3,7 +3,7 @@
   import { t } from "$lib/i18n";
   import { invoke } from "@tauri-apps/api/core";
 
-  const buttonSizes = ["large", "small", "hidden"];
+  const buttonSizes = ["large", "small", "hide"];
 
   let dialog: HTMLDialogElement;
   let buttons: HTMLButtonElement[] = [];
@@ -39,7 +39,7 @@
     if (size === "large" || size === "small") {
       return `general.${size}`;
     }
-    return `options.UI_buttons.${size}`;
+    return `general.${size}`;
   };
 </script>
 

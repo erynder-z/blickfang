@@ -20,7 +20,7 @@ export interface AppConfig {
   theme: string;
   shortcuts: Shortcuts;
   customShortcuts: Shortcuts;
-  buttonSize: "large" | "small" | "hidden";
+  buttonSize: "large" | "small" | "hide";
   imageNameDisplayMode: "show" | "hide" | "fade";
   edgeIndicatorsVisible: boolean;
   rememberWindowSize: boolean;
