@@ -1,6 +1,7 @@
 import { triggerWheelZoom } from "$lib/commands";
-import { edgeIndicators, indicatorsVisible } from "$lib/store";
+import { edgeIndicators, indicatorsVisible, appConfig } from "$lib/store";
 import type { Writable } from "svelte/store";
+import { get } from "svelte/store";
 
 type ZoomPanOptions = {
   zoomLevelStore: Writable<number>;
@@ -35,13 +36,15 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
 
   // --- Interaction Handling ---
   const debounceIndicatorVisibility = () => {
-    if (interactionTimeoutId) {
-      clearTimeout(interactionTimeoutId);
-    }
+    const timeoutInMs = 100;
+    if (!get(appConfig).edgeIndicatorsVisible) return;
+
+    if (interactionTimeoutId) clearTimeout(interactionTimeoutId);
+
     indicatorsVisible.set(true);
     interactionTimeoutId = setTimeout(() => {
       indicatorsVisible.set(false);
-    }, 100);
+    }, timeoutInMs);
   };
 
   // --- Drawing & Transformations ---
@@ -213,9 +216,11 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
       offsetY = canvas.height / 2 - centerY * displayScale;
 
       updateEdgeIndicators();
-      indicatorsVisible.set(true);
-      if (interactionTimeoutId) clearTimeout(interactionTimeoutId);
-      interactionTimeoutId = setTimeout(() => indicatorsVisible.set(false), 100);
+      if (get(appConfig).edgeIndicatorsVisible) {
+        indicatorsVisible.set(true);
+        if (interactionTimeoutId) clearTimeout(interactionTimeoutId);
+        interactionTimeoutId = setTimeout(() => indicatorsVisible.set(false), 100);
+      }
 
       draw();
     }

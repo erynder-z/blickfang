@@ -1,7 +1,7 @@
 import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/core";
 import { setLocale } from "$lib/i18n";
-import { appConfig, imageUrl, imagePath, imageExif } from "$lib/store";
+import { appConfig, imageUrl, imagePath } from "$lib/store";
 import type { AppConfig } from "$lib/store";
 import { processImage } from "./imageProcessor";
 

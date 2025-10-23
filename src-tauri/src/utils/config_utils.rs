@@ -36,6 +36,8 @@ pub struct Config {
     pub custom_shortcuts: Shortcuts,
     #[serde(default = "default_image_name_display_mode")]
     pub image_name_display_mode: String,
+    #[serde(default = "default_edge_indicators_visible")]
+    pub edge_indicators_visible: bool,
 }
 
 fn default_language() -> String {
@@ -52,6 +54,10 @@ fn default_button_size() -> String {
 
 fn default_image_name_display_mode() -> String {
     "fade".to_string()
+}
+
+fn default_edge_indicators_visible() -> bool {
+    false
 }
 
 pub fn default_shortcuts() -> Shortcuts {
@@ -96,6 +102,7 @@ impl Default for Config {
             image_name_display_mode: default_image_name_display_mode(),
             shortcuts: default_shortcuts(),
             custom_shortcuts: default_shortcuts(),
+            edge_indicators_visible: default_edge_indicators_visible()
         }
     }
 }

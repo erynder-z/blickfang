@@ -7,6 +7,7 @@
     isHotkeysMenuVisible,
     isButtonMenuVisible,
     isImageNameDisplayMenuVisible,
+    isEdgeIndicatorMenuVisible,
   } from "$lib/store";
 
   const showLanguageSelectOverlay = () => {
@@ -28,6 +29,10 @@
   const showImageNameDisplayMenu = () => {
     isImageNameDisplayMenuVisible.set(true);
   };
+
+  const showEdgeIndicatorMenu = () => {
+    isEdgeIndicatorMenuVisible.set(true);
+  };
 </script>
 
 <div class="options-sidebar-overlay" class:visible={$isOptionsSidebarVisible}>
@@ -38,6 +43,7 @@
     <button on:click={showThemeSelectOverlay}>{$t["options.button.theme"]}</button>
     <button on:click={showUIButtonOptionsOverlay}>{$t["options.button.UI_buttons"]}</button>
     <button on:click={showImageNameDisplayMenu}>{$t["options.button.image_name_display"]}</button>
+    <button on:click={showEdgeIndicatorMenu}>{$t["options.button.edge_indicators"]}</button>
   </div>
 </div>
 

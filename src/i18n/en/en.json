@@ -9,6 +9,7 @@
   "options.button.close": "Close",
   "options.button.UI_buttons": "Buttons",
   "options.button.image_name_display": "Image Name Display",
+  "options.button.edge_indicators": "Edge Indicators",
   "options.UI_buttons.large": "Large",
   "options.UI_buttons.small": "Small",
   "options.UI_buttons.hidden": "Hidden",
@@ -41,5 +42,7 @@
   "hotkeys.remap.title": "Remap Hotkeys",
   "hotkeys.remap.press_key_for": "Press a key for",
   "hotkeys.remap.finished": "All keys have been remapped.",
-  "hotkeys.remap.error.key_in_use": "Key '{key}' is already in use."
+  "hotkeys.remap.error.key_in_use": "Key '{key}' is already in use.",
+  "general.show": "Show",
+  "general.hide": "Hide"
 }

@@ -101,3 +101,15 @@ pub fn set_active_shortcuts_to_custom(app: AppHandle) {
         }
     }
 }
+
+#[tauri::command]
+pub fn update_edge_indicators_visible_command(app: AppHandle, visible: bool) {
+    let config_str = read_config(&app);
+    if let Ok(mut config) = serde_json::from_str::<Config>(&config_str) {
+        config.edge_indicators_visible = visible;
+        if let Ok(new_config_str) = serde_json::to_string(&config) {
+            write_config(&app, &new_config_str);
+            app.emit("config-updated", &config).unwrap();
+        }
+    }
+}

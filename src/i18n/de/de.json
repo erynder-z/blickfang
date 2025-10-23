@@ -9,6 +9,7 @@
   "options.button.close": "Schließen",
   "options.button.UI_buttons": "Schaltflächen",
   "options.button.image_name_display": "Dateinamenanzeige",
+  "options.button.edge_indicators": "Kantenindikatoren",
   "options.UI_buttons.large": "Groß",
   "options.UI_buttons.small": "Klein",
   "options.UI_buttons.hidden": "Ausblenden",
@@ -41,5 +42,7 @@
   "hotkeys.remap.title": "Hotkeys neu zuweisen",
   "hotkeys.remap.press_key_for": "Taste drücken für",
   "hotkeys.remap.finished": "Alle Tasten wurden neu zugewiesen.",
-  "hotkeys.remap.error.key_in_use": "Taste '{key}' wird bereits verwendet."
+  "hotkeys.remap.error.key_in_use": "Taste '{key}' wird bereits verwendet.",
+  "general.show": "Anzeigen",
+  "general.hide": "Verbergen"
 }

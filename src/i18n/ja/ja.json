@@ -9,6 +9,7 @@
   "options.button.close": "閉じる",
   "options.button.UI_buttons": "ボタン",
   "options.button.image_name_display": "ファイル名表示",
+  "options.button.edge_indicators": "エッジインジケーター",
   "options.UI_buttons.large": "大",
   "options.UI_buttons.small": "小",
   "options.UI_buttons.hidden": "隠す",
@@ -41,5 +42,7 @@
   "hotkeys.remap.title": "ショートカットキーの再割り当て",
   "hotkeys.remap.press_key_for": "のキーを押してください",
   "hotkeys.remap.finished": "すべてのキーが再割り当てされました。",
-  "hotkeys.remap.error.key_in_use": "キー '{key}' は既に使用されています。"
+  "hotkeys.remap.error.key_in_use": "キー '{key}' は既に使用されています。",
+  "general.show": "表示",
+  "general.hide": "隠す"
 }

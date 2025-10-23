@@ -12,6 +12,7 @@
   import { initializeApp } from "$lib/appManager";
   import ButtonsMenu from "$lib/components/ButtonsMenu.svelte";
   import ImageNameDisplayMenu from "$lib/components/ImageNameDisplayMenu.svelte";
+  import EdgeIndicatorMenu from "$lib/components/EdgeIndicatorMenu.svelte";
 
   initThemeManager();
 
@@ -30,6 +31,7 @@
 <ThemeMenu />
 <ButtonsMenu />
 <ImageNameDisplayMenu />
+<EdgeIndicatorMenu />
 
 <div class="app-container">
   <InfoSidebar />

@@ -39,7 +39,8 @@ pub fn run() {
             commands::config_commands::update_custom_shortcuts_command,
             commands::config_commands::set_active_shortcuts_to_default,
             commands::config_commands::set_active_shortcuts_to_custom,
-            commands::config_commands::update_image_name_display_mode_command
+            commands::config_commands::update_image_name_display_mode_command,
+            commands::config_commands::update_edge_indicators_visible_command
         ])
         .build(context)
         .expect("error while building tauri application")
