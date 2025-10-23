@@ -51,7 +51,7 @@
     </button>
 
     <button on:click={handleClose} class="close-button">
-      {$t["options.button.close"]}
+      {$t["general.close"]}
     </button>
   </div>
 </dialog>

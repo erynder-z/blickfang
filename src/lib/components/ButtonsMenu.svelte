@@ -34,6 +34,13 @@
   const handleClose = () => {
     isButtonMenuVisible.set(false);
   };
+
+  const getLabel = (size: string) => {
+    if (size === "large" || size === "small") {
+      return `general.${size}`;
+    }
+    return `options.UI_buttons.${size}`;
+  };
 </script>
 
 <dialog bind:this={dialog} on:close={handleClose}>
@@ -42,11 +49,11 @@
 
     {#each buttonSizes as size, i}
       <button bind:this={buttons[i]} on:click={() => handleButtonClick(size)}>
-        {$t[`options.UI_buttons.${size}`]}
+        {$t[getLabel(size)]}
       </button>
     {/each}
 
-    <button on:click={handleClose} class="close-button">{$t["options.button.close"]}</button>
+    <button on:click={handleClose} class="close-button">{$t["general.close"]}</button>
   </div>
 </dialog>
 

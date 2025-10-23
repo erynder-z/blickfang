@@ -37,6 +37,13 @@
   const handleClose = () => {
     isImageNameDisplayMenuVisible.set(false);
   };
+
+  const getLabel = (mode: DisplayMode) => {
+    if (mode === "show" || mode === "hide") {
+      return `general.${mode}`;
+    }
+    return `image_name_display.option.${mode}`;
+  };
 </script>
 
 <dialog bind:this={dialog} on:close={handleClose}>
@@ -45,11 +52,11 @@
 
     {#each modes as mode, i}
       <button bind:this={buttons[i]} on:click={() => handleButtonClick(mode)}>
-        {$t[`image_name_display.option.${mode}`]}
+        {$t[getLabel(mode)]}
       </button>
     {/each}
 
-    <button on:click={handleClose} class="close-button">{$t["options.button.close"]}</button>
+    <button on:click={handleClose} class="close-button">{$t["general.close"]}</button>
   </div>
 </dialog>
 

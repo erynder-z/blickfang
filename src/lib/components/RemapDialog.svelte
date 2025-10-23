@@ -97,10 +97,10 @@
         </div>
       {:else}
         <p>{$t["hotkeys.remap.finished"]}</p>
-        <button on:click={handleSaveRemap} class="remap-button">{$t["hotkeys.button.save"]}</button>
+        <button on:click={handleSaveRemap} class="remap-button">{$t["general.save"]}</button>
       {/if}
       <button on:click={handleCancelRemap} class="close-button"
-        >{$t["hotkeys.button.cancel"]}</button
+        >{$t["general.cancel"]}</button
       >
     </div>
   {/if}
