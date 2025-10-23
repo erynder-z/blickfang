@@ -1,6 +1,6 @@
 use crate::utils::{
     startup_handler::{AppReady, OpenedPathsState},
-    window_utils::{setup_main_window, handle_window_event},
+    window_utils::setup_main_window,
 };
 
 use tauri_plugin_dialog;
