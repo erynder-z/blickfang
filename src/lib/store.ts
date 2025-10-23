@@ -23,6 +23,7 @@ export interface AppConfig {
   buttonSize: "large" | "small" | "hidden";
   imageNameDisplayMode: "show" | "hide" | "fade";
   edgeIndicatorsVisible: boolean;
+  rememberWindowSize: boolean;
 }
 
 export const imageUrl = writable<string | null>(null);
@@ -47,6 +48,7 @@ export const isHotkeysMenuVisible = writable<boolean>(false);
 export const isButtonMenuVisible = writable<boolean>(false);
 export const isImageNameDisplayMenuVisible = writable<boolean>(false);
 export const isEdgeIndicatorMenuVisible = writable<boolean>(false);
+export const isAppWindowMenuVisible = writable<boolean>(false);
 export const isRemapping = writable<boolean>(false);
 export const activeActions = writable<string[]>([]);
 export const appConfig = writable<AppConfig>({
@@ -55,6 +57,7 @@ export const appConfig = writable<AppConfig>({
   buttonSize: "large",
   imageNameDisplayMode: "fade",
   edgeIndicatorsVisible: false,
+  rememberWindowSize: false,
   shortcuts: {
     openFile: { keys: [], label: "" },
     previousImage: { keys: [], label: "" },

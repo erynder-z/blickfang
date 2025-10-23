@@ -1,6 +1,6 @@
 use crate::utils::config_utils::{default_shortcuts, read_config, write_config, Config, Shortcuts};
 use serde_json;
-use tauri::{AppHandle, Emitter};
+use tauri::{AppHandle, Emitter, Manager};
 
 #[tauri::command]
 pub fn read_config_command(app: AppHandle) -> String {
@@ -107,6 +107,35 @@ pub fn update_edge_indicators_visible_command(app: AppHandle, visible: bool) {
     let config_str = read_config(&app);
     if let Ok(mut config) = serde_json::from_str::<Config>(&config_str) {
         config.edge_indicators_visible = visible;
+        if let Ok(new_config_str) = serde_json::to_string(&config) {
+            write_config(&app, &new_config_str);
+            app.emit("config-updated", &config).unwrap();
+        }
+    }
+}
+
+#[tauri::command]
+pub fn update_remember_window_size_command(app: AppHandle, remember: bool) {
+    let config_str = read_config(&app);
+    if let Ok(mut config) = serde_json::from_str::<Config>(&config_str) {
+        config.remember_window_size = remember;
+        if remember {
+            if let Some(window) = app.get_webview_window("main") {
+                if let Ok(size) = window.inner_size() {
+                    config.window_width = Some(size.width as f64);
+                    config.window_height = Some(size.height as f64);
+                }
+                if let Ok(position) = window.inner_position() {
+                    config.window_x = Some(position.x as f64);
+                    config.window_y = Some(position.y as f64);
+                }
+            }
+        } else {
+            config.window_width = None;
+            config.window_height = None;
+            config.window_x = None;
+            config.window_y = None;
+        }
         if let Ok(new_config_str) = serde_json::to_string(&config) {
             write_config(&app, &new_config_str);
             app.emit("config-updated", &config).unwrap();

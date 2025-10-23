@@ -38,6 +38,16 @@ pub struct Config {
     pub image_name_display_mode: String,
     #[serde(default = "default_edge_indicators_visible")]
     pub edge_indicators_visible: bool,
+    #[serde(default = "default_remember_window_size")]
+    pub remember_window_size: bool,
+    #[serde(default)]
+    pub window_width: Option<f64>,
+    #[serde(default)]
+    pub window_height: Option<f64>,
+    #[serde(default)]
+    pub window_x: Option<f64>,
+    #[serde(default)]
+    pub window_y: Option<f64>,
 }
 
 fn default_language() -> String {
@@ -57,6 +67,10 @@ fn default_image_name_display_mode() -> String {
 }
 
 fn default_edge_indicators_visible() -> bool {
+    false
+}
+
+fn default_remember_window_size() -> bool {
     false
 }
 
@@ -102,7 +116,12 @@ impl Default for Config {
             image_name_display_mode: default_image_name_display_mode(),
             shortcuts: default_shortcuts(),
             custom_shortcuts: default_shortcuts(),
-            edge_indicators_visible: default_edge_indicators_visible()
+            edge_indicators_visible: default_edge_indicators_visible(),
+            remember_window_size: default_remember_window_size(),
+            window_width: None,
+            window_height: None,
+            window_x: None,
+            window_y: None,
         }
     }
 }

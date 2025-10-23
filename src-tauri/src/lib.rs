@@ -1,6 +1,6 @@
 use crate::utils::{
     startup_handler::{AppReady, OpenedPathsState},
-    window_utils::setup_main_window,
+    window_utils::{setup_main_window, handle_window_event},
 };
 
 use tauri_plugin_dialog;
@@ -40,11 +40,13 @@ pub fn run() {
             commands::config_commands::set_active_shortcuts_to_default,
             commands::config_commands::set_active_shortcuts_to_custom,
             commands::config_commands::update_image_name_display_mode_command,
-            commands::config_commands::update_edge_indicators_visible_command
+            commands::config_commands::update_edge_indicators_visible_command,
+            commands::config_commands::update_remember_window_size_command
         ])
         .build(context)
         .expect("error while building tauri application")
         .run(|app_handle, event| {
             utils::startup_handler::handle_run_event(app_handle, &event);
+            utils::window_utils::handle_window_event(app_handle, &event);
         });
 }
