@@ -99,9 +99,7 @@
         <p>{$t["hotkeys.remap.finished"]}</p>
         <button on:click={handleSaveRemap} class="remap-button">{$t["general.save"]}</button>
       {/if}
-      <button on:click={handleCancelRemap} class="close-button"
-        >{$t["general.cancel"]}</button
-      >
+      <button on:click={handleCancelRemap} class="close-button">{$t["general.cancel"]}</button>
     </div>
   {/if}
 </dialog>
@@ -116,7 +114,7 @@
   }
 
   dialog::backdrop {
-    background: var(--color-accent);
+    background: var(--color-dialog-backdrop);
   }
 
   .menu-content {

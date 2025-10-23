@@ -85,7 +85,7 @@
   }
 
   dialog::backdrop {
-    background: var(--color-accent);
+    background: var(--color-dialog-backdrop);
   }
 
   .menu-content {

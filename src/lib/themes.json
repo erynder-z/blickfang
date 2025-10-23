@@ -1,6 +1,7 @@
 {
   "default": {
     "background": "#372e49",
+    "dialog-backdrop": "#000000b3",
     "accent": "#4F4268",
     "text-primary": "#E3E3E3",
     "text-secondary": "#727272",
@@ -12,6 +13,7 @@
   },
   "catppuccin-frappe": {
     "background": "#303446",
+    "dialog-backdrop": "#000000b3",
     "accent": "#414559",
     "text-primary": "#c6d0f5",
     "text-secondary": "#a5adce",
@@ -23,6 +25,7 @@
   },
   "catppuccin-macchiato": {
     "background": "#24273a",
+    "dialog-backdrop": "#000000b3",
     "accent": "#363a4f",
     "text-primary": "#cad3f5",
     "text-secondary": "#a5adcb",
@@ -34,6 +37,7 @@
   },
   "catppuccin-mocha": {
     "background": "#1e1e2e",
+    "dialog-backdrop": "#000000b3",
     "accent": "#313244",
     "text-primary": "#cdd6f4",
     "text-secondary": "#a6adc8",
