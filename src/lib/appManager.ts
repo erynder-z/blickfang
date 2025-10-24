@@ -9,13 +9,21 @@ const handleImageSourceEvent = async (event: { payload: string[] }) => {
   const paths = event.payload;
   if (paths.length > 0) {
     const path = paths[0];
-    imagePath.set(path);
 
-    invoke("read_image_file", { path }).then(async (res) => {
-      const [dataUrl, exifData] = res as [string, string];
+    try {
+      const result = await invoke("read_image_from_path", { path });
+      const [dataUrl, exifData, newPathStr, _directoryFiles] = result as [
+        string,
+        string,
+        string,
+        string[],
+      ];
       imageUrl.set(dataUrl);
-      processImage(dataUrl, path, exifData);
-    });
+      imagePath.set(newPathStr);
+      processImage(dataUrl, newPathStr, exifData);
+    } catch (error) {
+      console.error("Failed to read image from path:", error);
+    }
   }
 };
 

@@ -28,7 +28,7 @@ pub fn run() {
             utils::window_utils::show_window,
             utils::startup_handler::frontend_is_ready,
             commands::file_operations::open_and_read_file,
-            commands::file_operations::read_image_file,
+            commands::file_operations::read_image_from_path,
             commands::file_operations::change_image,
             commands::config_commands::read_config_command,
             commands::config_commands::write_config_command,
