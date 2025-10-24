@@ -4,21 +4,50 @@
   import EdgeIndicators from "./EdgeIndicators.svelte";
   import { t } from "$lib/i18n";
   import { openFile } from "$lib/commands";
+  import { fade } from "svelte/transition";
+  import { onMount } from "svelte";
+
+  let showSvg = false;
+  let canvasOpacity = 0;
+
+  onMount(() => {
+    showSvg = true;
+  });
+
+  $: if ($imageUrl) {
+    canvasOpacity = 0;
+  }
 </script>
 
 <div class="image-view-container">
   <EdgeIndicators />
   {#if $imageUrl}
-    <canvas use:zoomPan={{ imageUrlStore: imageUrl, zoomLevelStore: zoomLevel }}></canvas>
+    {#key $imageUrl}
+      <canvas
+        use:zoomPan={{
+          imageUrlStore: imageUrl,
+          zoomLevelStore: zoomLevel,
+          onImageDrawn: () => (canvasOpacity = 1),
+        }}
+        style="opacity: {canvasOpacity}; transition: opacity 150ms linear;"
+      ></canvas>
+    {/key}
   {:else}
     <div class="empty-canvas">
       <button on:click={openFile}>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon">
-          <path
-            d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2Zm-2 0H5V5h14v14ZM8.9 13.98l2.1 2.52 3-3.76 3.9 5.26H6l2.9-4.02Z"
-            fill="currentColor"
-          />
-        </svg>
+        {#if showSvg}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            class="icon"
+            in:fade={{ duration: 100 }}
+          >
+            <path
+              d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2Zm-2 0H5V5h14v14ZM8.9 13.98l2.1 2.52 3-3.76 3.9 5.26H6l2.9-4.02Z"
+              fill="currentColor"
+            />
+          </svg>
+        {/if}
 
         {$t["image-view.placeholder"]}
       </button>

@@ -6,10 +6,11 @@ import { get } from "svelte/store";
 type ZoomPanOptions = {
   zoomLevelStore: Writable<number>;
   imageUrlStore: Writable<string | null>;
+  onImageDrawn?: () => void;
 };
 
 export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
-  const { zoomLevelStore, imageUrlStore } = options;
+  const { zoomLevelStore, imageUrlStore, onImageDrawn } = options;
   const container = canvas.parentElement;
   if (!container) return;
 
@@ -237,7 +238,10 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
     if (url) {
       image = new Image();
       image.src = url;
-      image.onload = () => setInitialTransform();
+      image.onload = () => {
+        setInitialTransform();
+        if (onImageDrawn) onImageDrawn();
+      };
     } else {
       image = null;
     }
