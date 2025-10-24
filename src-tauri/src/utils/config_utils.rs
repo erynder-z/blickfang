@@ -51,25 +51,20 @@ pub struct Config {
 }
 
 fn default_language() -> String {
-    "en".to_string()
+    "en".into()
 }
-
 fn default_theme() -> String {
-    "default".to_string()
+    "default".into()
 }
-
 fn default_button_size() -> String {
-    "large".to_string()
+    "large".into()
 }
-
 fn default_image_name_display_mode() -> String {
-    "fade".to_string()
+    "fade".into()
 }
-
 fn default_edge_indicators_visible() -> bool {
     false
 }
-
 fn default_remember_window_size() -> bool {
     false
 }
@@ -77,32 +72,32 @@ fn default_remember_window_size() -> bool {
 pub fn default_shortcuts() -> Shortcuts {
     Shortcuts {
         open_file: Shortcut {
-            keys: vec!["o".to_string()],
-            label: "o".to_string(),
+            keys: vec!["o".into()],
+            label: "o".into(),
         },
         previous_image: Shortcut {
-            keys: vec!["ArrowLeft".to_string()],
-            label: "←".to_string(),
+            keys: vec!["ArrowLeft".into()],
+            label: "←".into(),
         },
         next_image: Shortcut {
-            keys: vec!["ArrowRight".to_string()],
-            label: "→".to_string(),
+            keys: vec!["ArrowRight".into()],
+            label: "→".into(),
         },
         zoom_in: Shortcut {
-            keys: vec!["+".to_string(), "=".to_string(), "ArrowUp".to_string()],
-            label: "+ / ↑".to_string(),
+            keys: vec!["+".into(), "=".into(), "ArrowUp".into()],
+            label: "+ / ↑".into(),
         },
         zoom_out: Shortcut {
-            keys: vec!["-".to_string(), "_".to_string(), "ArrowDown".to_string()],
-            label: "- / ↓".to_string(),
+            keys: vec!["-".into(), "_".into(), "ArrowDown".into()],
+            label: "- / ↓".into(),
         },
         toggle_exif: Shortcut {
-            keys: vec!["i".to_string()],
-            label: "i".to_string(),
+            keys: vec!["i".into()],
+            label: "i".into(),
         },
         toggle_options: Shortcut {
-            keys: vec!["m".to_string()],
-            label: "m".to_string(),
+            keys: vec!["m".into()],
+            label: "m".into(),
         },
     }
 }
@@ -126,30 +121,48 @@ impl Default for Config {
     }
 }
 
-fn get_config_path(app: &AppHandle) -> PathBuf {
-    let mut config_path = app.path().app_data_dir().unwrap();
+fn get_config_path(app: &AppHandle) -> Result<PathBuf, String> {
+    let mut config_path = app
+        .path()
+        .app_data_dir()
+        .map_err(|e| format!("Failed to get app data directory: {}", e))?;
+
     config_path.push("simple-image-viewer");
-    fs::create_dir_all(&config_path).unwrap();
+    fs::create_dir_all(&config_path)
+        .map_err(|e| format!("Failed to create config directory: {}", e))?;
     config_path.push("config.json");
-    config_path
+    Ok(config_path)
 }
 
-pub fn read_config(app: &AppHandle) -> String {
-    let config_path = get_config_path(app);
+pub fn read_config(app: &AppHandle) -> Result<String, String> {
+    let config_path = get_config_path(app)?;
+
     if !config_path.exists() {
         let default_config = Config::default();
-        let default_config_str = serde_json::to_string(&default_config).unwrap();
-        fs::write(&config_path, default_config_str).unwrap();
+        let default_str = serde_json::to_string_pretty(&default_config)
+            .map_err(|e| format!("Failed to serialize default config: {}", e))?;
+        fs::write(&config_path, &default_str)
+            .map_err(|e| format!("Failed to write default config file: {}", e))?;
+        return Ok(default_str);
     }
 
-    let config_str = fs::read_to_string(&config_path).unwrap_or_else(|_| "{}".to_string());
-    let config: Config = serde_json::from_str(&config_str).unwrap_or_default();
-    serde_json::to_string(&config).unwrap()
+    let raw = fs::read_to_string(&config_path)
+        .map_err(|e| format!("Failed to read config file: {}", e))?;
+
+    let config: Config = serde_json::from_str(&raw).unwrap_or_else(|_| Config::default());
+
+    let normalized = serde_json::to_string_pretty(&config)
+        .map_err(|e| format!("Failed to reserialize normalized config: {}", e))?;
+
+    if normalized != raw {
+        let _ = fs::write(&config_path, &normalized);
+    }
+
+    Ok(normalized)
 }
 
-pub fn write_config(app: &AppHandle, content: &str) {
-    let config_path = get_config_path(app);
-    fs::write(config_path, content).unwrap();
+pub fn write_config(app: &AppHandle, content: &str) -> Result<(), String> {
+    let config_path = get_config_path(app)?;
+    fs::write(config_path, content).map_err(|e| format!("Failed to write config file: {}", e))?;
+    Ok(())
 }
-
-

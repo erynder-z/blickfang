@@ -24,9 +24,11 @@ pub fn frontend_is_ready(
 
     let mut guard = opened_paths_state.paths.lock().unwrap();
     if !guard.is_empty() {
-        let paths_to_send = guard.clone();
-        guard.clear();
-        if let Err(_) = app.emit("image-source", paths_to_send) {}
+        let paths_to_send: Vec<String> = guard.drain(..).collect();
+
+        if let Err(e) = app.emit("image-source", paths_to_send) {
+            eprintln!("Failed to emit 'image-source' event: {}", e);
+        }
     }
 }
 
@@ -44,16 +46,14 @@ pub fn handle_run_event(app_handle: &AppHandle, event: &RunEvent) {
             .collect();
 
         if !paths_to_process.is_empty() {
-            // Check if the frontend is ready.
             if app_ready_state.0.load(Ordering::Relaxed) {
-                if let Err(_) = app_handle.emit("image-source", paths_to_process) {}
+                if let Err(e) = app_handle.emit("image-source", paths_to_process) {
+                    eprintln!("Failed to emit 'image-source' event: {}", e);
+                }
             } else {
-                // If not ready, cache the paths.
                 let opened_paths_state = app_handle.state::<OpenedPathsState>();
                 let mut guard = opened_paths_state.paths.lock().unwrap();
-                for path in paths_to_process {
-                    guard.push(path);
-                }
+                guard.extend(paths_to_process);
             }
         }
     }

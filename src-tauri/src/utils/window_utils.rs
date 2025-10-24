@@ -1,28 +1,47 @@
 use crate::utils::config_utils::{read_config, write_config, Config};
 use serde_json;
-use std::error::Error;
-use tauri::{App, AppHandle, Manager, PhysicalPosition, PhysicalSize};
+use tauri::{App, AppHandle, Manager, PhysicalPosition, PhysicalSize, RunEvent, WindowEvent};
 
-pub fn setup_main_window(app: &mut App) -> Result<(), Box<dyn Error>> {
-    let window = app.get_webview_window("main").unwrap();
-    let app_handle = app.handle().clone();
-    let config_str = read_config(&app_handle);
-    if let Ok(config) = serde_json::from_str::<Config>(&config_str) {
-        if config.remember_window_size {
-            if let (Some(w), Some(h), Some(x), Some(y)) = (
-                config.window_width,
-                config.window_height,
-                config.window_x,
-                config.window_y,
-            ) {
-                window.set_size(PhysicalSize::new(w as u32, h as u32))?;
-                window.set_position(PhysicalPosition::new(x as i32, y as i32))?;
-                return Ok(());
-            }
+fn load_config(app_handle: &AppHandle) -> Result<Config, String> {
+    let config_str = read_config(app_handle)?;
+    serde_json::from_str(&config_str).map_err(|e| format!("Failed to deserialize config: {}", e))
+}
+
+fn save_config(app_handle: &AppHandle, config: &Config) {
+    if let Ok(json) = serde_json::to_string(config) {
+        if let Err(e) = write_config(app_handle, &json) {
+            eprintln!("Failed to write config: {e}");
+        }
+    } else {
+        eprintln!("Failed to serialize config for saving.");
+    }
+}
+
+pub fn setup_main_window(app: &mut App) -> Result<(), String> {
+    let window = app
+        .get_webview_window("main")
+        .ok_or_else(|| "Main window not found".to_string())?;
+
+    let config = load_config(&app.handle())?;
+
+    if config.remember_window_size {
+        if let (Some(w), Some(h), Some(x), Some(y)) = (
+            config.window_width,
+            config.window_height,
+            config.window_x,
+            config.window_y,
+        ) {
+            window
+                .set_size(PhysicalSize::new(w as u32, h as u32))
+                .map_err(|e| format!("Failed to set window size: {e}"))?;
+            window
+                .set_position(PhysicalPosition::new(x as i32, y as i32))
+                .map_err(|e| format!("Failed to set window position: {e}"))?;
+            return Ok(());
         }
     }
 
-    if let Some(monitor) = window.current_monitor()? {
+    if let Some(monitor) = window.current_monitor().map_err(|e| e.to_string())? {
         let monitor_size = monitor.size();
         let mut new_height = (monitor_size.height as f64 * 0.8) as u32;
         let mut new_width = (new_height as f64 * 4.0 / 3.0) as u32;
@@ -32,39 +51,44 @@ pub fn setup_main_window(app: &mut App) -> Result<(), Box<dyn Error>> {
             new_height = (new_width as f64 * 3.0 / 4.0) as u32;
         }
 
-        window.set_size(PhysicalSize::new(new_width, new_height))?;
-        window.set_position(PhysicalPosition::new(50, 50))?;
+        window
+            .set_size(PhysicalSize::new(new_width, new_height))
+            .map_err(|e| format!("Failed to set default window size: {e}"))?;
+        window
+            .set_position(PhysicalPosition::new(50, 50))
+            .map_err(|e| format!("Failed to set default window position: {e}"))?;
     }
+
     Ok(())
 }
 
 #[tauri::command]
 pub fn show_window(window: tauri::Window) {
-    window.show().unwrap();
+    if let Err(e) = window.show() {
+        eprintln!("Failed to show window: {e}");
+    }
 }
 
-pub fn handle_window_event(app_handle: &AppHandle, event: &tauri::RunEvent) {
-    if let tauri::RunEvent::WindowEvent {
+pub fn handle_window_event(app_handle: &AppHandle, event: &RunEvent) {
+    if let RunEvent::WindowEvent {
         label,
-        event: tauri::WindowEvent::Moved(_) | tauri::WindowEvent::Resized(_),
+        event: WindowEvent::Moved(_) | WindowEvent::Resized(_),
         ..
     } = event
     {
         if label == "main" {
-            let window = app_handle.get_webview_window("main").unwrap();
-            let config_str = read_config(app_handle);
-            if let Ok(mut config) = serde_json::from_str::<Config>(&config_str) {
-                if config.remember_window_size {
-                    if let Ok(size) = window.inner_size() {
-                        config.window_width = Some(size.width as f64);
-                        config.window_height = Some(size.height as f64);
-                    }
-                    if let Ok(position) = window.inner_position() {
-                        config.window_x = Some(position.x as f64);
-                        config.window_y = Some(position.y as f64);
-                    }
-                    if let Ok(new_config_str) = serde_json::to_string(&config) {
-                        write_config(app_handle, &new_config_str);
+            if let Some(window) = app_handle.get_webview_window("main") {
+                if let Ok(mut config) = load_config(app_handle) {
+                    if config.remember_window_size {
+                        if let Ok(size) = window.inner_size() {
+                            config.window_width = Some(size.width as f64);
+                            config.window_height = Some(size.height as f64);
+                        }
+                        if let Ok(pos) = window.inner_position() {
+                            config.window_x = Some(pos.x as f64);
+                            config.window_y = Some(pos.y as f64);
+                        }
+                        save_config(app_handle, &config);
                     }
                 }
             }

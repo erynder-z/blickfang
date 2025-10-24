@@ -2,132 +2,103 @@ use crate::utils::config_utils::{default_shortcuts, read_config, write_config, C
 use serde_json;
 use tauri::{AppHandle, Emitter, Manager};
 
+fn update_config<F>(app: &AppHandle, updater: F) -> Result<(), String>
+where
+    F: FnOnce(&mut Config),
+{
+    let config_str = read_config(app)?;
+    let mut config: Config = serde_json::from_str(&config_str)
+        .map_err(|e| format!("Failed to deserialize config: {}", e))?;
+
+    updater(&mut config);
+
+    let new_config_str =
+        serde_json::to_string(&config).map_err(|e| format!("Failed to serialize config: {}", e))?;
+
+    write_config(app, &new_config_str)?;
+    app.emit("config-updated", &config)
+        .map_err(|e| format!("Failed to emit config-updated event: {}", e))?;
+
+    Ok(())
+}
+
 #[tauri::command]
-pub fn read_config_command(app: AppHandle) -> String {
+pub fn read_config_command(app: AppHandle) -> Result<String, String> {
     read_config(&app)
 }
 
 #[tauri::command]
-pub fn write_config_command(app: AppHandle, content: String) {
-    write_config(&app, &content);
+pub fn write_config_command(app: AppHandle, content: String) -> Result<(), String> {
+    write_config(&app, &content)
 }
 
 #[tauri::command]
-pub fn update_language_command(app: AppHandle, language: String) {
-    let config_str = read_config(&app);
-    if let Ok(mut config) = serde_json::from_str::<Config>(&config_str) {
-        config.language = language;
-        if let Ok(new_config_str) = serde_json::to_string(&config) {
-            write_config(&app, &new_config_str);
-            app.emit("config-updated", &config).unwrap();
-        }
-    }
+pub fn update_language_command(app: AppHandle, language: String) -> Result<(), String> {
+    update_config(&app, |config| config.language = language)
 }
 
 #[tauri::command]
-pub fn update_theme_command(app: AppHandle, theme: String) {
-    let config_str = read_config(&app);
-    if let Ok(mut config) = serde_json::from_str::<Config>(&config_str) {
-        config.theme = theme;
-        if let Ok(new_config_str) = serde_json::to_string(&config) {
-            write_config(&app, &new_config_str);
-            app.emit("config-updated", &config).unwrap();
-        }
-    }
+pub fn update_theme_command(app: AppHandle, theme: String) -> Result<(), String> {
+    update_config(&app, |config| config.theme = theme)
 }
 
 #[tauri::command]
-pub fn update_button_size_command(app: AppHandle, button_size: String) {
-    let config_str = read_config(&app);
-    if let Ok(mut config) = serde_json::from_str::<Config>(&config_str) {
-        config.button_size = button_size;
-        if let Ok(new_config_str) = serde_json::to_string(&config) {
-            write_config(&app, &new_config_str);
-            app.emit("config-updated", &config).unwrap();
-        }
-    }
+pub fn update_button_size_command(app: AppHandle, button_size: String) -> Result<(), String> {
+    update_config(&app, |config| config.button_size = button_size)
 }
 
 #[tauri::command]
-pub fn update_image_name_display_mode_command(app: AppHandle, mode: String) {
-    let config_str = read_config(&app);
-    if let Ok(mut config) = serde_json::from_str::<Config>(&config_str) {
-        config.image_name_display_mode = mode;
-        if let Ok(new_config_str) = serde_json::to_string(&config) {
-            write_config(&app, &new_config_str);
-            app.emit("config-updated", &config).unwrap();
-        }
-    }
+pub fn update_image_name_display_mode_command(app: AppHandle, mode: String) -> Result<(), String> {
+    update_config(&app, |config| config.image_name_display_mode = mode)
 }
 
 #[tauri::command]
-pub fn get_default_shortcuts_command() -> Shortcuts {
-    default_shortcuts()
+pub fn get_default_shortcuts_command() -> Result<Shortcuts, String> {
+    Ok(default_shortcuts())
 }
 
 #[tauri::command]
-pub fn update_custom_shortcuts_command(app: AppHandle, new_shortcuts: Shortcuts) {
-    let config_str = read_config(&app);
-    if let Ok(mut config) = serde_json::from_str::<Config>(&config_str) {
+pub fn update_custom_shortcuts_command(
+    app: AppHandle,
+    new_shortcuts: Shortcuts,
+) -> Result<(), String> {
+    update_config(&app, |config| {
         config.shortcuts = new_shortcuts.clone();
         config.custom_shortcuts = new_shortcuts;
-        if let Ok(new_config_str) = serde_json::to_string(&config) {
-            write_config(&app, &new_config_str);
-            app.emit("config-updated", &config).unwrap();
-        }
-    }
+    })
 }
 
 #[tauri::command]
-pub fn set_active_shortcuts_to_default(app: AppHandle) {
-    let config_str = read_config(&app);
-    if let Ok(mut config) = serde_json::from_str::<Config>(&config_str) {
-        config.shortcuts = default_shortcuts();
-        if let Ok(new_config_str) = serde_json::to_string(&config) {
-            write_config(&app, &new_config_str);
-            app.emit("config-updated", &config).unwrap();
-        }
-    }
+pub fn set_active_shortcuts_to_default(app: AppHandle) -> Result<(), String> {
+    update_config(&app, |config| config.shortcuts = default_shortcuts())
 }
 
 #[tauri::command]
-pub fn set_active_shortcuts_to_custom(app: AppHandle) {
-    let config_str = read_config(&app);
-    if let Ok(mut config) = serde_json::from_str::<Config>(&config_str) {
-        config.shortcuts = config.custom_shortcuts.clone();
-        if let Ok(new_config_str) = serde_json::to_string(&config) {
-            write_config(&app, &new_config_str);
-            app.emit("config-updated", &config).unwrap();
-        }
-    }
+pub fn set_active_shortcuts_to_custom(app: AppHandle) -> Result<(), String> {
+    update_config(&app, |config| {
+        config.shortcuts = config.custom_shortcuts.clone()
+    })
 }
 
 #[tauri::command]
-pub fn update_edge_indicators_visible_command(app: AppHandle, visible: bool) {
-    let config_str = read_config(&app);
-    if let Ok(mut config) = serde_json::from_str::<Config>(&config_str) {
-        config.edge_indicators_visible = visible;
-        if let Ok(new_config_str) = serde_json::to_string(&config) {
-            write_config(&app, &new_config_str);
-            app.emit("config-updated", &config).unwrap();
-        }
-    }
+pub fn update_edge_indicators_visible_command(app: AppHandle, visible: bool) -> Result<(), String> {
+    update_config(&app, |config| config.edge_indicators_visible = visible)
 }
 
 #[tauri::command]
-pub fn update_remember_window_size_command(app: AppHandle, remember: bool) {
-    let config_str = read_config(&app);
-    if let Ok(mut config) = serde_json::from_str::<Config>(&config_str) {
+pub fn update_remember_window_size_command(app: AppHandle, remember: bool) -> Result<(), String> {
+    update_config(&app, |config| {
         config.remember_window_size = remember;
+
         if remember {
             if let Some(window) = app.get_webview_window("main") {
                 if let Ok(size) = window.inner_size() {
                     config.window_width = Some(size.width as f64);
                     config.window_height = Some(size.height as f64);
                 }
-                if let Ok(position) = window.inner_position() {
-                    config.window_x = Some(position.x as f64);
-                    config.window_y = Some(position.y as f64);
+                if let Ok(pos) = window.inner_position() {
+                    config.window_x = Some(pos.x as f64);
+                    config.window_y = Some(pos.y as f64);
                 }
             }
         } else {
@@ -136,9 +107,5 @@ pub fn update_remember_window_size_command(app: AppHandle, remember: bool) {
             config.window_x = None;
             config.window_y = None;
         }
-        if let Ok(new_config_str) = serde_json::to_string(&config) {
-            write_config(&app, &new_config_str);
-            app.emit("config-updated", &config).unwrap();
-        }
-    }
+    })
 }
