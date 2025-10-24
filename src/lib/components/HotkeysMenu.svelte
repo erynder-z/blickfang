@@ -5,8 +5,9 @@
   import RemapDialog from "./RemapDialog.svelte";
   import type { Shortcuts } from "$lib/store";
   import { onMount } from "svelte";
+  import { blur } from "svelte/transition";
+  import { focusTrap } from "$lib/actions/focusTrap";
 
-  let dialog: HTMLDialogElement;
   let defaultShortcuts: Shortcuts | null = null;
 
   onMount(async () => {
@@ -18,21 +19,11 @@
     $appConfig.shortcuts &&
     JSON.stringify($appConfig.shortcuts) === JSON.stringify(defaultShortcuts);
 
-  isHotkeysMenuVisible.subscribe((visible) => {
-    if (visible) {
-      dialog?.showModal();
-    } else {
-      dialog?.close();
-    }
-  });
-
   const handleRemap = () => {
     isRemapping.set(true);
   };
 
-  const handleClose = () => {
-    isHotkeysMenuVisible.set(false);
-  };
+  const handleClose = () => isHotkeysMenuVisible.set(false);
 
   const handleSetDefault = () => {
     invoke("set_active_shortcuts_to_default");
@@ -41,53 +32,79 @@
   const handleSetCustom = () => {
     invoke("set_active_shortcuts_to_custom");
   };
+
+  const handleKeydown = (event: KeyboardEvent) => {
+    if (!$isHotkeysMenuVisible) return;
+    if (event.key === "Escape") handleClose();
+  };
 </script>
+
+<svelte:window on:keydown={handleKeydown} />
 
 <RemapDialog />
 
-<dialog bind:this={dialog} on:close={handleClose}>
-  <div class="menu-content">
-    <h1>{$t["hotkeys.heading"]}</h1>
+{#if $isHotkeysMenuVisible}
+  <!-- svelte-ignore a11y-no-static-element-interactions, a11y-click-events-have-key-events -->
+  <div class="backdrop" on:click={handleClose} transition:blur={{ duration: 100 }}></div>
+  <div
+    use:focusTrap
+    class="menu-dialog"
+    role="dialog"
+    aria-modal="true"
+    transition:blur={{ duration: 100 }}
+  >
+    <div class="menu-content">
+      <h1>{$t["hotkeys.heading"]}</h1>
 
-    <div class="toggle-buttons">
-      <button class:selected={isUsingDefault} on:click={handleSetDefault}>
-        {$t["hotkeys.button.default_hotkeys"]}
-      </button>
-      <button class:selected={!isUsingDefault} on:click={handleSetCustom}>
-        {$t["hotkeys.button.custom_hotkeys"]}
-      </button>
+      <div class="toggle-buttons">
+        <button class:selected={isUsingDefault} on:click={handleSetDefault}>
+          {$t["hotkeys.button.default_hotkeys"]}
+        </button>
+        <button class:selected={!isUsingDefault} on:click={handleSetCustom}>
+          {$t["hotkeys.button.custom_hotkeys"]}
+        </button>
+      </div>
+
+      <div class="hotkeys-grid">
+        {#if $appConfig.shortcuts}
+          {#each Object.keys($appConfig.shortcuts) as action}
+            <div class="hotkey-action">{$t[`hotkeys.${action}`]}</div>
+            <div class="hotkey-key">
+              {$appConfig.shortcuts[action as keyof Shortcuts].label.toLocaleUpperCase()}
+            </div>
+          {/each}
+        {/if}
+      </div>
+
+      <button on:click={handleRemap} class="remap-button">{$t["hotkeys.button.remap"]}</button>
+
+      <button on:click={handleClose} class="close-button">{$t["general.close"]}</button>
     </div>
-
-    <div class="hotkeys-grid">
-      {#if $appConfig.shortcuts}
-        {#each Object.keys($appConfig.shortcuts) as action}
-          <div class="hotkey-action">{$t[`hotkeys.${action}`]}</div>
-          <div class="hotkey-key">
-            {$appConfig.shortcuts[action as keyof Shortcuts].label.toLocaleUpperCase()}
-          </div>
-        {/each}
-      {/if}
-    </div>
-
-    <button on:click={handleRemap} class="remap-button">{$t["hotkeys.button.remap"]}</button>
-
-    <button on:click={handleClose} class="close-button">{$t["general.close"]}</button>
   </div>
-</dialog>
+{/if}
 
 <style>
-  dialog {
+  .backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-dialog-backdrop);
+    z-index: 30;
+  }
+  .menu-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
     background-color: var(--color-background);
     border: 1px solid var(--color-accent);
     border-radius: 8px;
     padding: 1.5rem;
     box-shadow: 0 4px 12px var(--color-shadow);
   }
-
-  dialog::backdrop {
-    background: var(--color-dialog-backdrop);
-  }
-
   .menu-content {
     display: flex;
     flex-direction: column;

@@ -2,21 +2,20 @@
   import { isButtonMenuVisible, appConfig } from "$lib/store";
   import { t } from "$lib/i18n";
   import { invoke } from "@tauri-apps/api/core";
+  import { tick } from "svelte";
+  import { blur } from "svelte/transition";
+  import { focusTrap } from "$lib/actions/focusTrap";
 
   const buttonSizes = ["large", "small", "hide"];
 
-  let dialog: HTMLDialogElement;
   let buttons: HTMLButtonElement[] = [];
 
-  isButtonMenuVisible.subscribe((visible) => {
-    if (visible) {
-      dialog?.showModal();
+  $: if ($isButtonMenuVisible) {
+    tick().then(() => {
       const currentIndex = buttonSizes.indexOf($appConfig.buttonSize);
       if (currentIndex !== -1) buttons[currentIndex]?.focus();
-    } else {
-      dialog?.close();
-    }
-  });
+    });
+  }
 
   const saveButtonSize = async (size: string) => {
     try {
@@ -31,9 +30,7 @@
     handleClose();
   };
 
-  const handleClose = () => {
-    isButtonMenuVisible.set(false);
-  };
+  const handleClose = () => isButtonMenuVisible.set(false);
 
   const getLabel = (size: string) => {
     if (size === "large" || size === "small") {
@@ -41,35 +38,61 @@
     }
     return `general.${size}`;
   };
+
+  const handleKeydown = (event: KeyboardEvent) => {
+    if (!$isButtonMenuVisible) return;
+    if (event.key === "Escape") handleClose();
+  };
 </script>
 
-<dialog bind:this={dialog} on:close={handleClose}>
-  <div class="menu-content">
-    <h1>{$t["options.button.heading"]}</h1>
+<svelte:window on:keydown={handleKeydown} />
 
-    {#each buttonSizes as size, i}
-      <button bind:this={buttons[i]} on:click={() => handleButtonClick(size)}>
-        {$t[getLabel(size)]}
-      </button>
-    {/each}
+{#if $isButtonMenuVisible}
+  <!-- svelte-ignore a11y-no-static-element-interactions, a11y-click-events-have-key-events -->
+  <div class="backdrop" on:click={handleClose} transition:blur={{ duration: 100 }}></div>
+  <div
+    use:focusTrap
+    class="menu-dialog"
+    role="dialog"
+    aria-modal="true"
+    transition:blur={{ duration: 100 }}
+  >
+    <div class="menu-content">
+      <h1>{$t["options.button.heading"]}</h1>
 
-    <button on:click={handleClose} class="close-button">{$t["general.close"]}</button>
+      {#each buttonSizes as size, i}
+        <button bind:this={buttons[i]} on:click={() => handleButtonClick(size)}>
+          {$t[getLabel(size)]}
+        </button>
+      {/each}
+
+      <button on:click={handleClose} class="close-button">{$t["general.close"]}</button>
+    </div>
   </div>
-</dialog>
+{/if}
 
 <style>
-  dialog {
+  .backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-dialog-backdrop);
+    z-index: 30;
+  }
+  .menu-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
     background-color: var(--color-background);
     border: 1px solid var(--color-accent);
     border-radius: 8px;
     padding: 1.5rem;
     box-shadow: 0 4px 12px var(--color-shadow);
   }
-
-  dialog::backdrop {
-    background: var(--color-dialog-backdrop);
-  }
-
   .menu-content {
     display: flex;
     flex-direction: column;

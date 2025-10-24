@@ -3,38 +3,31 @@
   import { t } from "$lib/i18n";
   import { invoke } from "@tauri-apps/api/core";
   import { onMount, onDestroy } from "svelte";
-
-  let dialog: HTMLDialogElement;
+  import { blur } from "svelte/transition";
+  import { focusTrap } from "$lib/actions/focusTrap";
 
   let remapStep = 0;
   let actionsToRemap: (keyof Shortcuts)[] = [];
   let tempShortcuts: Shortcuts;
   let errorMessage: string | null = null;
 
-  $: if (dialog && $isRemapping) {
-    dialog.showModal();
+  $: if ($isRemapping) {
     errorMessage = null;
     remapStep = 0;
     actionsToRemap = Object.keys($appConfig.shortcuts) as (keyof Shortcuts)[];
     tempShortcuts = JSON.parse(JSON.stringify($appConfig.shortcuts));
-  } else if (dialog && !$isRemapping) {
-    dialog.close();
   }
 
-  const handleClose = () => {
-    isRemapping.set(false);
-  };
+  const handleClose = () => isRemapping.set(false);
 
-  const handleCancelRemap = () => {
-    handleClose();
-  };
+  const handleCancelRemap = () => handleClose();
 
   const handleSaveRemap = async () => {
     await invoke("update_custom_shortcuts_command", { newShortcuts: tempShortcuts });
     handleClose();
   };
 
-  const handleKeydown = (event: KeyboardEvent) => {
+  const handleRemappingKeydown = (event: KeyboardEvent) => {
     if (!$isRemapping || remapStep >= actionsToRemap.length) return;
 
     event.preventDefault();
@@ -72,51 +65,77 @@
     }
   };
 
+  const handleKeydown = (event: KeyboardEvent) => {
+    if (!$isRemapping) return;
+    if (event.key === "Escape") handleClose();
+  };
+
   onMount(() => {
-    window.addEventListener("keydown", handleKeydown, true);
+    window.addEventListener("keydown", handleRemappingKeydown, true);
   });
 
   onDestroy(() => {
-    window.removeEventListener("keydown", handleKeydown, true);
+    window.removeEventListener("keydown", handleRemappingKeydown, true);
   });
 </script>
 
-<dialog bind:this={dialog} on:close={handleClose}>
-  {#if tempShortcuts}
-    <div class="menu-content">
-      <h1>{$t["hotkeys.remap.title"]}</h1>
-      {#if remapStep < actionsToRemap.length}
-        <p>
-          {$t["hotkeys.remap.press_key_for"]} "{$t[`hotkeys.${actionsToRemap[remapStep]}`]}"
-        </p>
-        {#if errorMessage}
-          <p class="error">{errorMessage}</p>
+<svelte:window on:keydown={handleKeydown} />
+
+{#if $isRemapping}
+  <!-- svelte-ignore a11y-no-static-element-interactions, a11y-click-events-have-key-events -->
+  <div class="backdrop" on:click={handleClose} transition:blur={{ duration: 100 }}></div>
+  <div
+    use:focusTrap
+    class="menu-dialog"
+    role="dialog"
+    aria-modal="true"
+    transition:blur={{ duration: 100 }}
+  >
+    {#if tempShortcuts}
+      <div class="menu-content">
+        <h1>{$t["hotkeys.remap.title"]}</h1>
+        {#if remapStep < actionsToRemap.length}
+          <p>
+            {$t["hotkeys.remap.press_key_for"]} "{$t[`hotkeys.${actionsToRemap[remapStep]}`]}"
+          </p>
+          {#if errorMessage}
+            <p class="error">{errorMessage}</p>
+          {/if}
+          <div class="hotkey-key remap-indicator">
+            {tempShortcuts[actionsToRemap[remapStep]].label.toLocaleUpperCase()}
+          </div>
+        {:else}
+          <p>{$t["hotkeys.remap.finished"]}</p>
+          <button on:click={handleSaveRemap} class="remap-button">{$t["general.save"]}</button>
         {/if}
-        <div class="hotkey-key remap-indicator">
-          {tempShortcuts[actionsToRemap[remapStep]].label.toLocaleUpperCase()}
-        </div>
-      {:else}
-        <p>{$t["hotkeys.remap.finished"]}</p>
-        <button on:click={handleSaveRemap} class="remap-button">{$t["general.save"]}</button>
-      {/if}
-      <button on:click={handleCancelRemap} class="close-button">{$t["general.cancel"]}</button>
-    </div>
-  {/if}
-</dialog>
+        <button on:click={handleCancelRemap} class="close-button">{$t["general.cancel"]}</button>
+      </div>
+    {/if}
+  </div>
+{/if}
 
 <style>
-  dialog {
+  .backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-dialog-backdrop);
+    z-index: 150;
+  }
+  .menu-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 200;
     background-color: var(--color-background);
     border: 1px solid var(--color-accent);
     border-radius: 8px;
     padding: 1.5rem;
     box-shadow: 0 4px 12px var(--color-shadow);
   }
-
-  dialog::backdrop {
-    background: var(--color-dialog-backdrop);
-  }
-
   .menu-content {
     display: flex;
     flex-direction: column;

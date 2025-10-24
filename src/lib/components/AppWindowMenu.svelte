@@ -2,20 +2,19 @@
   import { isAppWindowMenuVisible, appConfig } from "$lib/store";
   import { t } from "$lib/i18n";
   import { invoke } from "@tauri-apps/api/core";
+  import { tick } from "svelte";
+  import { blur } from "svelte/transition";
+  import { focusTrap } from "$lib/actions/focusTrap";
 
-  let dialog: HTMLDialogElement;
   let defaultButton: HTMLButtonElement;
   let rememberButton: HTMLButtonElement;
 
-  isAppWindowMenuVisible.subscribe((visible) => {
-    if (visible) {
-      dialog?.showModal();
+  $: if ($isAppWindowMenuVisible) {
+    tick().then(() => {
       const targetButton = $appConfig.rememberWindowSize ? rememberButton : defaultButton;
       targetButton?.focus();
-    } else {
-      dialog?.close();
-    }
-  });
+    });
+  }
 
   const saveRememberWindowSize = async (remember: boolean) => {
     try {
@@ -30,40 +29,67 @@
     handleClose();
   };
 
-  const handleClose = () => {
-    isAppWindowMenuVisible.set(false);
+  const handleClose = () => isAppWindowMenuVisible.set(false);
+
+  const handleKeydown = (event: KeyboardEvent) => {
+    if (!$isAppWindowMenuVisible) return;
+
+    if (event.key === "Escape") handleClose();
   };
 </script>
 
-<dialog bind:this={dialog} on:close={handleClose}>
-  <div class="menu-content">
-    <h1>{$t["app_window.title"]}</h1>
+<svelte:window on:keydown={handleKeydown} />
 
-    <button bind:this={defaultButton} on:click={() => handleButtonClick(false)}>
-      {$t["app_window.option.default"]}
-    </button>
+{#if $isAppWindowMenuVisible}
+  <!-- svelte-ignore a11y-no-static-element-interactions, a11y-click-events-have-key-events -->
+  <div class="backdrop" on:click={handleClose} transition:blur={{ duration: 100 }}></div>
+  <div
+    use:focusTrap
+    class="menu-dialog"
+    role="dialog"
+    aria-modal="true"
+    transition:blur={{ duration: 100 }}
+  >
+    <div class="menu-content">
+      <h1>{$t["app_window.title"]}</h1>
 
-    <button bind:this={rememberButton} on:click={() => handleButtonClick(true)}>
-      {$t["app_window.option.remember"]}
-    </button>
+      <button bind:this={defaultButton} on:click={() => handleButtonClick(false)}>
+        {$t["app_window.option.default"]}
+      </button>
 
-    <button on:click={handleClose} class="close-button">
-      {$t["general.close"]}
-    </button>
+      <button bind:this={rememberButton} on:click={() => handleButtonClick(true)}>
+        {$t["app_window.option.remember"]}
+      </button>
+
+      <button on:click={handleClose} class="close-button">
+        {$t["general.close"]}
+      </button>
+    </div>
   </div>
-</dialog>
+{/if}
 
 <style>
-  dialog {
+  .backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-dialog-backdrop);
+    z-index: 30;
+  }
+
+  .menu-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
     background-color: var(--color-background);
     border: 1px solid var(--color-accent);
     border-radius: 8px;
     padding: 1.5rem;
     box-shadow: 0 4px 12px var(--color-shadow);
-  }
-
-  dialog::backdrop {
-    background: var(--color-dialog-backdrop );
   }
 
   .menu-content {
