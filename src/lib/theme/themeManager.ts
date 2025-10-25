@@ -1,12 +1,12 @@
 // src/lib/themeManager.ts
-import themes from '$lib/themes.json';
-import { appConfig } from '$lib/store';
+import themes from "./themes.json";
+import { appConfig } from "$lib/stores/appState";
 
 const setColors = (theme: string) => {
   const themeColors = (themes as Record<string, Record<string, string>>)[theme];
   if (!themeColors) {
     console.warn(`Theme '${theme}' not found. Using default.`);
-    setColors('default');
+    setColors("default");
     return;
   }
   for (const [key, value] of Object.entries(themeColors)) {

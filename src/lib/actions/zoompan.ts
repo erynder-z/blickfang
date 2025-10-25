@@ -1,5 +1,5 @@
-import { triggerWheelZoom } from "$lib/commands";
-import { edgeIndicators, indicatorsVisible, appConfig } from "$lib/store";
+import { triggerWheelZoom } from "$lib/core/commands";
+import { edgeIndicators, indicatorsVisible, appConfig } from "$lib/stores/appState";
 import type { Writable } from "svelte/store";
 import { get } from "svelte/store";
 

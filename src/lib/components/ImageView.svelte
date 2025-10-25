@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { imageUrl, zoomLevel } from "$lib/store";
+  import { imageUrl, zoomLevel } from "$lib/stores/appState";
   import { zoomPan } from "$lib/actions/zoompan";
   import EdgeIndicators from "./EdgeIndicators.svelte";
-  import { t } from "$lib/i18n";
-  import { openFile } from "$lib/commands";
+  import { t } from "$lib/utils/i18n";
+  import { openFile } from "$lib/core/commands";
   import { fade } from "svelte/transition";
   import { onMount } from "svelte";
 

@@ -1,10 +1,10 @@
 import { writable } from 'svelte/store';
 
-const modules = import.meta.glob('../i18n/**/*.json', { eager: true });
+const modules = import.meta.glob('../../i18n/**/*.json', { eager: true });
 
 export const locales: Record<string, Record<string, string>> = {};
 for (const path in modules) {
-    const locale = path.match(/..\/i18n\/(.*?)\//)?.[1];
+    const locale = path.match(/..\/..\/i18n\/(.*?)\//)?.[1];
     if (locale) {
         locales[locale] = (modules[path] as any).default;
     }

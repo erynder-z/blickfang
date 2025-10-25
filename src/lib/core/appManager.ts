@@ -1,9 +1,8 @@
 import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/core";
-import { setLocale } from "$lib/i18n";
-import { appConfig, imageUrl, imagePath } from "$lib/store";
-import type { AppConfig } from "$lib/store";
-import { processImage } from "./imageProcessor";
+import { setLocale } from "$lib/utils/i18n";
+import { imageUrl, imagePath, appConfig, type AppConfig } from "$lib/stores/appState";
+import { processImage } from "../utils/imageProcessor";
 
 const handleImageSourceEvent = async (event: { payload: string[] }) => {
   const paths = event.payload;

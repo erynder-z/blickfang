@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { isThemeMenuVisible, appConfig } from "$lib/store";
-  import { t } from "$lib/i18n";
+  import { isThemeMenuVisible, appConfig } from "$lib/stores/appState";
+  import { t } from "$lib/utils/i18n";
   import { invoke } from "@tauri-apps/api/core";
-  import themes from "$lib/themes.json";
+  import themes from "$lib/theme/themes.json";
   import { tick } from "svelte";
   import { blur } from "svelte/transition";
   import { focusTrap } from "$lib/actions/focusTrap";

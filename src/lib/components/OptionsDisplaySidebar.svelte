@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { t } from "$lib/i18n";
+  import { t } from "$lib/utils/i18n";
   import {
     isLanguageMenuVisible,
     isOptionsSidebarVisible,
@@ -9,7 +9,7 @@
     isImageNameDisplayMenuVisible,
     isEdgeIndicatorMenuVisible,
     isAppWindowMenuVisible,
-  } from "$lib/store";
+  } from "$lib/stores/appState";
 
   const showLanguageSelectOverlay = () => {
     isLanguageMenuVisible.set(true);

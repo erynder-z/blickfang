@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { imageFormat, imageResolution, imageAspectRatio } from "$lib/store";
-  import { t } from "$lib/i18n";
+  import { imageFormat, imageResolution, imageAspectRatio } from "$lib/stores/appState";
+  import { t } from "$lib/utils/i18n";
 </script>
 
 <div class="info-container">

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { imagePath, appConfig } from "$lib/store";
+  import { imagePath, appConfig } from "$lib/stores/appState";
   import { quintOut } from "svelte/easing";
   import { fade } from "svelte/transition";
 

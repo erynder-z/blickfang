@@ -1,5 +1,5 @@
 import { get } from "svelte/store";
-import { appConfig, isRemapping } from "$lib/store";
+import { appConfig, isRemapping } from "$lib/stores/appState";
 import {
   openFile,
   previousImage,

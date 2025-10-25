@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { isImageNameDisplayMenuVisible, appConfig } from "$lib/store";
-  import { t } from "$lib/i18n";
+  import { isImageNameDisplayMenuVisible, appConfig } from "$lib/stores/appState";
+  import { t } from "$lib/utils/i18n";
   import { invoke } from "@tauri-apps/api/core";
   import { tick } from "svelte";
   import { blur } from "svelte/transition";

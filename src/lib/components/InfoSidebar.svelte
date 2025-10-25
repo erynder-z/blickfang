@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { isExifSidebarVisible } from "$lib/store";
+  import { isExifSidebarVisible } from "$lib/stores/appState";
   import ExifDisplay from "./ExifDisplay.svelte";
   import ImageDetails from "./ImageDetails.svelte";
 </script>

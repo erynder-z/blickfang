@@ -1,4 +1,4 @@
-import { imageFormat, imageResolution, imageAspectRatio, imageExif } from "$lib/store";
+import { imageFormat, imageResolution, imageAspectRatio, imageExif } from "$lib/stores/appState";
 
 const greatestCommonDivisor = (a: number, b: number): number => {
   return b === 0 ? a : greatestCommonDivisor(b, a % b);

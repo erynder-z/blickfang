@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { activeActions, appConfig } from "$lib/store";
+  import { activeActions, appConfig } from "$lib/stores/appState";
   import {
     nextImage,
     openFile,
@@ -9,7 +9,7 @@
     stopContinuousZoom,
     toggleExif,
     toggleOptions,
-  } from "$lib/commands";
+  } from "$lib/core/commands";
 
   const buttonSizes: Record<string, string> = {
     large: "1.75rem",

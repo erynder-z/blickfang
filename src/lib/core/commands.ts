@@ -2,14 +2,13 @@ import { get } from "svelte/store";
 import {
   imagePath,
   imageUrl,
-  imageExif,
   zoomLevel,
   isExifSidebarVisible,
   isOptionsSidebarVisible,
   activeActions,
-} from "$lib/store";
+} from "$lib/stores/appState";
 import { invoke } from "@tauri-apps/api/core";
-import { processImage } from "./imageProcessor";
+import { processImage } from "../utils/imageProcessor";
 
 // --- Feedback Management ---
 
@@ -32,9 +31,8 @@ const singleShotFeedback = (actionName: string) => {
 export const openFile = async () => {
   startFeedback("openFile");
   try {
-    const [newImageData, newImageExif, newImagePath, _] = await invoke<
-      [string, string, string, string[]]
-    >("open_and_read_file");
+    const [newImageData, newImageExif, newImagePath, _] =
+      await invoke<[string, string, string, string[]]>("open_and_read_file");
     if (newImageData) {
       imageUrl.set(newImageData);
       imagePath.set(newImagePath);
@@ -53,12 +51,13 @@ const changeImage = async (direction: "next" | "previous") => {
   if (!currentPath) return;
 
   try {
-    const [newImageData, newImagePath, newImageExif] = await invoke<
-      [string, string, string]
-    >("change_image", {
-      currentPath,
-      direction,
-    });
+    const [newImageData, newImagePath, newImageExif] = await invoke<[string, string, string]>(
+      "change_image",
+      {
+        currentPath,
+        direction,
+      }
+    );
     imageUrl.set(newImageData);
     imagePath.set(newImagePath);
     processImage(newImageData, newImagePath, newImageExif);

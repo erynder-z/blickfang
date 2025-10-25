@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { isLanguageMenuVisible } from "$lib/store";
-  import { locale, setLocale, t, locales } from "$lib/i18n";
+  import { isLanguageMenuVisible } from "$lib/stores/appState";
+  import { locale, setLocale, t, locales } from "$lib/utils/i18n";
   import { invoke } from "@tauri-apps/api/core";
   import { tick } from "svelte";
   import { blur } from "svelte/transition";
