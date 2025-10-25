@@ -9,7 +9,17 @@ type ZoomPanOptions = {
   onImageDrawn?: () => void;
 };
 
-export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
+/**
+ * Attaches a zoom and pan functionality to a given canvas element.
+ *
+ * @param {HTMLCanvasElement} canvas - The canvas element to attach the functionality to.
+ * @param {ZoomPanOptions} options - Options for the zoom and pan functionality.
+ * @param {Writable<number>} options.zoomLevelStore - The writable store for the current zoom level.
+ * @param {Writable<string | null>} options.imageUrlStore - The writable store for the current image URL.
+ * @param {() => void} [options.onImageDrawn] - Optional callback to be called when the image is finished drawing.
+ * @returns {Object | undefined}  Undefined if the canvas element is not found. Otherwise, returns an object with a single property, "destroy", which is a function that can be used to destroy the zoom and pan functionality.
+ */
+export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions): object | undefined => {
   const { zoomLevelStore, imageUrlStore, onImageDrawn } = options;
   const container = canvas.parentElement;
   if (!container) return;
@@ -35,7 +45,15 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
   let animationFrameId: number;
   let interactionTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
-  // --- Interaction Handling ---
+  /**
+   * Debounces the visibility of the edge indicators.
+   *
+   * If the edge indicators are enabled, this function will set the
+   * visibility of the indicators to true and then set it back to false
+   * after a timeout of 100ms.
+   *
+   * The function will only run if the edge indicators are enabled.
+   */
   const debounceIndicatorVisibility = () => {
     const timeoutInMs = 100;
     if (!get(appConfig).edgeIndicatorsVisible) return;
@@ -48,7 +66,17 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
     }, timeoutInMs);
   };
 
-  // --- Drawing & Transformations ---
+  /**
+   * Draws the current image on the canvas.
+   *
+   * This function is responsible for updating the canvas image when the user
+   * interacts with the image (e.g. zooms or pans the image).
+   *
+   * If the user is currently interacting with the image, the function will also
+   * trigger the edge indicators to be visible, if applicable.
+   *
+   * If the image is not fully loaded, the function will return early.
+   */
   const draw = () => {
     animationFrameId = requestAnimationFrame(draw);
     if (!ctx || !canvas) return;
@@ -70,6 +98,12 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
     updateEdgeIndicators();
   };
 
+  /**
+   * Updates the edge indicators with the current image offset and dimensions.
+   *
+   * If the image offset is negative or exceeds the canvas dimensions, the
+   * corresponding edge indicator will be set to true.
+   */
   const updateEdgeIndicators = () => {
     if (!image || !canvas) return;
 
@@ -85,6 +119,15 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
     }));
   };
 
+  /**
+   * Sets the initial transformation of the image on the canvas.
+   *
+   * The initial transformation is calculated based on the aspect ratio of the canvas and the image.
+   * The image is scaled to fit within the canvas while maintaining its aspect ratio.
+   * The offset of the image is then calculated based on the scaled image dimensions and the canvas dimensions.
+   * The zoom level is set to 1.
+   * The edge indicators are updated based on the new image offset and dimensions.
+   */
   const setInitialTransform = () => {
     if (!image || !image.complete || !canvas || canvas.width === 0) return;
 
@@ -104,6 +147,17 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
     updateEdgeIndicators();
   };
 
+  /**
+   * Animates the zoom level to the given target zoom level.
+   *
+   * The animation is done by smoothly changing the display scale of the image over a given duration.
+   * The offset of the image is also updated based on the new display scale and the canvas dimensions.
+   * The edge indicators are updated based on the new image offset and dimensions.
+   *
+   * If the function is called while an animation is already in progress, it will return immediately without doing anything.
+   *
+   * @param {number} targetZoomLevel - The target zoom level of the animation.
+   */
   const animateZoomTo = (targetZoomLevel: number) => {
     if (isAnimating) return;
     isAnimating = true;
@@ -142,7 +196,11 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
     requestAnimationFrame(frame);
   };
 
-  // --- Event Handlers ---
+  /**
+   * Handle mouse down event on the image.
+   * Start dragging the image when mouse is down.
+   * @param {MouseEvent} event - The mouse down event.
+   */
   const onMouseDown = (event: MouseEvent) => {
     if (!image) return;
     isAnimating = false;
@@ -151,6 +209,11 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
     startY = event.clientY - offsetY;
   };
 
+  /**
+   * Handles mouse move event on the image.
+   * Updates the offset of the image when the mouse is dragged.
+   * @param {MouseEvent} event - The mouse move event.
+   */
   const onMouseMove = (event: MouseEvent) => {
     if (isDragging) {
       offsetX = event.clientX - startX;
@@ -158,10 +221,21 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
     }
   };
 
+  /**
+   * Handles mouse up event on the image.
+   * Sets isDragging to false when the mouse is released.
+   */
   const onMouseUp = () => {
     isDragging = false;
   };
 
+  /**
+   * Handles wheel event on the image.
+   * When the wheel is scrolled, the image is zoomed in or out.
+   * The zoom level is updated based on the new display scale.
+   * The offset of the image is also updated based on the new display scale and the mouse position.
+   * @param {WheelEvent} event - The wheel event.
+   */
   const onWheel = (event: WheelEvent) => {
     if (!image) return;
     event.preventDefault();
@@ -257,6 +331,9 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions) => {
   });
 
   return {
+    /**
+     * Destroys the zoompan action and releases all resources.
+     */
     destroy() {
       canvas.style.willChange = "auto";
       container.removeEventListener("mousedown", onMouseDown);

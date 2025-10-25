@@ -10,6 +10,12 @@ import type { LoadEvent } from "@sveltejs/kit";
 
 export const ssr = false;
 
+/**
+ * This function is called by SvelteKit when the page is loaded.
+ * It will try to load the app config from the native app and set the locale
+ * accordingly. If the config cannot be loaded, it will log an error to the console.
+ * @param {LoadEvent} event - The event passed to this function by SvelteKit
+ */
 export async function load({ fetch }: LoadEvent) {
   if (browser) {
     try {
