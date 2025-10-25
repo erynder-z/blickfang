@@ -37,6 +37,7 @@ export const openFile = async () => {
       imageUrl.set(newImageData);
       imagePath.set(newImagePath);
       processImage(newImageData, newImagePath, newImageExif);
+      zoomLevel.set(1);
     }
   } catch (error) {
     console.error("Failed to open and read file:", error);
@@ -61,6 +62,7 @@ const changeImage = async (direction: "next" | "previous") => {
     imageUrl.set(newImageData);
     imagePath.set(newImagePath);
     processImage(newImageData, newImagePath, newImageExif);
+    zoomLevel.set(1);
   } catch (error) {
     console.error("Failed to change image:", error);
   }
