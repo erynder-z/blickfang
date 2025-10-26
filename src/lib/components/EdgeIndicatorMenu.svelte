@@ -58,11 +58,19 @@
     <div class="menu-content">
       <h1>{$t["options.button.edge_indicators"]}</h1>
 
-      <button bind:this={showButton} on:click={() => handleButtonClick(true)}>
+      <button
+        bind:this={showButton}
+        on:click={() => handleButtonClick(true)}
+        class:active={$appConfig.edgeIndicatorsVisible}
+      >
         {$t["general.show"]}
       </button>
 
-      <button bind:this={hideButton} on:click={() => handleButtonClick(false)}>
+      <button
+        bind:this={hideButton}
+        on:click={() => handleButtonClick(false)}
+        class:active={!$appConfig.edgeIndicatorsVisible}
+      >
         {$t["general.hide"]}
       </button>
 
@@ -119,7 +127,11 @@
   }
 
   button:focus {
-    outline: none;
+    outline: solid 0.15rem var(--color-accent);
+    outline-offset: 0.15rem;
+  }
+
+  button.active {
     background-color: var(--color-accent);
   }
 

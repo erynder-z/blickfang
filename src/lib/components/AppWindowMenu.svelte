@@ -59,11 +59,19 @@
     <div class="menu-content">
       <h1>{$t["app_window.title"]}</h1>
 
-      <button bind:this={defaultButton} on:click={() => handleButtonClick(false)}>
+      <button
+        bind:this={defaultButton}
+        on:click={() => handleButtonClick(false)}
+        class:active={!$appConfig.rememberWindowSize}
+      >
         {$t["app_window.option.default"]}
       </button>
 
-      <button bind:this={rememberButton} on:click={() => handleButtonClick(true)}>
+      <button
+        bind:this={rememberButton}
+        on:click={() => handleButtonClick(true)}
+        class:active={$appConfig.rememberWindowSize}
+      >
         {$t["app_window.option.remember"]}
       </button>
 
@@ -122,7 +130,11 @@
   }
 
   button:focus {
-    outline: none;
+    outline: solid 0.15rem var(--color-accent);
+    outline-offset: 0.15rem;
+  }
+
+  button.active {
     background-color: var(--color-accent);
   }
 

@@ -61,7 +61,11 @@
       <h1>{$t["options.theme.heading"]}</h1>
 
       {#each themeNames as theme, i}
-        <button bind:this={buttons[i]} on:click={() => handleButtonClick(theme)}>
+        <button
+          bind:this={buttons[i]}
+          on:click={() => handleButtonClick(theme)}
+          class:active={$appConfig.theme === theme}
+        >
           {theme}
         </button>
       {/each}
@@ -114,7 +118,11 @@
     font-weight: bold;
   }
   button:focus {
-    outline: none;
+    outline: solid 0.15rem var(--color-accent);
+    outline-offset: 0.15rem;
+  }
+
+  button.active {
     background-color: var(--color-accent);
   }
   .close-button {

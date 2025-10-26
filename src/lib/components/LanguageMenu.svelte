@@ -64,7 +64,11 @@
       <h1>{$t["options.language.heading"]}</h1>
 
       {#each languages as [lang, translations], i}
-        <button bind:this={buttons[i]} on:click={() => handleButtonClick(lang)}>
+        <button
+          bind:this={buttons[i]}
+          on:click={() => handleButtonClick(lang)}
+          class:active={$locale === lang}
+        >
           {translations["language.name"]}
         </button>
       {/each}
@@ -117,7 +121,11 @@
     font-weight: bold;
   }
   button:focus {
-    outline: none;
+    outline: solid 0.15rem var(--color-accent);
+    outline-offset: 0.15rem;
+  }
+
+  button.active {
     background-color: var(--color-accent);
   }
   .close-button {

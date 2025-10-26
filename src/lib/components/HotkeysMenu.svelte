@@ -67,10 +67,10 @@
       <h1>{$t["hotkeys.heading"]}</h1>
 
       <div class="toggle-buttons">
-        <button class:selected={isUsingDefault} on:click={handleSetDefault}>
+        <button class:active={isUsingDefault} on:click={handleSetDefault}>
           {$t["hotkeys.button.default_hotkeys"]}
         </button>
-        <button class:selected={!isUsingDefault} on:click={handleSetCustom}>
+        <button class:active={!isUsingDefault} on:click={handleSetCustom}>
           {$t["hotkeys.button.custom_hotkeys"]}
         </button>
       </div>
@@ -150,7 +150,7 @@
     border-right: 1px solid var(--color-accent);
   }
 
-  .toggle-buttons button.selected {
+  .toggle-buttons button.active {
     background-color: var(--color-accent);
   }
 

@@ -61,7 +61,11 @@
       <h1>{$t["options.button.heading"]}</h1>
 
       {#each buttonSizes as size, i}
-        <button bind:this={buttons[i]} on:click={() => handleButtonClick(size)}>
+        <button
+          bind:this={buttons[i]}
+          on:click={() => handleButtonClick(size)}
+          class:active={$appConfig.buttonSize === size}
+        >
           {$t[getLabel(size)]}
         </button>
       {/each}
@@ -117,7 +121,11 @@
   }
 
   button:focus {
-    outline: none;
+    outline: solid 0.15rem var(--color-accent);
+    outline-offset: 0.15rem;
+  }
+
+  button.active {
     background-color: var(--color-accent);
   }
 
