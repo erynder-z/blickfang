@@ -2,7 +2,7 @@
   import { t } from "$lib/utils/i18n";
   import {
     isLanguageMenuVisible,
-    isOptionsSidebarVisible,
+    isOptionsMenuVisible,
     isThemeMenuVisible,
     isHotkeysMenuVisible,
     isButtonMenuVisible,
@@ -40,7 +40,7 @@
   };
 </script>
 
-<div class="options-sidebar-overlay" class:visible={$isOptionsSidebarVisible}>
+<div class="options-sidebar-overlay" class:visible={$isOptionsMenuVisible}>
   <h1>{$t["options.title"]}</h1>
   <div class="options-container">
     <button class="hotkeys-button" on:click={showHotkeysOverlay}>
@@ -145,7 +145,7 @@
   }
 
   .options-sidebar-overlay.visible {
-    transform: translateX(0);
+    transform: translateY(0);
   }
 
   .options-container {

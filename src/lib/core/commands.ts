@@ -4,7 +4,7 @@ import {
   imageUrl,
   zoomLevel,
   isExifSidebarVisible,
-  isOptionsSidebarVisible,
+  isOptionsMenuVisible,
   activeActions,
 } from "$lib/stores/appState";
 import { invoke } from "@tauri-apps/api/core";
@@ -228,9 +228,9 @@ export const toggleExif = () => {
 
 /**
  * Toggles the visibility of the options sidebar.
- * Starts feedback for the "toggleOptions" action, and then updates the isOptionsSidebarVisible store.
+ * Starts feedback for the "toggleOptions" action, and then updates the isOptionsMenuVisible store.
  */
 export const toggleOptions = () => {
   singleShotFeedback("toggleOptions");
-  isOptionsSidebarVisible.update((isOpen) => !isOpen);
+  isOptionsMenuVisible.update((isOpen) => !isOpen);
 };

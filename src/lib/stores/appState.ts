@@ -41,7 +41,7 @@ export const edgeIndicators = writable({
 });
 export const indicatorsVisible = writable(false);
 export const isExifSidebarVisible = writable<boolean>(false);
-export const isOptionsSidebarVisible = writable<boolean>(false);
+export const isOptionsMenuVisible = writable<boolean>(false);
 export const isLanguageMenuVisible = writable<boolean>(false);
 export const isThemeMenuVisible = writable<boolean>(false);
 export const isHotkeysMenuVisible = writable<boolean>(false);
