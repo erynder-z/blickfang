@@ -4,7 +4,7 @@
   import { invoke } from "@tauri-apps/api/core";
   import themes from "$lib/theme/themes.json";
   import { tick } from "svelte";
-  import { blur } from "svelte/transition";
+  import { fly, fade } from "svelte/transition";
   import { focusTrap } from "$lib/actions/focusTrap";
 
   const themeNames = Object.keys(themes);
@@ -43,13 +43,19 @@
 
 {#if $isThemeMenuVisible}
   <!-- svelte-ignore a11y-no-static-element-interactions, a11y-click-events-have-key-events -->
-  <div class="backdrop" on:click={handleClose} transition:blur={{ duration: 100 }}></div>
+  <div
+    class="backdrop"
+    on:click={handleClose}
+    in:fade={{ duration: 100 }}
+    out:fade={{ duration: 100 }}
+  ></div>
   <div
     use:focusTrap
     class="menu-dialog"
     role="dialog"
     aria-modal="true"
-    transition:blur={{ duration: 100 }}
+    in:fly={{ y: 200, duration: 100 }}
+    out:fade={{ duration: 100 }}
   >
     <div class="menu-content">
       <h1>{$t["options.theme.heading"]}</h1>
@@ -100,13 +106,12 @@
   }
   button {
     padding: 0.5rem;
-    border: none;
+    border: solid 0.15rem var(--color-outline);
     border-radius: 0.5rem;
-    background-color: var(--color-button);
+    background-color: transparent;
     color: var(--color-text-primary);
     cursor: pointer;
     font-weight: bold;
-    text-transform: capitalize;
   }
   button:focus {
     outline: none;
@@ -114,5 +119,6 @@
   }
   .close-button {
     margin-top: 1rem;
+    background-color: var(--color-close-button);
   }
 </style>

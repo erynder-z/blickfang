@@ -53,34 +53,40 @@
     color: var(--color-text-primary);
   }
 
+  h1 {
+    text-align: center;
+    font-size: 1.5rem;
+  }
+
   .exif-grid {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 1rem;
   }
 
   .exif-item {
-    flex: 1 1 10rem;
+    flex: 1 1 auto;
     display: flex;
     flex-direction: column;
-    background-color: var(--color-accent);
+    background-color: transparent;
     padding: 0.75rem;
-    border-radius: 4px;
+    border-radius: 0.5rem;
+    border: solid 0.15rem var(--color-accent);
   }
 
   .exif-tag {
     font-weight: bold;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: var(--color-text-secondary);
     margin-bottom: 0.25rem;
     word-break: break-all;
+    text-align: end;
   }
 
   .exif-value {
     font-size: 1rem;
     color: var(--color-text-primary);
     word-break: break-all;
-    margin-top: 4rem;
   }
 
   .empty-exif {

@@ -35,6 +35,7 @@
 
   h1 {
     text-align: center;
+    font-size: 1.5rem;
   }
 
   .info-grid {
@@ -47,8 +48,9 @@
     flex: 1 1 10rem;
     display: flex;
     flex-direction: column;
-    background-color: var(--color-accent);
+    background-color: transparent;
     padding: 0.75rem;
+    border: solid 0.15rem var(--color-accent);
     border-radius: 4px;
   }
 
@@ -58,6 +60,7 @@
     color: var(--color-text-secondary);
     margin-bottom: 0.25rem;
     word-break: break-all;
+    text-align: end;
   }
 
   .info-value {

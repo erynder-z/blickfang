@@ -3,7 +3,7 @@
   import { t } from "$lib/utils/i18n";
   import { invoke } from "@tauri-apps/api/core";
   import { onMount, onDestroy } from "svelte";
-  import { blur } from "svelte/transition";
+  import { fly, fade } from "svelte/transition";
   import { focusTrap } from "$lib/actions/focusTrap";
 
   let remapStep = 0;
@@ -83,13 +83,19 @@
 
 {#if $isRemapping}
   <!-- svelte-ignore a11y-no-static-element-interactions, a11y-click-events-have-key-events -->
-  <div class="backdrop" on:click={handleClose} transition:blur={{ duration: 100 }}></div>
+  <div
+    class="backdrop"
+    on:click={handleClose}
+    in:fade={{ duration: 100 }}
+    out:fade={{ duration: 100 }}
+  ></div>
   <div
     use:focusTrap
     class="menu-dialog"
     role="dialog"
     aria-modal="true"
-    transition:blur={{ duration: 100 }}
+    in:fly={{ y: -200, duration: 100 }}
+    out:fade={{ duration: 100 }}
   >
     {#if tempShortcuts}
       <div class="menu-content">

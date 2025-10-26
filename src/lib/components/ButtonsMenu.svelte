@@ -108,13 +108,12 @@
 
   button {
     padding: 0.5rem;
-    border: none;
+    border: solid 0.15rem var(--color-outline);
     border-radius: 0.5rem;
-    background-color: var(--color-button);
+    background-color: transparent;
     color: var(--color-text-primary);
     cursor: pointer;
     font-weight: bold;
-    text-transform: capitalize;
   }
 
   button:focus {
@@ -124,5 +123,6 @@
 
   .close-button {
     margin-top: 1rem;
+    background-color: var(--color-close-button);
   }
 </style>

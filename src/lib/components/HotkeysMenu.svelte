@@ -9,7 +9,7 @@
   import { invoke } from "@tauri-apps/api/core";
   import RemapDialog from "./RemapDialog.svelte";
   import { onMount } from "svelte";
-  import { blur } from "svelte/transition";
+  import { fly, fade } from "svelte/transition";
   import { focusTrap } from "$lib/actions/focusTrap";
 
   let defaultShortcuts: Shortcuts | null = null;
@@ -49,13 +49,19 @@
 
 {#if $isHotkeysMenuVisible}
   <!-- svelte-ignore a11y-no-static-element-interactions, a11y-click-events-have-key-events -->
-  <div class="backdrop" on:click={handleClose} transition:blur={{ duration: 100 }}></div>
+  <div
+    class="backdrop"
+    on:click={handleClose}
+    in:fade={{ duration: 100 }}
+    out:fade={{ duration: 100 }}
+  ></div>
   <div
     use:focusTrap
     class="menu-dialog"
     role="dialog"
     aria-modal="true"
-    transition:blur={{ duration: 100 }}
+    in:fly={{ y: 200, duration: 100 }}
+    out:fade={{ duration: 100 }}
   >
     <div class="menu-content">
       <h1>{$t["hotkeys.heading"]}</h1>
@@ -170,13 +176,22 @@
     justify-self: end;
   }
 
-  .remap-button,
+  .remap-button {
+    padding: 0.5rem;
+    border: solid 0.15rem var(--color-outline);
+    border-radius: 0.5rem;
+    background-color: transparent;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    font-weight: bold;
+  }
+
   .close-button {
     margin-top: 1rem;
     padding: 0.5rem;
     border: none;
     border-radius: 0.5rem;
-    background-color: var(--color-button);
+    background-color: var(--color-close-button);
     color: var(--color-text-primary);
     cursor: pointer;
     font-weight: bold;
