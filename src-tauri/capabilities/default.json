@@ -20,6 +20,11 @@
     "permissions": ["core:event:allow-listen"]
   },
   {
+    "identifier": "core:window",
+    "windows": ["main"],
+    "permissions": ["core:window:allow-set-fullscreen"]
+  },
+  {
     "identifier": "fs:allow-appdata-read",
     "allow": [{ "path": "$APPDATA" }],
     "permissions": []

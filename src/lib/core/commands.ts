@@ -6,9 +6,11 @@ import {
   isExifSidebarVisible,
   isOptionsMenuVisible,
   activeActions,
+  isFullscreenActive,
 } from "$lib/stores/appState";
 import { invoke } from "@tauri-apps/api/core";
 import { processImage } from "../utils/imageProcessor";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 
 /**
  * Starts feedback for an action, marking it as active in the app state.
@@ -213,6 +215,22 @@ export const triggerWheelZoom = (direction: "in" | "out") => {
   stopFeedback(direction === "in" ? "zoomOut" : "zoomIn");
   startFeedback(direction === "in" ? "zoomIn" : "zoomOut");
   wheelZoomTimeout = setTimeout(stopWheelZoom, 150);
+};
+
+// --- Fullscreen Action ---
+
+/**
+ * Toggles the fullscreen mode of the application window.
+ * If the application window is not in fullscreen mode, it will be set to fullscreen mode, and vice versa.
+ * Starts feedback for the "toggleFullscreen" action, and then updates the isFullscreenActive store with the new state.
+ */
+export const toggleFullscreen = async () => {
+  singleShotFeedback("toggleFullscreen");
+
+  const fullscreen = !get(isFullscreenActive);
+  await getCurrentWindow().setFullscreen(fullscreen);
+
+  isFullscreenActive.set(fullscreen);
 };
 
 // --- UI Toggle Actions ---

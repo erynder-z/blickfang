@@ -41,6 +41,7 @@
   "hotkeys.nextImage": "Nächstes Bild",
   "hotkeys.zoomIn": "Vergrößern",
   "hotkeys.zoomOut": "Verkleinern",
+  "hotkeys.toggleFullscreen": "Vollbildmodus verwenden/beenden",
   "hotkeys.toggleExif": "EXIF-Infos zeigen/verbergen",
   "hotkeys.toggleOptions": "Optionen zeigen/verbergen",
   "hotkeys.remap.title": "Hotkeys neu zuweisen",

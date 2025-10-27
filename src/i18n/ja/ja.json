@@ -41,6 +41,7 @@
   "hotkeys.nextImage": "次の画像",
   "hotkeys.zoomIn": "ズームイン",
   "hotkeys.zoomOut": "ズームアウト",
+  "hotkeys.toggleFullscreen": "フルスクリーンモードを切り替え",
   "hotkeys.toggleExif": "EXIF情報の表示/陰る",
   "hotkeys.toggleOptions": "オプションの表示/陰る",
   "hotkeys.remap.title": "ショートカットキーの再割り当て",

@@ -6,6 +6,7 @@ import {
   nextImage,
   toggleExif,
   toggleOptions,
+  toggleFullscreen,
   startZoomIn,
   startZoomOut,
   stopContinuousZoom,
@@ -17,6 +18,7 @@ const singleShotActions: Record<string, () => void> = {
   nextImage,
   toggleExif,
   toggleOptions,
+  toggleFullscreen,
 };
 
 let activeContinuousKey: string | null = null;

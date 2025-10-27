@@ -17,6 +17,7 @@ pub struct Shortcuts {
     pub next_image: Shortcut,
     pub zoom_in: Shortcut,
     pub zoom_out: Shortcut,
+    pub toggle_fullscreen: Shortcut,
     pub toggle_exif: Shortcut,
     pub toggle_options: Shortcut,
 }
@@ -90,6 +91,10 @@ pub fn default_shortcuts() -> Shortcuts {
         zoom_out: Shortcut {
             keys: vec!["-".into(), "_".into(), "ArrowDown".into()],
             label: "- / ↓".into(),
+        },
+        toggle_fullscreen: Shortcut {
+            keys: vec!["f".into()],
+            label: "f".into(),
         },
         toggle_exif: Shortcut {
             keys: vec!["i".into()],
