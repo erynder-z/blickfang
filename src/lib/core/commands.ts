@@ -7,6 +7,13 @@ import {
   isOptionsMenuVisible,
   activeActions,
   isFullscreenActive,
+  isLanguageMenuVisible,
+  isThemeMenuVisible,
+  isHotkeysMenuVisible,
+  isButtonMenuVisible,
+  isImageNameDisplayMenuVisible,
+  isEdgeIndicatorMenuVisible,
+  isAppWindowMenuVisible,
 } from "$lib/stores/appState";
 import { invoke } from "@tauri-apps/api/core";
 import { processImage } from "../utils/imageProcessor";
@@ -228,6 +235,9 @@ export const toggleFullscreen = async () => {
   singleShotFeedback("toggleFullscreen");
 
   const fullscreen = !get(isFullscreenActive);
+
+  if (fullscreen) closeAllOpenMenus();
+
   await getCurrentWindow().setFullscreen(fullscreen);
 
   isFullscreenActive.set(fullscreen);
@@ -251,4 +261,23 @@ export const toggleExif = () => {
 export const toggleOptions = () => {
   singleShotFeedback("toggleOptions");
   isOptionsMenuVisible.update((isOpen) => !isOpen);
+};
+
+// --- Utility Functions ---
+
+/**
+ * Closes all open menus in the application.
+ * This function is used to reset the application state when certain actions are taken.
+ * For example, when the user toggles the fullscreen mode, all open menus will be closed.
+ */
+const closeAllOpenMenus = () => {
+  isExifSidebarVisible.set(false);
+  isOptionsMenuVisible.set(false);
+  isLanguageMenuVisible.set(false);
+  isThemeMenuVisible.set(false);
+  isHotkeysMenuVisible.set(false);
+  isButtonMenuVisible.set(false);
+  isImageNameDisplayMenuVisible.set(false);
+  isEdgeIndicatorMenuVisible.set(false);
+  isAppWindowMenuVisible.set(false);
 };
