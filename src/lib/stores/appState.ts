@@ -52,6 +52,7 @@ export const isAppWindowMenuVisible = writable<boolean>(false);
 export const isRemapping = writable<boolean>(false);
 export const activeActions = writable<string[]>([]);
 export const isFullscreenActive = writable<boolean>(false);
+export const isRefittingOnResize = writable(false);
 export const appConfig = writable<AppConfig>({
   language: "en",
   theme: "default",

@@ -1,5 +1,5 @@
 import { triggerWheelZoom } from "$lib/core/commands";
-import { edgeIndicators, indicatorsVisible, appConfig } from "$lib/stores/appState";
+import { edgeIndicators, indicatorsVisible, appConfig, isRefittingOnResize } from "$lib/stores/appState";
 import type { Writable } from "svelte/store";
 import { get } from "svelte/store";
 
@@ -278,17 +278,20 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions): obj
     const { width, height } = entry.contentRect;
 
     if (canvas.width !== width || canvas.height !== height) {
-      const prevCanvasWidth = canvas.width;
-      const prevCanvasHeight = canvas.height;
+      if (get(isRefittingOnResize)) {
+        canvas.width = width;
+        canvas.height = height;
+        setInitialTransform();
+      } else {
+        const centerX = (canvas.width / 2 - offsetX) / displayScale;
+        const centerY = (canvas.height / 2 - offsetY) / displayScale;
 
-      const centerX = (canvas.width / 2 - offsetX) / displayScale;
-      const centerY = (canvas.height / 2 - offsetY) / displayScale;
+        canvas.width = width;
+        canvas.height = height;
 
-      canvas.width = width;
-      canvas.height = height;
-
-      offsetX = canvas.width / 2 - centerX * displayScale;
-      offsetY = canvas.height / 2 - centerY * displayScale;
+        offsetX = canvas.width / 2 - centerX * displayScale;
+        offsetY = canvas.height / 2 - centerY * displayScale;
+      }
 
       updateEdgeIndicators();
       if (get(appConfig).edgeIndicatorsVisible) {

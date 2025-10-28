@@ -14,6 +14,7 @@ import {
   isImageNameDisplayMenuVisible,
   isEdgeIndicatorMenuVisible,
   isAppWindowMenuVisible,
+  isRefittingOnResize,
 } from "$lib/stores/appState";
 import { invoke } from "@tauri-apps/api/core";
 import { processImage } from "../utils/imageProcessor";
@@ -238,7 +239,11 @@ export const toggleFullscreen = async () => {
 
   if (fullscreen) closeAllOpenMenus();
 
+  isRefittingOnResize.set(true);
   await getCurrentWindow().setFullscreen(fullscreen);
+  setTimeout(() => {
+    isRefittingOnResize.set(false);
+  }, 100);
 
   isFullscreenActive.set(fullscreen);
 };
