@@ -109,11 +109,21 @@
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 100;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: clamp(40ch, 45ch, 90vw);
+    min-height: 25rem;
+    padding: 1.5rem;
+
     background-color: var(--color-background);
     border: 1px solid var(--color-accent);
     border-radius: 8px;
-    padding: 1.5rem;
     box-shadow: 0 4px 12px var(--color-shadow);
+
+    transition: height 0.2s ease;
   }
   .menu-content {
     display: flex;
@@ -121,11 +131,15 @@
     gap: 1.5rem;
     min-width: 300px;
     text-align: center;
+    width: 100%;
   }
 
   h1 {
+    color: var(--color-text-primary);
+    line-height: 1.2;
+    text-wrap: balance;
+    min-height: 2.5em;
     margin: 0;
-    color: #e3e3e3;
   }
 
   .toggle-buttons {
@@ -144,6 +158,11 @@
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.2s ease;
+    min-height: 2.5rem;
+    text-wrap: balance;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .toggle-buttons button:first-child {
@@ -176,7 +195,8 @@
     justify-self: end;
   }
 
-  .remap-button {
+  .remap-button,
+  .close-button {
     padding: 0.5rem;
     border: solid 0.15rem var(--color-outline);
     border-radius: 0.5rem;
@@ -184,16 +204,21 @@
     color: var(--color-text-primary);
     cursor: pointer;
     font-weight: bold;
+    min-height: 2.5rem;
+    text-wrap: balance;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .remap-button:focus,
+  .close-button:focus {
+    outline: solid 0.15rem var(--color-accent);
+    outline-offset: 0.15rem;
   }
 
   .close-button {
     margin-top: 1rem;
-    padding: 0.5rem;
-    border: none;
-    border-radius: 0.5rem;
     background-color: var(--color-close-button);
-    color: var(--color-text-primary);
-    cursor: pointer;
-    font-weight: bold;
   }
 </style>

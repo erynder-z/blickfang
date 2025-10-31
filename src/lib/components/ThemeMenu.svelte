@@ -26,10 +26,7 @@
     }
   };
 
-  const handleButtonClick = (theme: string) => {
-    saveTheme(theme);
-    handleClose();
-  };
+  const handleButtonClick = (theme: string) => saveTheme(theme);
 
   const handleClose = () => isThemeMenuVisible.set(false);
 
@@ -85,29 +82,50 @@
     background: var(--color-dialog-backdrop);
     z-index: 30;
   }
+
   .menu-dialog {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 100;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: clamp(30ch, 35ch, 90vw);
+    min-height: 25rem;
+    padding: 1.5rem;
+
     background-color: var(--color-background);
     border: 1px solid var(--color-accent);
     border-radius: 8px;
-    padding: 1.5rem;
     box-shadow: 0 4px 12px var(--color-shadow);
+
+    transition: height 0.2s ease;
   }
+
   .menu-content {
     display: flex;
     flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
     gap: 1rem;
-    min-width: 200px;
     text-align: center;
+    width: 100%;
+    max-width: 100%;
+    overflow-wrap: break-word;
   }
+
   h1 {
-    margin: 0 0 0.5rem 0;
-    color: #e3e3e3;
+    color: var(--color-text-primary);
+    line-height: 1.2;
+    text-wrap: balance;
+    min-height: 2.5em;
+    margin: 0;
   }
+
   button {
     padding: 0.5rem;
     border: solid 0.15rem var(--color-outline);
@@ -116,7 +134,14 @@
     color: var(--color-text-primary);
     cursor: pointer;
     font-weight: bold;
+
+    min-height: 2.5rem;
+    text-wrap: balance;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
+
   button:focus {
     outline: solid 0.15rem var(--color-accent);
     outline-offset: 0.15rem;
@@ -125,6 +150,7 @@
   button.active {
     background-color: var(--color-accent);
   }
+
   .close-button {
     margin-top: 1rem;
     background-color: var(--color-close-button);

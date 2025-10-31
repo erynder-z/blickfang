@@ -166,7 +166,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: fit-content;
     gap: 0.5rem;
     padding: 0.5rem 1.25rem;
     border: none;
