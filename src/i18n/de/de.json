@@ -1,6 +1,6 @@
 {
   "language.name": "Deutsch",
-  "app.title": "Simple Image Viewer",
+  "app.title": "Blickfang",
   "general.show": "Anzeigen",
   "general.hide": "Verbergen",
   "general.close": "Schließen",
@@ -18,7 +18,7 @@
   "options.button.image_name_display": "Dateinamenanzeige",
   "options.button.edge_indicators": "Kantenindikatoren",
   "options.button.app_window": "App-Fenster",
-  "options.language.heading": "Sprache auswhlen",
+  "options.language.heading": "Sprache auswählen",
   "options.theme.heading": "Thema auswählen",
   "options.button.heading": "Schaltflächengröße",
   "image_name_display.title": "Dateinamenanzeige",

@@ -1,6 +1,6 @@
 {
   "language.name": "日本語",
-  "app.title": "Simple Image Viewer",
+  "app.title": "Blickfang",
   "general.show": "表示",
   "general.hide": "隠す",
   "general.close": "閉じる",
@@ -9,7 +9,7 @@
   "general.large": "大",
   "general.medium": "中",
   "general.small": "小",
-  "image-view.placeholder": "表示する画像を選択してください",
+  "image-view.placeholder": "表示する画像を選択して下さい",
   "options.title": "オプション",
   "options.button.hotkeys": "ショートカットキー",
   "options.button.language": "言語",
@@ -18,7 +18,7 @@
   "options.button.image_name_display": "ファイル名表示",
   "options.button.edge_indicators": "エッジインジケーター",
   "options.button.app_window": "アプリウィンドウ",
-  "options.language.heading": "言語を選択してください",
+  "options.language.heading": "言語を選択して下さい",
   "options.theme.heading": "テーマを選択",
   "options.button.heading": "ボタンサイズ",
   "image_name_display.title": "ファイル名表示",
@@ -45,7 +45,7 @@
   "hotkeys.toggleExif": "EXIF情報の表示/陰る",
   "hotkeys.toggleOptions": "オプションの表示/陰る",
   "hotkeys.remap.title": "ショートカットキーの再割り当て",
-  "hotkeys.remap.press_key_for": "のキーを押してください",
+  "hotkeys.remap.press_key_for": "のキーを押して下さい",
   "hotkeys.remap.finished": "すべてのキーが再割り当てされました。",
   "hotkeys.remap.error.key_in_use": "キー '{key}' は既に使用されています。"
 }
