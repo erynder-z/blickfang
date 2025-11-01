@@ -37,7 +37,8 @@
   div {
     position: absolute;
     bottom: 0;
-    width: 100%;
+    left: 50%;
+    transform: translateX(-50%);
     text-align: center;
     background-color: transparent;
     color: white;
@@ -51,5 +52,9 @@
     color: white;
     padding: 0.5rem 0.75rem;
     border-radius: 4rem;
+    max-width: 66vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 </style>
