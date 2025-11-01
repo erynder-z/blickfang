@@ -1,11 +1,13 @@
 <script lang="ts">
   import ImageView from "../lib/components/ImageView.svelte";
-  import Controls from "../lib/components/Controls.svelte";
+  import Controls from "$lib/components/Controls.svelte";
+  import OptionsButton from "$lib/components/OptionsButton.svelte";
   import ImageNameDisplay from "$lib/components/ImageNameDisplay.svelte";
 </script>
 
 <main>
   <ImageView />
+  <OptionsButton />
   <Controls />
   <ImageNameDisplay />
 </main>

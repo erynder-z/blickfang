@@ -10,7 +10,7 @@
     isEdgeIndicatorMenuVisible,
     isAppWindowMenuVisible,
   } from "$lib/stores/appState";
-
+  import { toggleOptions } from "$lib/core/commands";
   const showLanguageSelectOverlay = () => {
     isLanguageMenuVisible.set(true);
   };
@@ -128,6 +128,19 @@
         /></svg
       >{$t["options.button.app_window"]}</button
     >
+    <button class="close-options-button" on:click={toggleOptions}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="1.25rem"
+        viewBox="0 -960 960 960"
+        width="1.25rem"
+        fill="var(--color-close-options-icon)"
+        ><path
+          d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+        /></svg
+      >
+      {$t["general.close"]}
+    </button>
   </div>
 </div>
 
@@ -232,5 +245,13 @@
 
   .app-window-button:hover {
     background-color: rgb(from var(--color-app-window-icon) r g b / 0.5);
+  }
+
+  .close-options-button {
+    background-color: var(--color-close-options-icon-background);
+  }
+
+  .close-options-button:hover {
+    background-color: rgb(from var(--color-close-options-icon) r g b / 0.5);
   }
 </style>

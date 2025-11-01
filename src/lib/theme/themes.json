@@ -19,13 +19,15 @@
     "image-name-display-icon": "#42bd75",
     "edge-indicators-icon": "#fffd00",
     "app-window-icon": "#e69d19",
+    "close-options-icon": "#e64342",
     "hotkeys-icon-background": "#2b0716",
     "language-icon-background": "#050105",
     "theme-icon-background": "#0d2517",
     "buttons-icon-background": "#0c1d26",
     "image-name-display-icon-background": "#091c11",
     "edge-indicators-icon-background": "#323200",
-    "app-window-icon-background": "#2d1f04"
+    "app-window-icon-background": "#2d1f04",
+    "close-options-icon-background": "#710618"
   },
   "catppuccin-frappe": {
     "background": "#303446",
@@ -47,13 +49,15 @@
     "image-name-display-icon": "#42bd75",
     "edge-indicators-icon": "#fffd00",
     "app-window-icon": "#e69d19",
+    "close-options-icon": "#e64342",
     "hotkeys-icon-background": "#2b0716",
     "language-icon-background": "#050105",
     "theme-icon-background": "#0d2517",
     "buttons-icon-background": "#0c1d26",
     "image-name-display-icon-background": "#091c11",
     "edge-indicators-icon-background": "#323200",
-    "app-window-icon-background": "#2d1f04"
+    "app-window-icon-background": "#2d1f04",
+    "close-options-icon-background": "#710618"
   },
   "catppuccin-macchiato": {
     "background": "#24273a",
@@ -75,13 +79,15 @@
     "image-name-display-icon": "#42bd75",
     "edge-indicators-icon": "#fffd00",
     "app-window-icon": "#e69d19",
+    "close-options-icon": "#e64342",
     "hotkeys-icon-background": "#2b0716",
     "language-icon-background": "#050105",
     "theme-icon-background": "#0d2517",
     "buttons-icon-background": "#0c1d26",
     "image-name-display-icon-background": "#091c11",
     "edge-indicators-icon-background": "#323200",
-    "app-window-icon-background": "#2d1f04"
+    "app-window-icon-background": "#2d1f04",
+    "close-options-icon-background": "#710618"
   },
   "catppuccin-mocha": {
     "background": "#1e1e2e",
@@ -103,12 +109,14 @@
     "image-name-display-icon": "#42bd75",
     "edge-indicators-icon": "#fffd00",
     "app-window-icon": "#e69d19",
+    "close-options-icon": "#e64342",
     "hotkeys-icon-background": "#2b0716",
     "language-icon-background": "#050105",
     "theme-icon-background": "#0d2517",
     "buttons-icon-background": "#0c1d26",
     "image-name-display-icon-background": "#091c11",
     "edge-indicators-icon-background": "#323200",
-    "app-window-icon-background": "#2d1f04"
+    "app-window-icon-background": "#2d1f04",
+    "close-options-icon-background": "#710618"
   }
 }
