@@ -20,7 +20,7 @@ export interface AppConfig {
   theme: string;
   shortcuts: Shortcuts;
   customShortcuts: Shortcuts;
-  buttonSize: "large" | "small" | "hide";
+  toolbarButtonSize: "large" | "small" | "hide";
   imageNameDisplayMode: "show" | "hide" | "fade";
   edgeIndicatorsVisible: boolean;
   rememberWindowSize: boolean;
@@ -45,7 +45,7 @@ export const isOptionsMenuVisible = writable<boolean>(false);
 export const isLanguageMenuVisible = writable<boolean>(false);
 export const isThemeMenuVisible = writable<boolean>(false);
 export const isHotkeysMenuVisible = writable<boolean>(false);
-export const isButtonMenuVisible = writable<boolean>(false);
+export const isToolbarMenuVisible = writable<boolean>(false);
 export const isImageNameDisplayMenuVisible = writable<boolean>(false);
 export const isEdgeIndicatorMenuVisible = writable<boolean>(false);
 export const isAppWindowMenuVisible = writable<boolean>(false);
@@ -56,7 +56,7 @@ export const isRefittingOnResize = writable(false);
 export const appConfig = writable<AppConfig>({
   language: "en",
   theme: "default",
-  buttonSize: "large",
+  toolbarButtonSize: "large",
   imageNameDisplayMode: "fade",
   edgeIndicatorsVisible: false,
   rememberWindowSize: false,

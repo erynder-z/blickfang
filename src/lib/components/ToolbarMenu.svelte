@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { isButtonMenuVisible, appConfig } from "$lib/stores/appState";
+  import { isToolbarMenuVisible, appConfig } from "$lib/stores/appState";
   import { t } from "$lib/utils/i18n";
   import { invoke } from "@tauri-apps/api/core";
   import { tick } from "svelte";
@@ -10,24 +10,24 @@
 
   let buttons: HTMLButtonElement[] = [];
 
-  $: if ($isButtonMenuVisible) {
+  $: if ($isToolbarMenuVisible) {
     tick().then(() => {
-      const currentIndex = buttonSizes.indexOf($appConfig.buttonSize);
+      const currentIndex = buttonSizes.indexOf($appConfig.toolbarButtonSize);
       if (currentIndex !== -1) buttons[currentIndex]?.focus();
     });
   }
 
-  const saveButtonSize = async (size: string) => {
+  const saveToolbarButtonSize = async (size: string) => {
     try {
-      await invoke("update_button_size_command", { buttonSize: size });
+      await invoke("update_toolbar_button_size_command", { toolbarButtonSize: size });
     } catch (error) {
       console.error("Failed to save button size:", error);
     }
   };
 
-  const handleButtonClick = (size: string) => saveButtonSize(size);
+  const handleButtonClick = (size: string) => saveToolbarButtonSize(size);
 
-  const handleClose = () => isButtonMenuVisible.set(false);
+  const handleClose = () => isToolbarMenuVisible.set(false);
 
   const getLabel = (size: string) => {
     if (size === "large" || size === "small") {
@@ -37,14 +37,14 @@
   };
 
   const handleKeydown = (event: KeyboardEvent) => {
-    if (!$isButtonMenuVisible) return;
+    if (!$isToolbarMenuVisible) return;
     if (event.key === "Escape") handleClose();
   };
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
 
-{#if $isButtonMenuVisible}
+{#if $isToolbarMenuVisible}
   <!-- svelte-ignore a11y-no-static-element-interactions, a11y-click-events-have-key-events -->
   <div
     class="backdrop"
@@ -61,13 +61,13 @@
     out:fade={{ duration: 100 }}
   >
     <div class="menu-content">
-      <h1>{$t["options.button.heading"]}</h1>
+      <h1>{$t["options.toolbar.heading"]}</h1>
 
       {#each buttonSizes as size, i}
         <button
           bind:this={buttons[i]}
           on:click={() => handleButtonClick(size)}
-          class:active={$appConfig.buttonSize === size}
+          class:active={$appConfig.toolbarButtonSize === size}
         >
           {$t[getLabel(size)]}
         </button>

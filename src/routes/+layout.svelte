@@ -10,7 +10,7 @@
   import { handleKeyDown, handleKeyUp } from "$lib/core/keyboardInputManager";
   import HotkeysMenu from "$lib/components/HotkeysMenu.svelte";
   import { initializeApp } from "$lib/core/appManager";
-  import ButtonsMenu from "$lib/components/ButtonsMenu.svelte";
+  import ToolbarMenu from "$lib/components/ToolbarMenu.svelte";
   import ImageNameDisplayMenu from "$lib/components/ImageNameDisplayMenu.svelte";
   import EdgeIndicatorMenu from "$lib/components/EdgeIndicatorMenu.svelte";
   import AppWindowMenu from "$lib/components/AppWindowMenu.svelte";
@@ -30,7 +30,7 @@
 <HotkeysMenu />
 <LanguageMenu />
 <ThemeMenu />
-<ButtonsMenu />
+<ToolbarMenu />
 <ImageNameDisplayMenu />
 <EdgeIndicatorMenu />
 <AppWindowMenu />

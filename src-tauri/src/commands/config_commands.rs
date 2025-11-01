@@ -43,8 +43,13 @@ pub fn update_theme_command(app: AppHandle, theme: String) -> Result<(), String>
 }
 
 #[tauri::command]
-pub fn update_button_size_command(app: AppHandle, button_size: String) -> Result<(), String> {
-    update_config(&app, |config| config.button_size = button_size)
+pub fn update_toolbar_button_size_command(
+    app: AppHandle,
+    toolbar_button_size: String,
+) -> Result<(), String> {
+    update_config(&app, |config| {
+        config.toolbar_button_size = toolbar_button_size
+    })
 }
 
 #[tauri::command]

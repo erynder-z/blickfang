@@ -31,8 +31,8 @@ pub struct Config {
     pub theme: String,
     #[serde(default = "default_shortcuts")]
     pub shortcuts: Shortcuts,
-    #[serde(default = "default_button_size")]
-    pub button_size: String,
+    #[serde(default = "default_toolbar_button_size")]
+    pub toolbar_button_size: String,
     #[serde(default = "default_shortcuts")]
     pub custom_shortcuts: Shortcuts,
     #[serde(default = "default_image_name_display_mode")]
@@ -57,7 +57,7 @@ fn default_language() -> String {
 fn default_theme() -> String {
     "default".into()
 }
-fn default_button_size() -> String {
+fn default_toolbar_button_size() -> String {
     "large".into()
 }
 fn default_image_name_display_mode() -> String {
@@ -112,7 +112,7 @@ impl Default for Config {
         Self {
             language: default_language(),
             theme: default_theme(),
-            button_size: default_button_size(),
+            toolbar_button_size: default_toolbar_button_size(),
             image_name_display_mode: default_image_name_display_mode(),
             shortcuts: default_shortcuts(),
             custom_shortcuts: default_shortcuts(),

@@ -16,12 +16,13 @@
     small: "1rem",
   };
 
-  $: size = buttonSizes[$appConfig.buttonSize];
+  $: size = buttonSizes[$appConfig.toolbarButtonSize];
 </script>
 
-<div class="controls-container" style:display={$appConfig.buttonSize === "hide" ? "none" : "flex"}>
-
-
+<div
+  class="controls-container"
+  style:display={$appConfig.toolbarButtonSize === "hide" ? "none" : "flex"}
+>
   <!-- Open File -->
   <button
     on:click={openFile}

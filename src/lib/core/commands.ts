@@ -10,7 +10,7 @@ import {
   isLanguageMenuVisible,
   isThemeMenuVisible,
   isHotkeysMenuVisible,
-  isButtonMenuVisible,
+  isToolbarMenuVisible,
   isImageNameDisplayMenuVisible,
   isEdgeIndicatorMenuVisible,
   isAppWindowMenuVisible,
@@ -281,7 +281,7 @@ const closeAllOpenMenus = () => {
   isLanguageMenuVisible.set(false);
   isThemeMenuVisible.set(false);
   isHotkeysMenuVisible.set(false);
-  isButtonMenuVisible.set(false);
+  isToolbarMenuVisible.set(false);
   isImageNameDisplayMenuVisible.set(false);
   isEdgeIndicatorMenuVisible.set(false);
   isAppWindowMenuVisible.set(false);
