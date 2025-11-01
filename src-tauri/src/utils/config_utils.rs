@@ -132,7 +132,7 @@ fn get_config_path(app: &AppHandle) -> Result<PathBuf, String> {
         .app_data_dir()
         .map_err(|e| format!("Failed to get app data directory: {}", e))?;
 
-    config_path.push("simple-image-viewer");
+    config_path.push("blickfang");
     fs::create_dir_all(&config_path)
         .map_err(|e| format!("Failed to create config directory: {}", e))?;
     config_path.push("config.json");
