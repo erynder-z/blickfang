@@ -18,6 +18,7 @@
   "options.button.image_name_display": "ファイル名表示",
   "options.button.edge_indicators": "エッジインジケーター",
   "options.button.app_window": "アプリウィンドウ",
+  "options.button.close.menu": "メニューを閉じる",
   "options.language.heading": "言語を選択して下さい",
   "options.theme.heading": "テーマを選択",
   "options.toolbar.heading": "ボタンサイズ",

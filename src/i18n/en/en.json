@@ -18,6 +18,7 @@
   "options.button.image_name_display": "Image Name Display",
   "options.button.edge_indicators": "Edge Indicators",
   "options.button.app_window": "App Window",
+  "options.button.close.menu": "Close Menu",
   "options.language.heading": "Select Language",
   "options.theme.heading": "Select Theme",
   "options.toolbar.heading": "Toolbar Button Size",
