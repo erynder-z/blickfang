@@ -109,20 +109,16 @@
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 100;
-
     display: flex;
     flex-direction: column;
     align-items: center;
-
     width: clamp(40ch, 45ch, 90vw);
     min-height: 25rem;
     padding: 1.5rem;
-
     background-color: var(--color-background);
     border: 1px solid var(--color-accent);
     border-radius: 8px;
     box-shadow: 0 4px 12px var(--color-shadow);
-
     transition: height 0.2s ease;
   }
   .menu-content {

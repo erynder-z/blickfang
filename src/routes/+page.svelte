@@ -13,6 +13,11 @@
 </main>
 
 <style>
+  @font-face {
+    font-family: SUSE Mono;
+    src: url(../assets/SUSEMono-VariableFont_wght.ttf) format("truetype");
+  }
+
   main {
     height: 100%;
     position: relative;
@@ -25,9 +30,10 @@
   }
 
   :global(:root) {
-    font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-    font-size: 16px;
-    line-height: 24px;
+    font-family: "SUSE Mono", monospace;
+    font-optical-sizing: auto;
+    font-size: 1rem;
+    line-height: 1rem;
     font-weight: 400;
     color: #747474;
     background-color: #241f2e;
