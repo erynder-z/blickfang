@@ -62,7 +62,17 @@ pub async fn read_image_file(path: String) -> Result<(String, String), String> {
         .map_err(|e| format!("Failed to read file '{}': {}", path_buf.display(), e))?;
 
     let (data_url, exif_data) = tokio::task::spawn_blocking(move || {
-        let mime_type = mime_guess::from_path(&path_buf).first_or_octet_stream();
+        let format = image::guess_format(&bytes).ok();
+
+        let mime_type: String = format
+            .map(|f| f.to_mime_type().to_string())
+            .unwrap_or_else(|| {
+                mime_guess::from_path(&path_buf)
+                    .first_or_octet_stream()
+                    .essence_str()
+                    .to_string()
+            });
+
         let base64_str = general_purpose::STANDARD.encode(&bytes);
         let data_url = format!("data:{};base64,{}", mime_type, base64_str);
         let exif_data = extract_exif_json(&bytes);
