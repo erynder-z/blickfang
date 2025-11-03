@@ -2,16 +2,14 @@ import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/core";
 import { setLocale } from "$lib/utils/i18n";
 import { imageUrl, imagePath, appConfig, type AppConfig } from "$lib/stores/appState";
-import { processImage } from "../utils/imageProcessor";
+import { type ImageMetadata, updateImageStores } from "./commands";
 
 /**
- * Handles an event from the image source event listener.
- * The event payload should contain an array of strings representing the paths to the images.
- * If the array is not empty, the first path will be used to read the image from the file system,
- * and the image data will be set to the image url and image path stores.
- * The image will then be processed and its exif data will be set to the image exif store.
- * If there is an error reading the image from the file system, an error will be logged to the console.
- * @param {string[]} event.payload - An array of strings representing the paths to the images.
+ * Handles the "image-source" event.
+ * This event is triggered when the image source event listener is triggered,
+ * and the event payload should contain an array of strings representing the paths to the images.
+ * The function reads the first image from the paths and updates the image stores.
+ * @param {Object} event - The event object containing the paths to the images.
  * @returns {Promise<void>}
  */
 const handleImageSourceEvent = async (event: { payload: string[] }): Promise<void> => {
@@ -20,16 +18,12 @@ const handleImageSourceEvent = async (event: { payload: string[] }): Promise<voi
     const path = paths[0];
 
     try {
-      const result = await invoke("read_image_from_path", { path });
-      const [dataUrl, exifData, newPathStr, _directoryFiles] = result as [
-        string,
-        string,
-        string,
-        string[],
-      ];
-      imageUrl.set(dataUrl);
+      const [metadata, newPathStr, _directoryFiles] = await invoke<
+        [ImageMetadata, string, string[]]
+      >("read_image_from_path", { path });
+      imageUrl.set(metadata.image_data);
       imagePath.set(newPathStr);
-      processImage(dataUrl, newPathStr, exifData);
+      updateImageStores(metadata);
     } catch (error) {
       console.error("Failed to read image from path:", error);
     }

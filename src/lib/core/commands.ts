@@ -15,10 +15,41 @@ import {
   isEdgeIndicatorMenuVisible,
   isAppWindowMenuVisible,
   isRefittingOnResize,
+  imageFormat,
+  imageResolution,
+  imageAspectRatio,
+  imageExif,
 } from "$lib/stores/appState";
 import { invoke } from "@tauri-apps/api/core";
-import { processImage } from "../utils/imageProcessor";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+
+export interface ImageMetadata {
+  image_data: string;
+  exif_data: string;
+  width: number;
+  height: number;
+  aspect_ratio: string;
+  format: string;
+}
+
+/**
+ * Updates the image stores with the new metadata.
+ * If the image has a valid width and height, it will also update the image resolution and aspect ratio.
+ * If the image does not have a valid width and height, it will reset the image resolution and aspect ratio to null.
+ * @param {ImageMetadata} metadata - the new image metadata to update the stores with
+ */
+export const updateImageStores = (metadata: ImageMetadata) => {
+  imageExif.set(metadata.exif_data);
+  imageFormat.set(metadata.format);
+
+  if (metadata.width > 0 && metadata.height > 0) {
+    imageResolution.set({ width: metadata.width, height: metadata.height });
+    imageAspectRatio.set(metadata.aspect_ratio);
+  } else {
+    imageResolution.set(null);
+    imageAspectRatio.set(null);
+  }
+};
 
 /**
  * Starts feedback for an action, marking it as active in the app state.
@@ -54,22 +85,21 @@ const singleShotFeedback = (actionName: string) => {
 // --- Actions ---
 
 /**
- * Opens a file dialog to select an image file, reads the file and sets the image data,
- * path, and EXIF data in the app state.
- * The zoom level is also reset to 1.
- * If the file cannot be opened or read, an error is logged to the console.
- * A loading indicator is shown while the file is being opened and read.
+ * Opens a file dialog to select an image file, and then reads the selected file.
+ * Updates the image stores with the new image data, and resets the zoom level to 1.
+ * Starts and stops feedback for the "openFile" action during the operation.
  * @returns {Promise<void>}
  */
 export const openFile = async (): Promise<void> => {
   startFeedback("openFile");
   try {
-    const [newImageData, newImageExif, newImagePath, _] =
-      await invoke<[string, string, string, string[]]>("open_and_read_file");
-    if (newImageData) {
-      imageUrl.set(newImageData);
-      imagePath.set(newImagePath);
-      processImage(newImageData, newImagePath, newImageExif);
+    const result = await invoke<[ImageMetadata, string, string[]] | null>("open_and_read_file");
+
+    if (result) {
+      const [metadata, path, _] = result;
+      imageUrl.set(metadata.image_data);
+      imagePath.set(path);
+      updateImageStores(metadata);
       zoomLevel.set(1);
     }
   } catch (error) {
@@ -80,12 +110,11 @@ export const openFile = async (): Promise<void> => {
 };
 
 /**
- * Changes the image to the previous or next one in the directory.
- * Reads the new image file and sets the image data, path, and EXIF data in the app state.
- * The zoom level is also reset to 1.
- * If the file cannot be opened or read, an error is logged to the console.
- * A loading indicator is shown while the file is being opened and read.
- * @param {string} direction - the direction to change the image, either "next" or "previous"
+ * Changes the current image to the next or previous image in the directory.
+ * The function reads the new image file and updates the image stores with the new image data.
+ * The zoom level is reset to 1.
+ * If the function is called while there is no current image, it will return immediately without doing anything.
+ * @param {string} direction - the direction of the image change, either "next" or "previous"
  * @returns {Promise<void>}
  */
 const changeImage = async (direction: "next" | "previous"): Promise<void> => {
@@ -93,16 +122,13 @@ const changeImage = async (direction: "next" | "previous"): Promise<void> => {
   if (!currentPath) return;
 
   try {
-    const [newImageData, newImagePath, newImageExif] = await invoke<[string, string, string]>(
-      "change_image",
-      {
-        currentPath,
-        direction,
-      }
-    );
-    imageUrl.set(newImageData);
-    imagePath.set(newImagePath);
-    processImage(newImageData, newImagePath, newImageExif);
+    const [metadata, newPath] = await invoke<[ImageMetadata, string]>("change_image", {
+      currentPath,
+      direction,
+    });
+    imageUrl.set(metadata.image_data);
+    imagePath.set(newPath);
+    updateImageStores(metadata);
     zoomLevel.set(1);
   } catch (error) {
     console.error("Failed to change image:", error);

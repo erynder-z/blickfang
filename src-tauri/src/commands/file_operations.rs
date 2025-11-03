@@ -1,11 +1,31 @@
 use base64::{engine::general_purpose, Engine as _};
 use exif::Reader;
 use mime_guess;
+use serde::Serialize;
+use std::io::Cursor;
 use std::path::PathBuf;
 use tauri_plugin_dialog::DialogExt;
 use tokio::sync::oneshot;
 
 use crate::utils::file_system::get_directory_files;
+
+#[derive(Serialize, Clone)]
+pub struct ImageMetadata {
+    pub image_data: String,
+    pub exif_data: String,
+    pub width: u32,
+    pub height: u32,
+    pub aspect_ratio: String,
+    pub format: String,
+}
+
+fn gcd(a: u32, b: u32) -> u32 {
+    if b == 0 {
+        a
+    } else {
+        gcd(b, a % b)
+    }
+}
 
 fn filter_dot_files(paths: Vec<String>) -> Vec<String> {
     paths
@@ -23,7 +43,7 @@ fn filter_dot_files(paths: Vec<String>) -> Vec<String> {
 #[tauri::command]
 pub async fn open_and_read_file(
     window: tauri::Window,
-) -> Result<(String, String, String, Vec<String>), String> {
+) -> Result<Option<(ImageMetadata, String, Vec<String>)>, String> {
     let (tx, rx) = oneshot::channel();
 
     window
@@ -44,66 +64,95 @@ pub async fn open_and_read_file(
 
     if let Some(path_buf) = file_path_option {
         let path_str = path_buf.to_string_lossy().to_string();
-        let (image_data, exif_data) = read_image_file(path_str.clone())
+        let metadata = read_image_file(path_str.clone())
             .await
             .map_err(|e| format!("Failed to read image file '{}': {}", path_str, e))?;
         let mut directory_files = get_directory_files(&path_str).await?;
         directory_files = filter_dot_files(directory_files);
 
-        Ok((image_data, exif_data, path_str, directory_files))
+        Ok(Some((metadata, path_str, directory_files)))
     } else {
-        Ok((String::new(), String::new(), String::new(), Vec::new()))
+        Ok(None)
     }
 }
 
 #[tauri::command]
 pub async fn read_image_from_path(
     path: String,
-) -> Result<(String, String, String, Vec<String>), String> {
-    let (image_data, exif_data) = read_image_file(path.clone())
+) -> Result<(ImageMetadata, String, Vec<String>), String> {
+    let metadata = read_image_file(path.clone())
         .await
         .map_err(|e| format!("Failed to read image file '{}': {}", path, e))?;
     let mut directory_files = get_directory_files(&path).await?;
     directory_files = filter_dot_files(directory_files);
 
-    Ok((image_data, exif_data, path, directory_files))
+    Ok((metadata, path, directory_files))
 }
 
-pub async fn read_image_file(path: String) -> Result<(String, String), String> {
+pub async fn read_image_file(path: String) -> Result<ImageMetadata, String> {
     let path_buf = PathBuf::from(&path);
 
     let bytes = tokio::fs::read(&path_buf)
         .await
         .map_err(|e| format!("Failed to read file '{}': {}", path_buf.display(), e))?;
 
-    let (data_url, exif_data) = tokio::task::spawn_blocking(move || {
-        let format = image::guess_format(&bytes).ok();
+    let metadata = tokio::task::spawn_blocking(move || {
+        let image_format_guess = image::guess_format(&bytes);
 
-        let mime_type: String = format
-            .map(|f| f.to_mime_type().to_string())
-            .unwrap_or_else(|| {
-                mime_guess::from_path(&path_buf)
-                    .first_or_octet_stream()
-                    .essence_str()
-                    .to_string()
-            });
+        let mime_type = match image_format_guess {
+            Ok(format) => format.to_mime_type().to_string(),
+            Err(_) => mime_guess::from_path(&path_buf)
+                .first_or_octet_stream()
+                .essence_str()
+                .to_string(),
+        };
+
+        let format = match image_format_guess {
+            Ok(f) => format!("{:?}", f).to_uppercase(),
+            Err(_) => path_buf
+                .extension()
+                .and_then(|s| s.to_str())
+                .unwrap_or("")
+                .to_uppercase(),
+        };
+
+        let (width, height) = (|| -> Result<(u32, u32), image::ImageError> {
+            let reader = image::ImageReader::new(Cursor::new(&bytes)).with_guessed_format()?;
+            reader.into_dimensions()
+        })()
+        .unwrap_or((0, 0));
+
+        let aspect_ratio = if width > 0 && height > 0 {
+            let divisor = gcd(width, height);
+            format!("{}:{}", width / divisor, height / divisor)
+        } else {
+            String::new()
+        };
 
         let base64_str = general_purpose::STANDARD.encode(&bytes);
         let data_url = format!("data:{};base64,{}", mime_type, base64_str);
         let exif_data = extract_exif_json(&bytes);
-        (data_url, exif_data)
+
+        ImageMetadata {
+            image_data: data_url,
+            exif_data,
+            width,
+            height,
+            aspect_ratio,
+            format,
+        }
     })
     .await
     .map_err(|e| format!("Failed to spawn blocking task for image processing: {}", e))?;
 
-    Ok((data_url, exif_data))
+    Ok(metadata)
 }
 
 #[tauri::command]
 pub async fn change_image(
     current_path: String,
     direction: String,
-) -> Result<(String, String, String), String> {
+) -> Result<(ImageMetadata, String), String> {
     let mut files = get_directory_files(&current_path).await?;
     files = filter_dot_files(files);
 
@@ -123,9 +172,9 @@ pub async fn change_image(
     };
 
     let next_image_path = files[next_index].clone();
-    let (image_data, exif_data) = read_image_file(next_image_path.clone()).await?;
+    let metadata = read_image_file(next_image_path.clone()).await?;
 
-    Ok((image_data, next_image_path, exif_data))
+    Ok((metadata, next_image_path))
 }
 
 fn extract_exif_json(bytes: &[u8]) -> String {
