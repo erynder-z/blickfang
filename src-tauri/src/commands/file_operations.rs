@@ -7,6 +7,19 @@ use tokio::sync::oneshot;
 
 use crate::utils::file_system::get_directory_files;
 
+fn filter_dot_files(paths: Vec<String>) -> Vec<String> {
+    paths
+        .into_iter()
+        .filter(|p| {
+            PathBuf::from(p)
+                .file_name()
+                .and_then(|name| name.to_str())
+                .map(|name| !name.starts_with('.'))
+                .unwrap_or(true)
+        })
+        .collect()
+}
+
 #[tauri::command]
 pub async fn open_and_read_file(
     window: tauri::Window,
@@ -34,7 +47,8 @@ pub async fn open_and_read_file(
         let (image_data, exif_data) = read_image_file(path_str.clone())
             .await
             .map_err(|e| format!("Failed to read image file '{}': {}", path_str, e))?;
-        let directory_files = get_directory_files(&path_str).await?;
+        let mut directory_files = get_directory_files(&path_str).await?;
+        directory_files = filter_dot_files(directory_files);
 
         Ok((image_data, exif_data, path_str, directory_files))
     } else {
@@ -49,7 +63,8 @@ pub async fn read_image_from_path(
     let (image_data, exif_data) = read_image_file(path.clone())
         .await
         .map_err(|e| format!("Failed to read image file '{}': {}", path, e))?;
-    let directory_files = get_directory_files(&path).await?;
+    let mut directory_files = get_directory_files(&path).await?;
+    directory_files = filter_dot_files(directory_files);
 
     Ok((image_data, exif_data, path, directory_files))
 }
@@ -89,7 +104,8 @@ pub async fn change_image(
     current_path: String,
     direction: String,
 ) -> Result<(String, String, String), String> {
-    let files = get_directory_files(&current_path).await?;
+    let mut files = get_directory_files(&current_path).await?;
+    files = filter_dot_files(files);
 
     if files.len() <= 1 {
         return Err("No other images in directory".to_string());
