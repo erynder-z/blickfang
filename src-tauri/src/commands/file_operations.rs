@@ -49,7 +49,13 @@ pub async fn open_and_read_file(
     window
         .dialog()
         .file()
-        .add_filter("Image files", &["png", "jpg", "jpeg", "webp"])
+        .add_filter(
+            "Image files",
+            &[
+                "png", "jpg", "jpeg", "webp", "bmp", "dds", "gif", "hdr", "ico", "tga", "tif",
+                "tiff",
+            ],
+        )
         .pick_file(move |file_path_result| {
             let path_to_send = file_path_result.and_then(|fp| match fp {
                 tauri_plugin_dialog::FilePath::Path(p) => Some(p),
