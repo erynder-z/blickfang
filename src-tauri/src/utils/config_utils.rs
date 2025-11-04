@@ -20,6 +20,8 @@ pub struct Shortcuts {
     pub toggle_fullscreen: Shortcut,
     pub toggle_exif: Shortcut,
     pub toggle_options: Shortcut,
+    pub zoom_modifier_up: Shortcut,
+    pub zoom_modifier_down: Shortcut,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -103,6 +105,14 @@ pub fn default_shortcuts() -> Shortcuts {
         toggle_options: Shortcut {
             keys: vec!["m".into()],
             label: "m".into(),
+        },
+        zoom_modifier_up: Shortcut {
+            keys: vec!["Control".into()],
+            label: "Control".into(),
+        },
+        zoom_modifier_down: Shortcut {
+            keys: vec!["Alt".into()],
+            label: "Alt / Command".into(),
         },
     }
 }

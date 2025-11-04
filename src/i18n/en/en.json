@@ -45,6 +45,8 @@
   "hotkeys.toggleFullscreen": "Toggle fullscreen mode",
   "hotkeys.toggleExif": "Toggle EXIF info",
   "hotkeys.toggleOptions": "Toggle options",
+  "hotkeys.zoomModifierUp": "Increase zoom modifier (hold)",
+  "hotkeys.zoomModifierDown": "Decrease zoom modifier (hold)",
   "hotkeys.remap.title": "Remap Hotkeys",
   "hotkeys.remap.press_key_for": "Press a key for",
   "hotkeys.remap.finished": "All keys have been remapped.",

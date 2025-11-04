@@ -45,6 +45,8 @@
   "hotkeys.toggleFullscreen": "Vollbildmodus verwenden/beenden",
   "hotkeys.toggleExif": "EXIF-Infos zeigen/verbergen",
   "hotkeys.toggleOptions": "Optionen zeigen/verbergen",
+  "hotkeys.zoomModifierUp": "Zoomgeschwindigkeit erhöhen (Taste halten)",
+  "hotkeys.zoomModifierDown": "Zoomgeschwindigkeit verringern (Taste halten)",
   "hotkeys.remap.title": "Hotkeys neu zuweisen",
   "hotkeys.remap.press_key_for": "Taste drücken für",
   "hotkeys.remap.finished": "Alle Tasten wurden neu zugewiesen.",

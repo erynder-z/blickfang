@@ -1,5 +1,12 @@
 import { triggerWheelZoom } from "$lib/core/commands";
-import { edgeIndicators, indicatorsVisible, appConfig, isRefittingOnResize } from "$lib/stores/appState";
+import {
+  edgeIndicators,
+  indicatorsVisible,
+  appConfig,
+  isRefittingOnResize,
+  isZoomModifierUpActive,
+  isZoomModifierDownActive,
+} from "$lib/stores/appState";
 import type { Writable } from "svelte/store";
 import { get } from "svelte/store";
 
@@ -230,12 +237,22 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions): obj
   };
 
   /**
-   * Handles wheel event on the image.
-   * When the wheel is scrolled, the image is zoomed in or out.
-   * The zoom level is updated based on the new display scale.
-   * The offset of the image is also updated based on the new display scale and the mouse position.
-   * @param {WheelEvent} event - The wheel event.
+   * Gets the speed of the wheel zoom based on the current zoom modifier state.
+   * If the zoom modifier up is active, returns 0.003.
+   * If the zoom modifier down is active, returns 0.0002.
+   * Otherwise returns 0.001.
+   * @returns {number} The speed of the wheel zoom.
    */
+  const getWheelZoomSpeed = (): number => {
+    if (get(isZoomModifierUpActive)) {
+      return 0.003;
+    }
+    if (get(isZoomModifierDownActive)) {
+      return 0.0002;
+    }
+    return 0.001;
+  };
+
   const onWheel = (event: WheelEvent) => {
     if (!image) return;
     event.preventDefault();
@@ -250,7 +267,7 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions): obj
     const worldX = (mouseX - offsetX) / displayScale;
     const worldY = (mouseY - offsetY) / displayScale;
 
-    const zoomSpeed = 0.001;
+    const zoomSpeed = getWheelZoomSpeed();
     const zoomAmount = event.deltaY * zoomSpeed;
     const newDisplayScale = Math.max(
       0.1 * baseScale,

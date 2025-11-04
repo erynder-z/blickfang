@@ -13,6 +13,8 @@ export interface Shortcuts {
   zoomOut: Shortcut;
   toggleExif: Shortcut;
   toggleOptions: Shortcut;
+  zoomModifierUp: Shortcut;
+  zoomModifierDown: Shortcut;
 }
 
 export interface AppConfig {
@@ -52,7 +54,9 @@ export const isAppWindowMenuVisible = writable<boolean>(false);
 export const isRemapping = writable<boolean>(false);
 export const activeActions = writable<string[]>([]);
 export const isFullscreenActive = writable<boolean>(false);
-export const isRefittingOnResize = writable(false);
+export const isRefittingOnResize = writable<boolean>(false);
+export const isZoomModifierUpActive = writable<boolean>(false);
+export const isZoomModifierDownActive = writable<boolean>(false);
 export const appConfig = writable<AppConfig>({
   language: "en",
   theme: "default",
@@ -68,6 +72,8 @@ export const appConfig = writable<AppConfig>({
     zoomOut: { keys: [], label: "" },
     toggleExif: { keys: [], label: "" },
     toggleOptions: { keys: [], label: "" },
+    zoomModifierUp: { keys: [], label: "" },
+    zoomModifierDown: { keys: [], label: "" },
   },
   customShortcuts: {
     openFile: { keys: [], label: "" },
@@ -77,5 +83,7 @@ export const appConfig = writable<AppConfig>({
     zoomOut: { keys: [], label: "" },
     toggleExif: { keys: [], label: "" },
     toggleOptions: { keys: [], label: "" },
+    zoomModifierUp: { keys: [], label: "" },
+    zoomModifierDown: { keys: [], label: "" },
   },
 });

@@ -19,6 +19,8 @@ import {
   imageResolution,
   imageAspectRatio,
   imageExif,
+  isZoomModifierUpActive,
+  isZoomModifierDownActive,
 } from "$lib/stores/appState";
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -153,28 +155,6 @@ export const nextImage = () => {
 
 // --- Zoom Actions ---
 
-/**
- * Handles all associated actions for zooming in the image.
- * Zooms in the image by increasing the zoom level by 0.25.
- */
-export const zoomIn = () => {
-  singleShotFeedback("zoomIn");
-  zoomLevel.update((level) => level + 0.25);
-};
-
-/**
- * Handles all associated actions for zooming out of the image.
- * Zooms out of the image by decreasing the zoom level by 0.25.
- */
-export const zoomOut = () => {
-  singleShotFeedback("zoomOut");
-  zoomLevel.update((level) => {
-    const newLevel = level - 0.25;
-    return newLevel < 0.1 ? 0.1 : newLevel;
-  });
-};
-
-// For continuous zoom (holding button/key)
 let zoomInterval: ReturnType<typeof setInterval> | null = null;
 
 /**
@@ -191,6 +171,23 @@ export const stopContinuousZoom = () => {
 };
 
 /**
+ * Returns the step size for continuous zooming based on the current state of the zoom modifier keys.
+ * If the zoom modifier up key is active, the step size is 0.3.
+ * If the zoom modifier down key is active, the step size is 0.02.
+ * Otherwise, the step size is 0.1.
+ * @returns {number} - the step size for continuous zooming
+ */
+const getZoomStep = (): number => {
+  if (get(isZoomModifierUpActive)) {
+    return 0.3;
+  }
+  if (get(isZoomModifierDownActive)) {
+    return 0.02;
+  }
+  return 0.1;
+};
+
+/**
  * Starts continuous zooming in of the image.
  * Zooms in the image by increasing the zoom level by 0.1 every 50ms.
  * Stops any existing continuous zooming and starts feedback for the "zoomIn" action.
@@ -198,9 +195,10 @@ export const stopContinuousZoom = () => {
 export const startZoomIn = () => {
   stopContinuousZoom();
   startFeedback("zoomIn");
-  zoomLevel.update((level) => level + 0.1);
+  const step = getZoomStep();
+  zoomLevel.update((level) => level + step);
   zoomInterval = setInterval(() => {
-    zoomLevel.update((level) => level + 0.1);
+    zoomLevel.update((level) => level + step);
   }, 50);
 };
 
@@ -212,13 +210,17 @@ export const startZoomIn = () => {
 export const startZoomOut = () => {
   stopContinuousZoom();
   startFeedback("zoomOut");
+
+  const step = getZoomStep();
+
   zoomLevel.update((level) => {
-    const newLevel = level - 0.1;
+    const newLevel = level - step;
     return newLevel < 0.1 ? 0.1 : newLevel;
   });
+
   zoomInterval = setInterval(() => {
     zoomLevel.update((level) => {
-      const newLevel = level - 0.1;
+      const newLevel = level - step;
       return newLevel < 0.1 ? 0.1 : newLevel;
     });
   }, 50);

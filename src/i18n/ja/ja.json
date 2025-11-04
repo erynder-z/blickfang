@@ -45,6 +45,8 @@
   "hotkeys.toggleFullscreen": "フルスクリーンモードを切り替え",
   "hotkeys.toggleExif": "EXIF情報の表示/陰る",
   "hotkeys.toggleOptions": "オプションの表示/陰る",
+  "hotkeys.zoomModifierUp": "ズームスピードを増やす (押しぱなし)",
+  "hotkeys.zoomModifierDown": "ズームスピードを減らす (押しぱなし)",
   "hotkeys.remap.title": "ショートカットキーの再割り当て",
   "hotkeys.remap.press_key_for": "のキーを押して下さい",
   "hotkeys.remap.finished": "すべてのキーが再割り当てされました。",
