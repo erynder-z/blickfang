@@ -78,39 +78,40 @@
 {/if}
 
 <style>
+  .backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-dialog-backdrop);
+    z-index: 30;
+  }
   .menu-dialog {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 100;
-
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    width: clamp(30ch, 35ch, 90vw);
+    width: clamp(40ch, 45ch, 90vw);
     min-height: 25rem;
     padding: 1.5rem;
-
     background-color: var(--color-background);
     border: 1px solid var(--color-accent);
     border-radius: 8px;
     box-shadow: 0 4px 12px var(--color-shadow);
-
     transition: height 0.2s ease;
   }
-
   .menu-content {
     display: flex;
     flex-direction: column;
-    align-items: stretch;
-    justify-content: center;
-    gap: 1rem;
+    gap: 1.5rem;
+    min-width: 300px;
     text-align: center;
     width: 100%;
-    max-width: 100%;
-    overflow-wrap: break-word;
   }
 
   h1 {
