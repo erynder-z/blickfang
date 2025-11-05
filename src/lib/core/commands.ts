@@ -14,6 +14,7 @@ import {
   isImageNameDisplayMenuVisible,
   isEdgeIndicatorMenuVisible,
   isAppWindowMenuVisible,
+  isSaveAsMenuVisible,
   isRefittingOnResize,
   imageFormat,
   imageResolution,
@@ -151,6 +152,28 @@ export const previousImage = () => {
 export const nextImage = () => {
   singleShotFeedback("nextImage");
   changeImage("next");
+};
+
+/**
+ * Saves the current image to a new file with a different format.
+ * @param {string} format - The new format to save the image as (e.g., "png", "jpg").
+ * @returns {Promise<void>}
+ */
+export const saveImageAs = async (format: string): Promise<void> => {
+  const currentPath = get(imagePath);
+  if (!currentPath) return;
+
+  startFeedback("saveImageAs");
+  try {
+    const result = await invoke<string | null>("save_image_as", {
+      path: currentPath,
+      format,
+    });
+  } catch (error) {
+    console.error("Failed to save image:", error);
+  } finally {
+    stopFeedback("saveImageAs");
+  }
 };
 
 // --- Zoom Actions ---
@@ -294,6 +317,14 @@ export const toggleExif = () => {
 export const toggleOptions = () => {
   singleShotFeedback("toggleOptions");
   isOptionsMenuVisible.update((isOpen) => !isOpen);
+};
+
+/**
+ * Toggles the visibility of the "Save As" menu.
+ */
+export const toggleSaveAsMenu = () => {
+  singleShotFeedback("saveImageAs");
+  isSaveAsMenuVisible.update((isOpen) => !isOpen);
 };
 
 // --- Utility Functions ---

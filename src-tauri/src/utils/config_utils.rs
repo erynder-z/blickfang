@@ -13,6 +13,7 @@ pub struct Shortcut {
 #[serde(rename_all = "camelCase")]
 pub struct Shortcuts {
     pub open_file: Shortcut,
+    pub save_image_as: Shortcut,
     pub previous_image: Shortcut,
     pub next_image: Shortcut,
     pub zoom_in: Shortcut,
@@ -77,6 +78,10 @@ pub fn default_shortcuts() -> Shortcuts {
         open_file: Shortcut {
             keys: vec!["o".into()],
             label: "o".into(),
+        },
+        save_image_as: Shortcut {
+            keys: vec!["c".into()],
+            label: "c".into(),
         },
         previous_image: Shortcut {
             keys: vec!["ArrowLeft".into()],

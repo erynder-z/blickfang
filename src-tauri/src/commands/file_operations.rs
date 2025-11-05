@@ -155,6 +155,81 @@ pub async fn read_image_file(path: String) -> Result<ImageMetadata, String> {
 }
 
 #[tauri::command]
+pub async fn save_image_as(
+    window: tauri::Window,
+    path: String,
+    format: String,
+) -> Result<Option<String>, String> {
+    let (tx, rx) = oneshot::channel();
+
+    let file_stem = PathBuf::from(&path)
+        .file_stem()
+        .and_then(|s| s.to_str())
+        .unwrap_or("image")
+        .to_string();
+
+    let new_extension = format.to_lowercase();
+    let suggested_filename = format!("{}.{}", file_stem, new_extension);
+
+    window
+        .dialog()
+        .file()
+        .set_file_name(&suggested_filename)
+        .add_filter(
+            &format!("{} files", format.to_uppercase()),
+            &[&new_extension],
+        )
+        .save_file(move |file_path_result| {
+            let path_to_send = file_path_result.and_then(|fp| match fp {
+                tauri_plugin_dialog::FilePath::Path(p) => Some(p),
+                _ => None,
+            });
+            let _ = tx.send(path_to_send);
+        });
+
+    let save_path_option = rx
+        .await
+        .map_err(|e| format!("Failed to receive save path from dialog: {}", e))?;
+
+    if let Some(save_path) = save_path_option {
+        let image_format = image::ImageFormat::from_extension(&new_extension)
+            .ok_or_else(|| format!("Invalid image format: {}", new_extension))?;
+
+        let bytes = tokio::fs::read(&path)
+            .await
+            .map_err(|e| format!("Failed to read original file '{}': {}", path, e))?;
+
+        tokio::task::spawn_blocking(move || {
+            let img = image::load_from_memory(&bytes)
+                .map_err(|e| format!("Failed to decode image: {}", e))?;
+
+            img.save_with_format(&save_path, image_format)
+                .map_err(|e| format!("Failed to save image: {}", e))?;
+
+            Ok(Some(save_path.to_string_lossy().to_string()))
+        })
+        .await
+        .map_err(|e| format!("Task spawn error: {}", e))?
+    } else {
+        Ok(None)
+    }
+}
+
+#[tauri::command]
+pub fn get_supported_image_formats() -> Result<Vec<String>, String> {
+    let mut formats = Vec::new();
+    #[cfg(feature = "png")]
+    formats.push("png".to_string());
+    #[cfg(feature = "jpeg")]
+    formats.push("jpeg".to_string());
+    #[cfg(feature = "webp")]
+    formats.push("webp".to_string());
+    #[cfg(feature = "tiff")]
+    formats.push("tiff".to_string());
+    Ok(formats)
+}
+
+#[tauri::command]
 pub async fn change_image(
     current_path: String,
     direction: String,

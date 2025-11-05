@@ -15,6 +15,7 @@ import {
   startZoomIn,
   startZoomOut,
   stopContinuousZoom,
+  toggleSaveAsMenu,
 } from "./commands";
 
 const singleShotActions: Record<string, () => void> = {
@@ -24,6 +25,7 @@ const singleShotActions: Record<string, () => void> = {
   toggleExif,
   toggleOptions,
   toggleFullscreen,
+  saveImageAs: toggleSaveAsMenu,
 };
 
 let activeContinuousKey: string | null = null;

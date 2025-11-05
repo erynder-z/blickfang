@@ -7,6 +7,7 @@ export interface Shortcut {
 
 export interface Shortcuts {
   openFile: Shortcut;
+  saveImageAs: Shortcut;
   previousImage: Shortcut;
   nextImage: Shortcut;
   zoomIn: Shortcut;
@@ -51,6 +52,7 @@ export const isToolbarMenuVisible = writable<boolean>(false);
 export const isImageNameDisplayMenuVisible = writable<boolean>(false);
 export const isEdgeIndicatorMenuVisible = writable<boolean>(false);
 export const isAppWindowMenuVisible = writable<boolean>(false);
+export const isSaveAsMenuVisible = writable<boolean>(false);
 export const isRemapping = writable<boolean>(false);
 export const activeActions = writable<string[]>([]);
 export const isFullscreenActive = writable<boolean>(false);
@@ -66,6 +68,7 @@ export const appConfig = writable<AppConfig>({
   rememberWindowSize: false,
   shortcuts: {
     openFile: { keys: [], label: "" },
+    saveImageAs: { keys: [], label: "" },
     previousImage: { keys: [], label: "" },
     nextImage: { keys: [], label: "" },
     zoomIn: { keys: [], label: "" },
@@ -77,6 +80,7 @@ export const appConfig = writable<AppConfig>({
   },
   customShortcuts: {
     openFile: { keys: [], label: "" },
+    saveImageAs: { keys: [], label: "" },
     previousImage: { keys: [], label: "" },
     nextImage: { keys: [], label: "" },
     zoomIn: { keys: [], label: "" },

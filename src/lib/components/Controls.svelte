@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { activeActions, appConfig } from "$lib/stores/appState";
+  import { activeActions, appConfig, isSaveAsMenuVisible } from "$lib/stores/appState";
   import {
     nextImage,
     openFile,
@@ -9,6 +9,7 @@
     stopContinuousZoom,
     toggleExif,
     toggleFullscreen,
+    saveImageAs,
   } from "$lib/core/commands";
 
   const buttonSizes: Record<string, string> = {
@@ -37,6 +38,24 @@
       fill="currentColor"
       ><path
         d="M240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v240h-80v-200H520v-200H240v640h360v80H240Zm638 15L760-183v89h-80v-226h226v80h-90l118 118-56 57Zm-638-95v-640 640Z"
+      /></svg
+    >
+  </button>
+
+  <!-- Save As -->
+  <button
+    on:click={() => isSaveAsMenuVisible.update((v) => !v)}
+    aria-label="Save As"
+    class:active={$activeActions.includes("saveImageAs")}
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="24px"
+      viewBox="0 -960 960 960"
+      width="24px"
+      fill="currentColor"
+      ><path
+        d="M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z"
       /></svg
     >
   </button>
