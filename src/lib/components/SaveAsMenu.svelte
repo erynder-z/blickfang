@@ -7,22 +7,34 @@
   import { invoke } from "@tauri-apps/api/core";
   import { onMount } from "svelte";
 
-  let formats: string[] = [];
+  let losslessFormats: string[] = [];
+  let lossyFormats: string[] = [];
+  let quality: number = 75;
 
   onMount(async () => {
     try {
-      formats = await invoke<string[]>("get_supported_image_formats");
+      const formats = await invoke<string[]>("get_supported_image_formats");
+      const lossy = ["jpeg", "webp"];
+      lossyFormats = formats.filter((f) => lossy.includes(f.toLowerCase()));
+      losslessFormats = formats.filter((f) => !lossy.includes(f.toLowerCase()));
     } catch (error) {
       console.error("Failed to get supported image formats:", error);
     }
   });
 
   const handleFormatClick = (format: string) => {
-    saveImageAs(format.toLowerCase());
+    const formatLower = format.toLowerCase();
+    if (lossyFormats.map((f) => f.toLowerCase()).includes(formatLower)) {
+      saveImageAs(formatLower, quality);
+    } else {
+      saveImageAs(formatLower, undefined);
+    }
     handleClose();
   };
 
-  const handleClose = () => isSaveAsMenuVisible.set(false);
+  const handleClose = () => {
+    isSaveAsMenuVisible.set(false);
+  };
 
   const handleKeydown = (event: KeyboardEvent) => {
     if (!$isSaveAsMenuVisible) return;
@@ -51,12 +63,43 @@
     <div class="menu-content">
       <h1>{$t["saveAs.heading"]}</h1>
 
-      <div class="formats-grid">
-        {#each formats as format}
-          <button on:click={() => handleFormatClick(format)}>
-            {format}
-          </button>
-        {/each}
+      <div class="format-group-lossless">
+        <h2 class="format-type-heading">Lossless</h2>
+        <div class="formats-grid">
+          {#each losslessFormats as format}
+            <button on:click={() => handleFormatClick(format)}>
+              {format}
+            </button>
+          {/each}
+        </div>
+      </div>
+
+      <div class="format-group-lossy">
+        <h2 class="format-type-heading">Lossy</h2>
+        <div class="formats-grid">
+          {#each lossyFormats as format}
+            <button on:click={() => handleFormatClick(format)}>
+              {format}
+            </button>
+          {/each}
+        </div>
+
+        <div class="quality-slider">
+          <label for="quality">{$t["saveAs.quality"]} ({quality}%)</label>
+          <div class="input-container">
+            <span>{$t["general.smaller_filesize"]}</span>
+            <input
+              class="slider"
+              type="range"
+              id="quality"
+              name="quality"
+              min="1"
+              max="100"
+              bind:value={quality}
+            />
+            <span>{$t["general.better_quality"]}</span>
+          </div>
+        </div>
       </div>
 
       <button on:click={handleClose} class="close-button">{$t["general.close"]}</button>
@@ -107,9 +150,30 @@
     margin: 0;
   }
 
+  .format-group-lossless {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .format-group-lossy {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .format-type-heading {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+    text-align: left;
+    padding-left: 0.25rem;
+  }
+
   .formats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
     gap: 1rem;
   }
 
@@ -124,8 +188,7 @@
     min-height: 2.5rem;
   }
 
-  button:focus,
-  button:hover {
+  button:focus {
     outline: solid 0.15rem var(--color-accent);
     outline-offset: 0.15rem;
     background-color: rgb(from var(--color-accent) r g b / 0.2);
@@ -134,5 +197,55 @@
   .close-button {
     margin-top: 1rem;
     background-color: var(--color-close-button);
+  }
+
+  .close-button:focus {
+    outline: solid 0.15rem var(--color-accent);
+    background-color: var(--color-close-button);
+    outline-offset: 0.15rem;
+  }
+
+  .quality-slider {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .quality-slider .slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 0.25rem;
+    background: var(--color-outline);
+    outline: none;
+  }
+
+  .quality-slider .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1rem;
+    height: 1rem;
+    background: var(--color-accent);
+    outline: solid 0.2ch var(--color-outline);
+    cursor: pointer;
+  }
+
+  .quality-slider label {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+  }
+
+  .quality-slider .input-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    line-height: 1.2;
+  }
+
+  .quality-slider input[type="range"] {
+    width: 100%;
   }
 </style>

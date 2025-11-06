@@ -1,11 +1,15 @@
-use base64::{engine::general_purpose, Engine as _};
+use base64::engine::general_purpose;
+use base64::Engine;
 use exif::Reader;
+use image::ImageFormat;
 use mime_guess;
 use serde::Serialize;
 use std::io::Cursor;
 use std::path::PathBuf;
+use tauri::Window;
 use tauri_plugin_dialog::DialogExt;
 use tokio::sync::oneshot;
+use webp;
 
 use crate::utils::file_system::get_directory_files;
 
@@ -49,13 +53,7 @@ pub async fn open_and_read_file(
     window
         .dialog()
         .file()
-        .add_filter(
-            "Image files",
-            &[
-                "png", "jpg", "jpeg", "webp", "bmp", "dds", "gif", "hdr", "ico", "tga", "tif",
-                "tiff",
-            ],
-        )
+        .add_filter("Image files", &["png", "jpg", "jpeg", "webp", "bmp"])
         .pick_file(move |file_path_result| {
             let path_to_send = file_path_result.and_then(|fp| match fp {
                 tauri_plugin_dialog::FilePath::Path(p) => Some(p),
@@ -156,13 +154,37 @@ pub async fn read_image_file(path: String) -> Result<ImageMetadata, String> {
 
 #[tauri::command]
 pub async fn save_image_as(
-    window: tauri::Window,
+    window: Window,
     path: String,
     format: String,
+    quality: Option<f32>,
 ) -> Result<Option<String>, String> {
+    let save_path_option = show_save_dialog(window, &path, &format).await?;
+    if save_path_option.is_none() {
+        return Ok(None);
+    }
+
+    let save_path = save_path_option.unwrap();
+
+    let bytes = load_image_bytes(&path).await?;
+
+    let result = tokio::task::spawn_blocking(move || {
+        save_image_to_format(&bytes, &save_path, &format, quality)
+    })
+    .await
+    .map_err(|e| format!("Task spawn error: {}", e))??;
+
+    Ok(Some(result))
+}
+
+async fn show_save_dialog(
+    window: Window,
+    source_path: &str,
+    format: &str,
+) -> Result<Option<PathBuf>, String> {
     let (tx, rx) = oneshot::channel();
 
-    let file_stem = PathBuf::from(&path)
+    let file_stem = PathBuf::from(source_path)
         .file_stem()
         .and_then(|s| s.to_str())
         .unwrap_or("image")
@@ -187,45 +209,72 @@ pub async fn save_image_as(
             let _ = tx.send(path_to_send);
         });
 
-    let save_path_option = rx
+    rx.await
+        .map_err(|e| format!("Failed to receive save path from dialog: {}", e))
+}
+
+async fn load_image_bytes(path: &str) -> Result<Vec<u8>, String> {
+    tokio::fs::read(path)
         .await
-        .map_err(|e| format!("Failed to receive save path from dialog: {}", e))?;
+        .map_err(|e| format!("Failed to read original file '{}': {}", path, e))
+}
 
-    if let Some(save_path) = save_path_option {
-        let image_format = image::ImageFormat::from_extension(&new_extension)
-            .ok_or_else(|| format!("Invalid image format: {}", new_extension))?;
+fn save_image_to_format(
+    bytes: &[u8],
+    save_path: &PathBuf,
+    format: &str,
+    quality: Option<f32>,
+) -> Result<String, String> {
+    let image_format = ImageFormat::from_extension(format)
+        .ok_or_else(|| format!("Invalid image format: {}", format))?;
 
-        let bytes = tokio::fs::read(&path)
-            .await
-            .map_err(|e| format!("Failed to read original file '{}': {}", path, e))?;
+    let img =
+        image::load_from_memory(bytes).map_err(|e| format!("Failed to decode image: {}", e))?;
 
-        tokio::task::spawn_blocking(move || {
-            let img = image::load_from_memory(&bytes)
-                .map_err(|e| format!("Failed to decode image: {}", e))?;
-
-            img.save_with_format(&save_path, image_format)
-                .map_err(|e| format!("Failed to save image: {}", e))?;
-
-            Ok(Some(save_path.to_string_lossy().to_string()))
-        })
-        .await
-        .map_err(|e| format!("Task spawn error: {}", e))?
-    } else {
-        Ok(None)
+    match image_format {
+        ImageFormat::WebP => save_webp(&img, save_path, quality)?,
+        ImageFormat::Jpeg => save_jpeg(&img, save_path, quality)?,
+        _ => img
+            .save_with_format(save_path, image_format)
+            .map_err(|e| format!("Failed to save image: {}", e))?,
     }
+
+    Ok(save_path.to_string_lossy().to_string())
+}
+
+fn save_webp(
+    img: &image::DynamicImage,
+    save_path: &PathBuf,
+    quality: Option<f32>,
+) -> Result<(), String> {
+    let rgba_image = img.to_rgba8();
+    let encoder = webp::Encoder::from_rgba(&rgba_image, rgba_image.width(), rgba_image.height());
+    let memory_encoder = encoder.encode(quality.unwrap_or(75.0) as f32);
+    std::fs::write(save_path, &*memory_encoder)
+        .map_err(|e| format!("Failed to save WebP image: {}", e))
+}
+
+fn save_jpeg(
+    img: &image::DynamicImage,
+    save_path: &PathBuf,
+    quality: Option<f32>,
+) -> Result<(), String> {
+    let mut file = std::fs::File::create(save_path)
+        .map_err(|e| format!("Failed to create JPEG file: {}", e))?;
+    let quality_u8 = quality.map(|q| q.clamp(1.0, 100.0) as u8).unwrap_or(75);
+    let encoder = image::codecs::jpeg::JpegEncoder::new_with_quality(&mut file, quality_u8);
+    img.write_with_encoder(encoder)
+        .map_err(|e| format!("Failed to save JPEG image: {}", e))
 }
 
 #[tauri::command]
 pub fn get_supported_image_formats() -> Result<Vec<String>, String> {
-    let mut formats = Vec::new();
-    #[cfg(feature = "png")]
-    formats.push("png".to_string());
-    #[cfg(feature = "jpeg")]
-    formats.push("jpeg".to_string());
-    #[cfg(feature = "webp")]
-    formats.push("webp".to_string());
-    #[cfg(feature = "tiff")]
-    formats.push("tiff".to_string());
+    let formats = vec![
+        "png".to_string(),
+        "jpeg".to_string(),
+        "webp".to_string(),
+        "bmp".to_string(),
+    ];
     Ok(formats)
 }
 

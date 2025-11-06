@@ -157,9 +157,10 @@ export const nextImage = () => {
 /**
  * Saves the current image to a new file with a different format.
  * @param {string} format - The new format to save the image as (e.g., "png", "jpg").
+ * @param {number | undefined} quality - The quality of the saved image (0-100).
  * @returns {Promise<void>}
  */
-export const saveImageAs = async (format: string): Promise<void> => {
+export const saveImageAs = async (format: string, quality: number | undefined): Promise<void> => {
   const currentPath = get(imagePath);
   if (!currentPath) return;
 
@@ -168,6 +169,7 @@ export const saveImageAs = async (format: string): Promise<void> => {
     const result = await invoke<string | null>("save_image_as", {
       path: currentPath,
       format,
+      quality,
     });
   } catch (error) {
     console.error("Failed to save image:", error);
