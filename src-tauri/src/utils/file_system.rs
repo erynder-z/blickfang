@@ -1,4 +1,4 @@
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use tokio::fs;
 
 pub async fn get_directory_files(file_path: &str) -> Result<Vec<String>, String> {
@@ -34,4 +34,22 @@ pub async fn get_directory_files(file_path: &str) -> Result<Vec<String>, String>
 
     image_files.sort();
     Ok(image_files)
+}
+
+pub fn filter_dot_files(paths: Vec<String>) -> Vec<String> {
+    paths
+        .into_iter()
+        .filter(|p| {
+            PathBuf::from(p)
+                .file_name()
+                .and_then(|name| name.to_str())
+                .map(|name| !name.starts_with('.'))
+                .unwrap_or(true)
+        })
+        .collect()
+}
+
+pub async fn get_filtered_directory_files(path: &str) -> Result<Vec<String>, String> {
+    let files = get_directory_files(path).await?;
+    Ok(filter_dot_files(files))
 }
