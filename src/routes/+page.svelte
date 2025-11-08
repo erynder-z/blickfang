@@ -47,4 +47,8 @@
   :global(body) {
     margin: 0;
   }
+
+  :global(button) {
+    font-family: "SUSE Mono", monospace;
+  }
 </style>

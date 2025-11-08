@@ -51,7 +51,7 @@
     background-color: var(--color-shadow);
     color: white;
     padding: 0.5rem 0.75rem;
-    border-radius: 4rem;
+    border-radius: 9999px;
     max-width: 66vw;
     white-space: nowrap;
     overflow: hidden;

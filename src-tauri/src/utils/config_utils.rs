@@ -58,7 +58,7 @@ fn default_language() -> String {
     "en".into()
 }
 fn default_theme() -> String {
-    "default".into()
+    "lowest-common-denominator".into()
 }
 fn default_toolbar_button_size() -> String {
     "large".into()

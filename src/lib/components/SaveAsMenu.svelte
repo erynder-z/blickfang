@@ -178,20 +178,36 @@
   }
 
   button {
-    padding: 0.5rem;
-    border: solid 0.15rem var(--color-outline);
-    border-radius: 0.5rem;
-    background-color: transparent;
+    appearance: none;
+    border: 2px solid var(--color-outline);
+    background-color: var(--color-button);
     color: var(--color-text-primary);
+    font-weight: 700;
+    border-radius: 0.25rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.95rem;
     cursor: pointer;
-    font-weight: bold;
-    min-height: 2.5rem;
+    box-shadow: 0.2rem 0.2rem 0 var(--color-outline);
+    transition:
+      transform 0.1s ease-out,
+      box-shadow 0.1s ease-out,
+      background-color 0.1s ease-out;
+  }
+
+  button:hover {
+    background-color: color-mix(in srgb, var(--color-button) 85%, var(--color-accent));
+    transform: translate(-0.1rem, -0.1rem);
+    box-shadow: 0.25rem 0.25rem 0 var(--color-outline);
+  }
+
+  button:active {
+    transform: translate(0.1rem, 0.1rem);
+    box-shadow: 1px 1px 0 var(--color-outline);
   }
 
   button:focus {
-    outline: solid 0.15rem var(--color-accent);
-    outline-offset: 0.15rem;
-    background-color: rgb(from var(--color-accent) r g b / 0.2);
+    outline: none;
+    border-color: var(--color-accent);
   }
 
   .close-button {

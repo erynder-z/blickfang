@@ -63,6 +63,7 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
+    background-color: var(--color-background);
   }
   .image-view-container:active {
     cursor: grabbing;
@@ -84,6 +85,7 @@
     color: var(--color-text-secondary);
     font: inherit;
     cursor: pointer;
+    text-shadow: 1px 1px 2px var(--color-shadow);
   }
 
   svg {

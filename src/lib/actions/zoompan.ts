@@ -88,7 +88,6 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions): obj
     animationFrameId = requestAnimationFrame(draw);
     if (!ctx || !canvas) return;
 
-    // --- Interaction check ---
     const isInteracting = isDragging || isAnimating || Date.now() - lastWheelTime < 100;
     if (isInteracting) debounceIndicatorVisibility();
 
@@ -98,6 +97,13 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions): obj
       ctx.save();
       ctx.translate(offsetX, offsetY);
       ctx.scale(displayScale, displayScale);
+
+      const shadowColor = getComputedStyle(canvas).getPropertyValue("--color-outline").trim();
+      ctx.shadowColor = shadowColor;
+      ctx.shadowOffsetX = 16;
+      ctx.shadowOffsetY = 16;
+      ctx.shadowBlur = 0;
+
       ctx.drawImage(image, 0, 0);
       ctx.restore();
     }

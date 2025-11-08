@@ -41,7 +41,6 @@
 </script>
 
 <div class="options-sidebar-overlay" class:visible={$isOptionsMenuVisible}>
-  <h1>{$t["options.title"]}</h1>
   <div class="options-container">
     <button class="hotkeys-button" on:click={showHotkeysOverlay}>
       <svg
@@ -165,32 +164,61 @@
 
   .options-container {
     display: grid;
-    grid-template-columns:
-      minmax(10rem, max-content)
-      repeat(auto-fill, 10rem) 20%;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
     gap: 1rem;
-    padding: 1rem;
-  }
-
-  h1 {
-    color: var(--color-text-primary);
-    text-align: center;
+    padding: 0.5rem;
   }
 
   button {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1.25rem;
-    border: none;
-    border-radius: 9999px;
+    gap: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    height: 2.5rem;
+    border: 2px solid var(--color-outline);
+    border-radius: 0.25rem;
     background-color: var(--color-button);
     color: var(--color-text-primary);
+    font-size: 0.9rem;
+    font-weight: 700;
     cursor: pointer;
-    font-size: 0.8rem;
-    font-weight: bold;
-    transition: all 0.2s ease;
+    box-shadow: 0.2rem 0.2rem 0 var(--color-outline);
+    transition:
+      transform 0.1s ease-out,
+      box-shadow 0.1s ease-out,
+      background-color 0.1s ease-out;
+  }
+
+  button:hover {
+    background-color: color-mix(in srgb, var(--color-button) 85%, var(--color-accent));
+    transform: translate(-0.1rem, -0.1rem);
+    box-shadow: 0.25rem 0.25rem 0 var(--color-outline);
+  }
+
+  button:active {
+    transform: translate(0.1rem, 0.1rem);
+    box-shadow: 1px 1px 0 var(--color-outline);
+  }
+
+  button:focus-visible {
+    outline: none;
+    border-color: var(--color-accent);
+  }
+
+  button svg {
+    flex-shrink: 0;
+    opacity: 0.9;
+    width: 1.1em;
+    height: 1.1em;
+    transition:
+      transform 0.1s ease-out,
+      opacity 0.1s ease-out;
+  }
+
+  button:hover svg {
+    transform: translate(-1px, -1px);
+    opacity: 1;
   }
 
   .hotkeys-button {

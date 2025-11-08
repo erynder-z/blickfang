@@ -103,6 +103,7 @@
     background: var(--color-dialog-backdrop);
     z-index: 30;
   }
+
   .menu-dialog {
     position: fixed;
     top: 50%;
@@ -116,11 +117,14 @@
     min-height: 25rem;
     padding: 1.5rem;
     background-color: var(--color-background);
-    border: 1px solid var(--color-accent);
-    border-radius: 8px;
-    box-shadow: 0 4px 12px var(--color-shadow);
+    border: 0.15rem solid var(--color-accent);
+    border-radius: 0.5rem;
+    box-shadow:
+      0.3rem 0.3rem 0 0 var(--color-outline),
+      0.6rem 0.6rem 0 0 var(--color-shadow);
     transition: height 0.2s ease;
   }
+
   .menu-content {
     display: flex;
     flex-direction: column;
@@ -133,7 +137,6 @@
   h1 {
     color: var(--color-text-primary);
     line-height: 1.2;
-    text-wrap: balance;
     min-height: 2.5em;
     margin: 0;
   }
@@ -141,28 +144,37 @@
   .toggle-buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    border: 1px solid var(--color-accent);
     border-radius: 0.5rem;
     overflow: hidden;
+    box-shadow: 0.2rem 0.2rem 0 0 var(--color-outline);
   }
 
   .toggle-buttons button {
     padding: 0.5rem;
     border: none;
-    background-color: transparent;
+    background-color: var(--color-button);
     color: var(--color-text-primary);
     cursor: pointer;
     font-weight: bold;
-    transition: background-color 0.2s ease;
+    transition: all 0.15s ease;
     min-height: 2.5rem;
-    text-wrap: balance;
-    overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .toggle-buttons button:first-child {
-    border-right: 1px solid var(--color-accent);
+    border-right: 0.15rem solid var(--color-accent);
+  }
+
+  .toggle-buttons button:hover {
+    background-color: color-mix(in srgb, var(--color-button) 85%, var(--color-accent));
+    transform: translateY(-1px);
+    box-shadow: 0.2rem 0.2rem 0 0 var(--color-outline);
+  }
+
+  .toggle-buttons button:active {
+    transform: translateY(1px);
+    box-shadow: 0.1rem 0.1rem 0 0 var(--color-outline);
   }
 
   .toggle-buttons button.active {
@@ -170,8 +182,8 @@
   }
 
   .toggle-buttons button:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: -2px;
+    outline: 0.15rem solid var(--color-accent);
+    outline-offset: 0.15rem;
   }
 
   .hotkeys-grid {
@@ -194,22 +206,35 @@
   .remap-button,
   .close-button {
     padding: 0.5rem;
-    border: solid 0.15rem var(--color-outline);
+    border: 0.15rem solid var(--color-outline);
     border-radius: 0.5rem;
-    background-color: transparent;
+    background-color: var(--color-button);
     color: var(--color-text-primary);
     cursor: pointer;
     font-weight: bold;
     min-height: 2.5rem;
-    text-wrap: balance;
-    overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
+    text-overflow: ellipsis;
+    transition: all 0.15s ease;
+    box-shadow: 0.2rem 0.2rem 0 0 var(--color-outline);
+  }
+
+  .remap-button:hover,
+  .close-button:hover {
+    background-color: color-mix(in srgb, var(--color-button) 85%, var(--color-accent));
+    transform: translateY(-1px);
+    box-shadow: 0.3rem 0.3rem 0 0 var(--color-outline);
+  }
+
+  .remap-button:active,
+  .close-button:active {
+    transform: translateY(1px);
+    box-shadow: 0.1rem 0.1rem 0 0 var(--color-outline);
   }
 
   .remap-button:focus,
   .close-button:focus {
-    outline: solid 0.15rem var(--color-accent);
+    outline: 0.15rem solid var(--color-accent);
     outline-offset: 0.15rem;
   }
 

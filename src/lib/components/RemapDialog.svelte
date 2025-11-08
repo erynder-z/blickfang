@@ -130,6 +130,7 @@
     background: var(--color-dialog-backdrop);
     z-index: 150;
   }
+
   .menu-dialog {
     position: fixed;
     top: 50%;
@@ -137,11 +138,17 @@
     transform: translate(-50%, -50%);
     z-index: 200;
     background-color: var(--color-background);
-    border: 1px solid var(--color-accent);
-    border-radius: 8px;
+    border: 0.15rem solid var(--color-accent);
+    border-radius: 0.5rem;
     padding: 1.5rem;
-    box-shadow: 0 4px 12px var(--color-shadow);
+    box-shadow:
+      0.3rem 0.3rem 0 0 var(--color-outline),
+      0.6rem 0.6rem 0 0 var(--color-shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
+
   .menu-content {
     display: flex;
     flex-direction: column;
@@ -152,7 +159,8 @@
 
   h1 {
     margin: 0 0 0.5rem 0;
-    color: #e3e3e3;
+    color: var(--color-text-primary);
+    line-height: 1.2;
   }
 
   .hotkey-key {
@@ -165,12 +173,35 @@
   button.close-button {
     margin-top: 1rem;
     padding: 0.5rem;
-    border: none;
+    border: 0.15rem solid var(--color-outline);
     border-radius: 0.5rem;
     background-color: var(--color-button);
     color: var(--color-text-primary);
     cursor: pointer;
     font-weight: bold;
+    min-height: 2.5rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    box-shadow: 0.2rem 0.2rem 0 0 var(--color-outline);
+    transition: all 0.15s ease;
+  }
+
+  button.remap-button:hover,
+  button.close-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0.3rem 0.3rem 0 0 var(--color-outline);
+  }
+
+  button.remap-button:active,
+  button.close-button:active {
+    transform: translateY(1px);
+    box-shadow: inset 0.1rem 0.1rem 0 0 var(--color-outline);
+  }
+
+  button.remap-button:focus,
+  button.close-button:focus {
+    outline: 0.15rem solid var(--color-accent);
+    outline-offset: 0.15rem;
   }
 
   p {
@@ -179,15 +210,17 @@
 
   .remap-indicator {
     padding: 0.5rem;
-    border: 1px dashed var(--color-accent);
-    border-radius: 4px;
+    border: 0.15rem dashed var(--color-accent);
+    border-radius: 0.5rem;
     min-height: 1.5rem;
     text-align: center;
+    box-shadow: inset -0.1rem -0.1rem 0 0 var(--color-outline);
   }
 
   .error {
     color: var(--color-error);
     margin-top: -0.5rem;
     margin-bottom: -0.5rem;
+    font-weight: bold;
   }
 </style>

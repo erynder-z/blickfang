@@ -24,7 +24,6 @@
     transition: transform 0.3s ease-in-out;
     z-index: 20;
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
-    border-left: 1px solid var(--color-accent);
   }
 
   .exif-sidebar-overlay.visible {
