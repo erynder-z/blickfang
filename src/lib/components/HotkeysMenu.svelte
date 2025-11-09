@@ -115,9 +115,9 @@
     align-items: center;
     width: clamp(40ch, 45ch, 90vw);
     min-height: 25rem;
-    padding: 1.5rem;
+    padding: 4rem;
     background-color: var(--color-background);
-    border: 0.15rem solid var(--color-accent);
+    border: 0.15rem solid var(--color-outline);
     border-radius: 0.5rem;
     box-shadow:
       0.3rem 0.3rem 0 0 var(--color-outline),
@@ -160,6 +160,7 @@
     min-height: 2.5rem;
     white-space: nowrap;
     text-overflow: ellipsis;
+    font-size: 1rem;
   }
 
   .toggle-buttons button:first-child {
@@ -172,6 +173,10 @@
     box-shadow: 0.2rem 0.2rem 0 0 var(--color-outline);
   }
 
+  .toggle-buttons button:first-child:hover {
+    box-shadow: 0 0.2rem 0 0 var(--color-outline);
+  }
+
   .toggle-buttons button:active {
     transform: translateY(1px);
     box-shadow: 0.1rem 0.1rem 0 0 var(--color-outline);
@@ -179,6 +184,7 @@
 
   .toggle-buttons button.active {
     background-color: var(--color-accent);
+    color: var(--color-text-tertiary);
   }
 
   .toggle-buttons button:focus-visible {
@@ -205,41 +211,42 @@
 
   .remap-button,
   .close-button {
-    padding: 0.5rem;
-    border: 0.15rem solid var(--color-outline);
-    border-radius: 0.5rem;
+    appearance: none;
+    border: 0.2rem solid var(--color-outline);
     background-color: var(--color-button);
     color: var(--color-text-primary);
+    font-weight: 700;
+    border-radius: 0.25rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
     cursor: pointer;
-    font-weight: bold;
-    min-height: 2.5rem;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    transition: all 0.15s ease;
-    box-shadow: 0.2rem 0.2rem 0 0 var(--color-outline);
+    box-shadow: 0.2rem 0.2rem 0 var(--color-outline);
+    transition:
+      transform 0.1s ease-out,
+      box-shadow 0.1s ease-out,
+      background-color 0.1s ease-out;
   }
 
   .remap-button:hover,
   .close-button:hover {
-    background-color: color-mix(in srgb, var(--color-button) 85%, var(--color-accent));
-    transform: translateY(-1px);
-    box-shadow: 0.3rem 0.3rem 0 0 var(--color-outline);
+    transform: translate(-0.1rem, -0.1rem);
+    box-shadow: 0.25rem 0.25rem 0 var(--color-outline);
   }
 
   .remap-button:active,
   .close-button:active {
-    transform: translateY(1px);
-    box-shadow: 0.1rem 0.1rem 0 0 var(--color-outline);
+    transform: translate(0.1rem, 0.1rem);
   }
 
   .remap-button:focus,
   .close-button:focus {
-    outline: 0.15rem solid var(--color-accent);
-    outline-offset: 0.15rem;
+    outline: none;
+    background-color: var(--color-accent);
+    color: var(--color-text-tertiary);
   }
 
   .close-button {
-    margin-top: 1rem;
-    background-color: var(--color-close-button);
+    margin-top: 2rem;
+    color: var(--color-close-button);
   }
 </style>

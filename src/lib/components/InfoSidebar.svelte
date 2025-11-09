@@ -23,7 +23,7 @@
     transform: translateX(100%);
     transition: transform 0.3s ease-in-out;
     z-index: 20;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+    border-left: 0.2rem solid var(--color-outline);
   }
 
   .exif-sidebar-overlay.visible {

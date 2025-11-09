@@ -139,14 +139,13 @@
     z-index: 200;
     background-color: var(--color-background);
     border: 0.15rem solid var(--color-accent);
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    box-shadow:
-      0.3rem 0.3rem 0 0 var(--color-outline),
-      0.6rem 0.6rem 0 0 var(--color-shadow);
+    border-radius: 0.25rem;
+    padding: 4rem;
+    box-shadow: 0.25rem 0.25rem 0 0 var(--color-outline);
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: clamp(40ch, 45ch, 90vw);
   }
 
   .menu-content {
@@ -184,6 +183,7 @@
     text-overflow: ellipsis;
     box-shadow: 0.2rem 0.2rem 0 0 var(--color-outline);
     transition: all 0.15s ease;
+    font-size: 0.8rem;
   }
 
   button.remap-button:hover,

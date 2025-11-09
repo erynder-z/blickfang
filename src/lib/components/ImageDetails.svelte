@@ -57,23 +57,9 @@
     background-color: var(--color-button);
     padding: 0.75rem;
     border: 0.15rem solid var(--color-outline);
-    border-radius: 0.5rem;
-    box-shadow:
-      0.2rem 0.2rem 0 0 var(--color-outline),
-      0.4rem 0.4rem 0 0 var(--color-shadow);
+    border-radius: 0.25rem;
+    box-shadow: 0.25rem 0.25rem 0 0 var(--color-outline);
     transition: all 0.15s ease;
-  }
-
-  .info-item:hover {
-    transform: translateY(-1px);
-    box-shadow:
-      0.3rem 0.3rem 0 0 var(--color-outline),
-      0.5rem 0.5rem 0 0 var(--color-shadow);
-  }
-
-  .info-item:active {
-    transform: translateY(1px);
-    box-shadow: inset 0.1rem 0.1rem 0 0 var(--color-outline);
   }
 
   .info-tag {

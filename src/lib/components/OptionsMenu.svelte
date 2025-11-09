@@ -151,11 +151,12 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: 1rem;
+    padding: 2rem;
     background-color: var(--color-background);
     transform: translateY(100%);
     transition: transform 0.3s ease-in-out;
     z-index: 20;
+    border-top: 0.2rem solid var(--color-outline);
   }
 
   .options-sidebar-overlay.visible {
@@ -164,26 +165,26 @@
 
   .options-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
     gap: 1rem;
     padding: 0.5rem;
   }
 
   button {
+    appearance: none;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.75rem;
-    padding: 1.25rem 1.5rem;
-    height: 2.5rem;
-    border: 2px solid var(--color-outline);
-    border-radius: 0.25rem;
+    border: 0.2rem solid var(--color-outline);
     background-color: var(--color-button);
     color: var(--color-text-primary);
-    font-size: 0.9rem;
     font-weight: 700;
+    border-radius: 0.25rem;
+    height: 3rem;
+    font-size: 1rem;
     cursor: pointer;
-    box-shadow: 0.2rem 0.2rem 0 var(--color-outline);
+    box-shadow: 0.25rem 0.25rem 0 0 var(--color-outline);
     transition:
       transform 0.1s ease-out,
       box-shadow 0.1s ease-out,
@@ -193,7 +194,7 @@
   button:hover {
     background-color: color-mix(in srgb, var(--color-button) 85%, var(--color-accent));
     transform: translate(-0.1rem, -0.1rem);
-    box-shadow: 0.25rem 0.25rem 0 var(--color-outline);
+    box-shadow: 0.3rem 0.3rem 0 var(--color-outline);
   }
 
   button:active {

@@ -117,6 +117,7 @@
     background: var(--color-dialog-backdrop);
     z-index: 30;
   }
+
   .menu-dialog {
     position: fixed;
     top: 50%;
@@ -127,12 +128,15 @@
     flex-direction: column;
     align-items: center;
     width: clamp(40ch, 45ch, 90vw);
-    padding: 1.5rem;
+    min-height: 25rem;
+    padding: 4rem;
     background-color: var(--color-background);
-    border: 1px solid var(--color-accent);
-    border-radius: 8px;
-    box-shadow: 0 4px 12px var(--color-shadow);
+    border: 0.15rem solid var(--color-outline);
+    border-radius: 0.25rem;
+    box-shadow: 0.25rem 0.25rem 0 0 var(--color-outline);
+    transition: height 0.2s ease;
   }
+
   .menu-content {
     display: flex;
     flex-direction: column;
@@ -179,13 +183,13 @@
 
   button {
     appearance: none;
-    border: 2px solid var(--color-outline);
+    border: 0.2rem solid var(--color-outline);
     background-color: var(--color-button);
     color: var(--color-text-primary);
     font-weight: 700;
     border-radius: 0.25rem;
     padding: 0.75rem 1.25rem;
-    font-size: 0.95rem;
+    font-size: 1rem;
     cursor: pointer;
     box-shadow: 0.2rem 0.2rem 0 var(--color-outline);
     transition:
@@ -195,30 +199,23 @@
   }
 
   button:hover {
-    background-color: color-mix(in srgb, var(--color-button) 85%, var(--color-accent));
     transform: translate(-0.1rem, -0.1rem);
     box-shadow: 0.25rem 0.25rem 0 var(--color-outline);
   }
 
   button:active {
     transform: translate(0.1rem, 0.1rem);
-    box-shadow: 1px 1px 0 var(--color-outline);
   }
 
   button:focus {
     outline: none;
-    border-color: var(--color-accent);
+    background-color: var(--color-accent);
+    color: var(--color-text-tertiary);
   }
 
   .close-button {
-    margin-top: 1rem;
-    background-color: var(--color-close-button);
-  }
-
-  .close-button:focus {
-    outline: solid 0.15rem var(--color-accent);
-    background-color: var(--color-close-button);
-    outline-offset: 0.15rem;
+    margin-top: 2rem;
+    color: var(--color-close-button);
   }
 
   .quality-slider {
