@@ -11,38 +11,14 @@
     isAppWindowMenuVisible,
   } from "$lib/stores/appState";
   import { toggleOptions } from "$lib/core/commands";
-  const showLanguageSelectOverlay = () => {
-    isLanguageMenuVisible.set(true);
-  };
+  import type { Writable } from "svelte/store";
 
-  const showThemeSelectOverlay = () => {
-    isThemeMenuVisible.set(true);
-  };
-
-  const showHotkeysOverlay = () => {
-    isHotkeysMenuVisible.set(true);
-  };
-
-  const showToolbarMenuOverlay = () => {
-    isToolbarMenuVisible.set(true);
-  };
-
-  const showImageNameDisplayMenu = () => {
-    isImageNameDisplayMenuVisible.set(true);
-  };
-
-  const showEdgeIndicatorMenu = () => {
-    isEdgeIndicatorMenuVisible.set(true);
-  };
-
-  const showAppWindowMenu = () => {
-    isAppWindowMenuVisible.set(true);
-  };
+  const openMenu = (store: Writable<boolean>) => store.set(true);
 </script>
 
 <div class="options-sidebar-overlay" class:visible={$isOptionsMenuVisible}>
   <div class="options-container">
-    <button class="hotkeys-button" on:click={showHotkeysOverlay}>
+    <button class="hotkeys-button" on:click={() => openMenu(isHotkeysMenuVisible)}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         height="1.25rem"
@@ -55,7 +31,7 @@
       >
       {$t["options.button.hotkeys"]}</button
     >
-    <button class="language-button" on:click={showLanguageSelectOverlay}
+    <button class="language-button" on:click={() => openMenu(isLanguageMenuVisible)}
       ><svg
         xmlns="http://www.w3.org/2000/svg"
         height="1.25rem"
@@ -67,7 +43,7 @@
         /></svg
       >{$t["options.button.language"]}</button
     >
-    <button class="theme-button" on:click={showThemeSelectOverlay}
+    <button class="theme-button" on:click={() => openMenu(isThemeMenuVisible)}
       ><svg
         xmlns="http://www.w3.org/2000/svg"
         height="1.25rem"
@@ -79,7 +55,7 @@
         /></svg
       >{$t["options.button.theme"]}</button
     >
-    <button class="toolbar-button" on:click={showToolbarMenuOverlay}>
+    <button class="toolbar-button" on:click={() => openMenu(isToolbarMenuVisible)}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         height="1.25rem"
@@ -92,9 +68,8 @@
       >
       {$t["options.button.toolbar"]}</button
     >
-
-    <button class="image-name-button" on:click={showImageNameDisplayMenu}
-      ><svg
+    <button class="image-name-button" on:click={() => openMenu(isImageNameDisplayMenuVisible)}>
+      <svg
         xmlns="http://www.w3.org/2000/svg"
         height="1.25rem"
         viewBox="0 -960 960 960"
@@ -105,8 +80,8 @@
         /></svg
       >{$t["options.button.image_name_display"]}</button
     >
-    <button class="edge-indicators-button" on:click={showEdgeIndicatorMenu}
-      ><svg
+    <button class="edge-indicators-button" on:click={() => openMenu(isEdgeIndicatorMenuVisible)}>
+      <svg
         xmlns="http://www.w3.org/2000/svg"
         height="1.25rem"
         viewBox="0 -960 960 960"
@@ -117,7 +92,7 @@
         /></svg
       >{$t["options.button.edge_indicators"]}</button
     >
-    <button class="app-window-button" on:click={showAppWindowMenu}>
+    <button class="app-window-button" on:click={() => openMenu(isAppWindowMenuVisible)}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         height="1.25rem"
@@ -165,7 +140,7 @@
 
   .options-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
     gap: 1rem;
     padding: 0.5rem;
   }
@@ -180,9 +155,10 @@
     background-color: var(--color-button);
     color: var(--color-text-primary);
     font-weight: 700;
-    border-radius: 0.25rem;
+    border-radius: 0.75rem;
     height: 3rem;
     font-size: 1rem;
+    padding: 2rem;
     cursor: pointer;
     box-shadow: 0.25rem 0.25rem 0 0 var(--color-outline);
     transition:
@@ -192,7 +168,6 @@
   }
 
   button:hover {
-    background-color: color-mix(in srgb, var(--color-button) 85%, var(--color-accent));
     transform: translate(-0.1rem, -0.1rem);
     box-shadow: 0.3rem 0.3rem 0 var(--color-outline);
   }
@@ -220,69 +195,5 @@
   button:hover svg {
     transform: translate(-1px, -1px);
     opacity: 1;
-  }
-
-  .hotkeys-button {
-    background-color: var(--color-hotkeys-icon-background);
-  }
-
-  .hotkeys-button:hover {
-    background-color: rgb(from var(--color-hotkeys-icon) r g b / 0.5);
-  }
-
-  .language-button {
-    background-color: var(--color-language-icon-background);
-  }
-
-  .language-button:hover {
-    background-color: rgb(from var(--color-language-icon) r g b / 0.5);
-  }
-
-  .theme-button {
-    background-color: var(--color-theme-icon-background);
-  }
-
-  .theme-button:hover {
-    background-color: rgb(from var(--color-theme-icon) r g b / 0.5);
-  }
-
-  .toolbar-button {
-    background-color: var(--color-buttons-icon-background);
-  }
-
-  .toolbar-button:hover {
-    background-color: rgb(from var(--color-buttons-icon) r g b / 0.5);
-  }
-
-  .edge-indicators-button {
-    background-color: var(--color-edge-indicators-icon-background);
-  }
-
-  .edge-indicators-button:hover {
-    background-color: rgb(from var(--color-edge-indicators-icon) r g b / 0.5);
-  }
-
-  .image-name-button {
-    background-color: var(--color-image-name-display-icon-background);
-  }
-
-  .image-name-button:hover {
-    background-color: rgb(from var(--color-image-name-display-icon) r g b / 0.5);
-  }
-
-  .app-window-button {
-    background-color: var(--color-app-window-icon-background);
-  }
-
-  .app-window-button:hover {
-    background-color: rgb(from var(--color-app-window-icon) r g b / 0.5);
-  }
-
-  .close-options-button {
-    background-color: var(--color-close-options-icon-background);
-  }
-
-  .close-options-button:hover {
-    background-color: rgb(from var(--color-close-options-icon) r g b / 0.5);
   }
 </style>
