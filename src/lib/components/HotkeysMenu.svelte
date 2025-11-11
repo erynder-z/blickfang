@@ -66,11 +66,12 @@
     <div class="menu-content">
       <h1>{$t["hotkeys.heading"]}</h1>
 
-      <div class="toggle-buttons">
-        <button class:active={isUsingDefault} on:click={handleSetDefault}>
+      <div class="toggle-row">
+        <button class="toggle-button" class:active={isUsingDefault} on:click={handleSetDefault}>
           {$t["hotkeys.button.default_hotkeys"]}
         </button>
-        <button class:active={!isUsingDefault} on:click={handleSetCustom}>
+
+        <button class="toggle-button" class:active={!isUsingDefault} on:click={handleSetCustom}>
           {$t["hotkeys.button.custom_hotkeys"]}
         </button>
       </div>
@@ -118,7 +119,7 @@
     padding: 4rem;
     background-color: var(--color-background);
     border: 0.15rem solid var(--color-outline);
-    border-radius: 0.5rem;
+    border-radius: 0.1rem;
     box-shadow:
       0.3rem 0.3rem 0 0 var(--color-outline),
       0.6rem 0.6rem 0 0 var(--color-shadow);
@@ -128,68 +129,58 @@
   .menu-content {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    min-width: 300px;
-    text-align: center;
-    width: 100%;
+    gap: 0.75rem;
+    align-items: center;
   }
 
   h1 {
+    margin: 0 0 1rem 0;
     color: var(--color-text-primary);
     line-height: 1.2;
-    min-height: 2.5em;
-    margin: 0;
+    font-size: 1.25rem;
+    text-wrap: balance;
   }
 
-  .toggle-buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    border-radius: 0.5rem;
-    overflow: hidden;
-    box-shadow: 0.2rem 0.2rem 0 0 var(--color-outline);
+  .toggle-row {
+    display: flex;
+    gap: 0.75rem;
   }
 
-  .toggle-buttons button {
-    padding: 0.5rem;
-    border: none;
-    background-color: var(--color-button);
+  .toggle-button {
+    border: 0.15rem solid var(--color-outline);
+    padding: 0.5rem 1rem;
+    border-radius: 0.1rem;
     color: var(--color-text-primary);
+    background-color: var(--color-button);
+    box-shadow: 0.25rem 0.25rem 0 var(--color-outline);
+    font-size: 0.9rem;
+    font-weight: 700;
     cursor: pointer;
-    font-weight: bold;
-    transition: all 0.15s ease;
-    min-height: 2.5rem;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    font-size: 1rem;
+    transition:
+      transform 150ms ease,
+      box-shadow 150ms ease,
+      background-color 150ms ease,
+      color 150ms ease;
   }
 
-  .toggle-buttons button:first-child {
-    border-right: 0.15rem solid var(--color-accent);
+  .toggle-button:hover {
+    transform: translate(0.15rem, 0.15rem);
+    box-shadow: 0.1rem 0.1rem 0 var(--color-outline);
   }
 
-  .toggle-buttons button:hover {
-    background-color: color-mix(in srgb, var(--color-button) 85%, var(--color-accent));
-    transform: translateY(-1px);
-    box-shadow: 0.2rem 0.2rem 0 0 var(--color-outline);
+  .toggle-button:active {
+    transform: translate(0.35rem, 0.35rem);
+    box-shadow: 0 0 0 var(--color-outline);
   }
 
-  .toggle-buttons button:first-child:hover {
-    box-shadow: 0 0.2rem 0 0 var(--color-outline);
-  }
-
-  .toggle-buttons button:active {
-    transform: translateY(1px);
-    box-shadow: 0.1rem 0.1rem 0 0 var(--color-outline);
-  }
-
-  .toggle-buttons button.active {
+  .toggle-button.active {
     background-color: var(--color-accent);
     color: var(--color-text-tertiary);
   }
 
-  .toggle-buttons button:focus-visible {
+  .toggle-button:focus-visible {
     outline: 0.15rem solid var(--color-accent);
-    outline-offset: 0.15rem;
+    outline-offset: 0.2rem;
   }
 
   .hotkeys-grid {
@@ -211,31 +202,33 @@
 
   .remap-button,
   .close-button {
-    appearance: none;
-    border: 0.2rem solid var(--color-outline);
-    background-color: var(--color-button);
+    width: fit-content;
+    min-width: 12rem;
+    border: 0.15rem solid var(--color-outline);
+    padding: 0.5rem 1rem;
+    border-radius: 0.1rem;
     color: var(--color-text-primary);
-    font-weight: 700;
-    border-radius: 0.25rem;
-    padding: 0.75rem 1.25rem;
-    font-size: 1rem;
-    cursor: pointer;
-    box-shadow: 0.2rem 0.2rem 0 var(--color-outline);
+    background-color: var(--color-button);
+    box-shadow: 0.25rem 0.25rem 0 var(--color-outline);
+    font-size: 0.9rem;
+    font-weight: 600;
     transition:
-      transform 0.1s ease-out,
-      box-shadow 0.1s ease-out,
-      background-color 0.1s ease-out;
+      transform 150ms ease,
+      box-shadow 150ms ease,
+      background-color 150ms ease,
+      color 150ms ease;
   }
 
   .remap-button:hover,
   .close-button:hover {
-    transform: translate(-0.1rem, -0.1rem);
-    box-shadow: 0.25rem 0.25rem 0 var(--color-outline);
+    transform: translate(0.15rem, 0.15rem);
+    box-shadow: 0.1rem 0.1rem 0 var(--color-outline);
   }
 
   .remap-button:active,
   .close-button:active {
-    transform: translate(0.1rem, 0.1rem);
+    transform: translate(0.35rem, 0.35rem);
+    box-shadow: 0 0 0 var(--color-outline);
   }
 
   .remap-button:focus,
@@ -246,7 +239,11 @@
   }
 
   .close-button {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    width: auto;
+    align-self: center;
     color: var(--color-close-button);
   }
 </style>

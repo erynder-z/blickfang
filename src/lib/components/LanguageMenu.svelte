@@ -61,16 +61,17 @@
   >
     <div class="menu-content">
       <h1>{$t["options.language.heading"]}</h1>
-
-      {#each languages as [lang, translations], i}
-        <button
-          bind:this={buttons[i]}
-          on:click={() => handleButtonClick(lang)}
-          class:active={$locale === lang}
-        >
-          {translations["language.name"]}
-        </button>
-      {/each}
+      <div class="option-buttons">
+        {#each languages as [lang, translations], i}
+          <button
+            bind:this={buttons[i]}
+            on:click={() => handleButtonClick(lang)}
+            class:active={$locale === lang}
+          >
+            {translations["language.name"]}
+          </button>
+        {/each}
+      </div>
 
       <button on:click={handleClose} class="close-button">{$t["general.close"]}</button>
     </div>
@@ -97,57 +98,64 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: clamp(40ch, 45ch, 90vw);
-    min-height: 25rem;
-    padding: 4rem;
+    width: clamp(28ch, 32ch, 90vw);
+    padding: 1.5rem 1.75rem;
+    min-height: auto;
     background-color: var(--color-background);
-    border: 0.15rem solid var(--color-outline);
-    border-radius: 0.25rem;
-    box-shadow: 0.25rem 0.25rem 0 0 var(--color-outline);
-    transition: height 0.2s ease;
+    border: 0.2rem solid var(--color-outline);
+    border-radius: 0.1rem;
+    box-shadow: 0 2px 8px var(--color-shadow);
   }
 
   .menu-content {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    min-width: 300px;
-    text-align: center;
-    width: 100%;
+    gap: 0.75rem;
+    align-items: center;
   }
 
   h1 {
+    margin: 0 0 1rem 0;
     color: var(--color-text-primary);
     line-height: 1.2;
+    font-size: 1.25rem;
     text-wrap: balance;
-    min-height: 2.5em;
-    margin: 0;
+  }
+
+  .option-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    align-items: center;
   }
 
   button {
-    appearance: none;
-    border: 0.2rem solid var(--color-outline);
-    background-color: var(--color-button);
+    width: fit-content;
+    min-width: 12rem;
+    border: 0.15rem solid var(--color-outline);
+    padding: 0.5rem 1rem;
+    border-radius: 0.1rem;
     color: var(--color-text-primary);
-    font-weight: 700;
-    border-radius: 0.25rem;
-    padding: 0.75rem 1.25rem;
-    font-size: 1rem;
-    cursor: pointer;
-    box-shadow: 0.2rem 0.2rem 0 var(--color-outline);
+    background-color: var(--color-button);
+    box-shadow: 0.25rem 0.25rem 0 var(--color-outline);
+    font-size: 0.9rem;
+    font-weight: 600;
     transition:
-      transform 0.1s ease-out,
-      box-shadow 0.1s ease-out,
-      background-color 0.1s ease-out;
+      transform 150ms ease,
+      box-shadow 150ms ease,
+      background-color 150ms ease,
+      color 150ms ease;
   }
 
   button:hover {
-    transform: translate(-0.1rem, -0.1rem);
-    box-shadow: 0.25rem 0.25rem 0 var(--color-outline);
+    transform: translate(0.15rem, 0.15rem);
+    box-shadow: 0.1rem 0.1rem 0 var(--color-outline);
   }
 
   button:active {
-    transform: translate(0.1rem, 0.1rem);
+    transform: translate(0.35rem, 0.35rem);
+    box-shadow: 0 0 0 var(--color-outline);
   }
 
   button:focus {
@@ -157,7 +165,11 @@
   }
 
   .close-button {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    width: auto;
+    align-self: center;
     color: var(--color-close-button);
   }
 </style>

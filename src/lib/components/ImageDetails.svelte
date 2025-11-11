@@ -57,8 +57,7 @@
     background-color: var(--color-button);
     padding: 0.75rem;
     border: 0.15rem solid var(--color-outline);
-    border-radius: 0.25rem;
-    box-shadow: 0.25rem 0.25rem 0 0 var(--color-outline);
+    border-radius: 0.1rem;
     transition: all 0.15s ease;
   }
 

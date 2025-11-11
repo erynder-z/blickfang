@@ -137,29 +137,31 @@
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 200;
-    background-color: var(--color-background);
-    border: 0.15rem solid var(--color-accent);
-    border-radius: 0.25rem;
-    padding: 4rem;
-    box-shadow: 0.25rem 0.25rem 0 0 var(--color-outline);
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: clamp(40ch, 45ch, 90vw);
+    width: clamp(28ch, 32ch, 90vw);
+    padding: 1.5rem 1.75rem;
+    min-height: auto;
+    background-color: var(--color-background);
+    border: 0.2rem solid var(--color-outline);
+    border-radius: 0.1rem;
+    box-shadow: 0 2px 8px var(--color-shadow);
   }
 
   .menu-content {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    min-width: 300px;
-    text-align: center;
+    gap: 0.75rem;
+    align-items: center;
   }
 
   h1 {
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 1rem 0;
     color: var(--color-text-primary);
     line-height: 1.2;
+    font-size: 1.25rem;
+    text-wrap: balance;
   }
 
   .hotkey-key {
@@ -170,20 +172,21 @@
 
   button.remap-button,
   button.close-button {
-    margin-top: 1rem;
-    padding: 0.5rem;
+    width: fit-content;
+    min-width: 12rem;
     border: 0.15rem solid var(--color-outline);
-    border-radius: 0.5rem;
-    background-color: var(--color-button);
+    padding: 0.5rem 1rem;
+    border-radius: 0.1rem;
     color: var(--color-text-primary);
-    cursor: pointer;
-    font-weight: bold;
-    min-height: 2.5rem;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    box-shadow: 0.2rem 0.2rem 0 0 var(--color-outline);
-    transition: all 0.15s ease;
-    font-size: 0.8rem;
+    background-color: var(--color-button);
+    box-shadow: 0.15rem 0.15rem 0 var(--color-outline);
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  button.close-button {
+    margin-top: 1.5rem;
+    color: var(--color-close-button);
   }
 
   button.remap-button:hover,

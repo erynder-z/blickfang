@@ -3,7 +3,7 @@ import {
   imagePath,
   imageUrl,
   zoomLevel,
-  isExifSidebarVisible,
+  isInfoSidebarVisible,
   isOptionsMenuVisible,
   activeActions,
   isFullscreenActive,
@@ -305,11 +305,11 @@ export const toggleFullscreen = async () => {
 
 /**
  * Toggles the visibility of the EXIF sidebar.
- * Starts feedback for the "toggleExif" action, and then updates the isExifSidebarVisible store.
+ * Starts feedback for the "toggleExif" action, and then updates the isInfoSidebarVisible store.
  */
 export const toggleExif = () => {
   singleShotFeedback("toggleExif");
-  isExifSidebarVisible.update((isOpen) => !isOpen);
+  isInfoSidebarVisible.update((isOpen) => !isOpen);
 };
 
 /**
@@ -337,7 +337,7 @@ export const toggleSaveAsMenu = () => {
  * For example, when the user toggles the fullscreen mode, all open menus will be closed.
  */
 const closeAllOpenMenus = () => {
-  isExifSidebarVisible.set(false);
+  isInfoSidebarVisible.set(false);
   isOptionsMenuVisible.set(false);
   isLanguageMenuVisible.set(false);
   isThemeMenuVisible.set(false);
