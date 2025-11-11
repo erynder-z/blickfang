@@ -54,5 +54,6 @@
   "hotkeys.remap.title": "ショートカットキーの再割り当て",
   "hotkeys.remap.press_key_for": "のキーを押して下さい",
   "hotkeys.remap.finished": "すべてのキーが再割り当てされました。",
-  "hotkeys.remap.error.key_in_use": "キー '{key}' は既に使用されています。"
+  "hotkeys.remap.error.key_in_use": "キー '{key}' は既に使用されています。",
+  "placeholder.no-image": "画像が読み込まれていません。"
 }

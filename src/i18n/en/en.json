@@ -54,5 +54,6 @@
   "hotkeys.remap.title": "Remap Hotkeys",
   "hotkeys.remap.press_key_for": "Press a key for",
   "hotkeys.remap.finished": "All keys have been remapped.",
-  "hotkeys.remap.error.key_in_use": "Key '{key}' is already in use."
+  "hotkeys.remap.error.key_in_use": "Key '{key}' is already in use.",
+  "placeholder.no-image": "No image loaded. "
 }

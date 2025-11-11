@@ -54,5 +54,6 @@
   "hotkeys.remap.title": "Hotkeys neu zuweisen",
   "hotkeys.remap.press_key_for": "Taste drücken für",
   "hotkeys.remap.finished": "Alle Tasten wurden neu zugewiesen.",
-  "hotkeys.remap.error.key_in_use": "Taste '{key}' wird bereits verwendet."
+  "hotkeys.remap.error.key_in_use": "Taste '{key}' wird bereits verwendet.",
+  "placeholder.no-image": "Kein Bild geladen."
 }
