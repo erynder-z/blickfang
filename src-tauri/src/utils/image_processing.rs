@@ -109,11 +109,21 @@ fn extract_exif_json(bytes: &[u8]) -> String {
         Ok(exif) => {
             let exif_map: std::collections::HashMap<_, _> = exif
                 .fields()
-                .map(|field| {
-                    (
-                        field.tag.to_string(),
-                        field.display_value().with_unit(&exif).to_string(),
-                    )
+                .filter_map(|field| {
+                    let value_str = match &field.value {
+                        // This is always binary, so we skip it.
+                        exif::Value::Undefined(_, _) => return None,
+
+                        exif::Value::Byte(buf) => {
+                            match String::from_utf8(buf.clone()) {
+                                Ok(s) => s,
+                                Err(_) => return None, // Skip, if not  UTF-8
+                            }
+                        }
+
+                        _ => field.display_value().with_unit(&exif).to_string(),
+                    };
+                    Some((field.tag.to_string(), value_str))
                 })
                 .collect();
             serde_json::to_string(&exif_map).unwrap_or_default()
