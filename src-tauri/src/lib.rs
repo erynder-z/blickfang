@@ -43,7 +43,8 @@ pub fn run() {
             commands::config_commands::set_active_shortcuts_to_custom,
             commands::config_commands::update_image_name_display_mode_command,
             commands::config_commands::update_edge_indicators_visible_command,
-            commands::config_commands::update_remember_window_size_command
+            commands::config_commands::update_remember_window_size_command,
+            commands::image_analyze::detect_ai_image
         ])
         .build(context)
         .expect("error while building tauri application")

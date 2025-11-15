@@ -3,9 +3,15 @@ use exif::Reader;
 use image::{self, DynamicImage, ImageFormat};
 use mime_guess;
 use serde::Serialize;
+use std::fs;
 use std::io::Cursor;
 use std::path::{Path, PathBuf};
 use webp;
+
+// C2PA UUID for ai generated content detection
+const C2PA_UUID: [u8; 16] = [
+    0xD8, 0xFE, 0x07, 0xFF, 0xF1, 0xD9, 0x4D, 0x9A, 0xA0, 0x5E, 0xA8, 0x0B, 0x5A, 0x9F, 0xD8, 0x5A,
+];
 
 #[derive(Serialize, Clone)]
 pub struct ImageMetadata {
@@ -130,7 +136,8 @@ pub fn save_image_to_format(
 ) -> Result<String, String> {
     let image_format = ImageFormat::from_extension(format)
         .ok_or_else(|| format!("Invalid image format: {}", format))?;
-    let img = image::load_from_memory(bytes).map_err(|e| format!("Failed to decode image: {}", e))?;
+    let img =
+        image::load_from_memory(bytes).map_err(|e| format!("Failed to decode image: {}", e))?;
 
     match image_format {
         ImageFormat::WebP => save_webp(&img, save_path, quality)?,
@@ -168,4 +175,81 @@ pub fn get_supported_image_formats() -> Result<Vec<String>, String> {
         "bmp".to_string(),
     ];
     Ok(formats)
+}
+
+pub fn detect_c2pa(path: &Path) -> Result<(bool, Option<String>), String> {
+    let bytes =
+        fs::read(path).map_err(|e| format!("Failed to read file for C2PA detection: {}", e))?;
+    if let Some(pos) = bytes.windows(16).position(|w| w == C2PA_UUID) {
+        if let Some((json, _store)) = extract_c2pa_store(&bytes[pos..]) {
+            return Ok((true, Some(json)));
+        }
+        return Ok((true, None));
+    }
+    Ok((false, None))
+}
+
+pub fn extract_c2pa_store(bytes: &[u8]) -> Option<(String, Vec<u8>)> {
+    if bytes.len() < 20 {
+        return None;
+    }
+    let payload = &bytes[16..];
+    let start = payload.iter().position(|&b| b == b'{')?;
+    let end = payload.iter().rposition(|&b| b == b'}')?;
+    if end > start {
+        if let Ok(json_str) = std::str::from_utf8(&payload[start..=end]) {
+            return Some((json_str.to_string(), payload.to_vec()));
+        }
+    }
+    None
+}
+
+pub fn extract_png_text_chunks(bytes: &[u8]) -> Vec<(String, String)> {
+    let mut chunks = Vec::new();
+    let mut cursor = 8;
+    while cursor + 8 <= bytes.len() {
+        let len = u32::from_be_bytes(bytes[cursor..cursor + 4].try_into().unwrap()) as usize;
+        let name = std::str::from_utf8(&bytes[cursor + 4..cursor + 8])
+            .unwrap_or("")
+            .to_string();
+        cursor += 8;
+        if cursor + len > bytes.len() {
+            break;
+        }
+        if name == "tEXt" || name == "iTXt" {
+            if let Ok(content) = std::str::from_utf8(&bytes[cursor..cursor + len]) {
+                if let Some(pos) = content.find('\0') {
+                    chunks.push((content[..pos].to_string(), content[pos + 1..].to_string()));
+                } else {
+                    chunks.push((name.clone(), content.to_string()));
+                }
+            }
+        }
+        cursor += len + 4;
+    }
+    chunks
+}
+
+pub fn extract_webp_xmp(bytes: &[u8]) -> Option<String> {
+    if bytes.len() < 12 || &bytes[0..4] != b"RIFF" || &bytes[8..12] != b"WEBP" {
+        return None;
+    }
+    let mut cursor = 12;
+    while cursor + 8 <= bytes.len() {
+        let chunk_type = &bytes[cursor..cursor + 4];
+        let chunk_size =
+            u32::from_le_bytes(bytes[cursor + 4..cursor + 8].try_into().unwrap()) as usize;
+        cursor += 8;
+        if cursor + chunk_size > bytes.len() {
+            break;
+        }
+        if chunk_type == b"XMP " {
+            let raw = &bytes[cursor..cursor + chunk_size];
+            if let Ok(xmp_str) = std::str::from_utf8(raw) {
+                return Some(xmp_str.to_string());
+            }
+        }
+        cursor += chunk_size + (chunk_size & 1);
+    }
+    None
 }

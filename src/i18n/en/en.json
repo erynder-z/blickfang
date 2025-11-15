@@ -55,5 +55,9 @@
   "hotkeys.remap.press_key_for": "Press a key for",
   "hotkeys.remap.finished": "All keys have been remapped.",
   "hotkeys.remap.error.key_in_use": "Key '{key}' is already in use.",
-  "placeholder.no-image": "No image loaded. "
+  "placeholder.no-image": "No image loaded. ",
+  "ai_checker.heading": "AI Checker",
+  "ai_checker.result_tag": "Result",
+  "ai_checker.positive_result": "Metadata contains hints of AI generated content",
+  "ai_checker.negative_result": "Metadata does not contain hints of AI generated content"
 }

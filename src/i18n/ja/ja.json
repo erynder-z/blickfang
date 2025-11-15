@@ -55,5 +55,9 @@
   "hotkeys.remap.press_key_for": "のキーを押して下さい",
   "hotkeys.remap.finished": "すべてのキーが再割り当てされました。",
   "hotkeys.remap.error.key_in_use": "キー '{key}' は既に使用されています。",
-  "placeholder.no-image": "画像が読み込まれていません。"
+  "placeholder.no-image": "画像が読み込まれていません。",
+  "ai_checker.heading": "AIチェック",
+  "ai_checker.result_tag": "結果",
+  "ai_checker.positive_result": "メタデータにAI生成されたコンテンツのヒントがあります",
+  "ai_checker.negative_result": "メタデータにAI生成されたコンテンツのヒントがありません"
 }

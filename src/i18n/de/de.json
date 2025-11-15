@@ -55,5 +55,9 @@
   "hotkeys.remap.press_key_for": "Taste drücken für",
   "hotkeys.remap.finished": "Alle Tasten wurden neu zugewiesen.",
   "hotkeys.remap.error.key_in_use": "Taste '{key}' wird bereits verwendet.",
-  "placeholder.no-image": "Kein Bild geladen."
+  "placeholder.no-image": "Kein Bild geladen.",
+  "ai_checker.heading": "KI Checker",
+  "ai_checker.result_tag": "Ergebnis",
+  "ai_checker.positive_result": "Metadata enthält hinweise auf KI generierten Inhalt",
+  "ai_checker.negative_result": "Metadata enthaltet keine Hinweise auf KI generierten Inhalt"
 }

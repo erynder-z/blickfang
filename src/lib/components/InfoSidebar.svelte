@@ -1,6 +1,7 @@
 <script lang="ts">
   import { isInfoSidebarVisible, imageFormat } from "$lib/stores/appState";
   import ExifDisplay from "./ExifDisplay.svelte";
+  import AiDetection from "./AiDetection.svelte";
   import ImageDetails from "./ImageDetails.svelte";
   import InfoSidebarPlaceholder from "./InfoSidebarPlaceholder.svelte";
 </script>
@@ -10,6 +11,7 @@
     {#if $imageFormat}
       <ImageDetails />
       <ExifDisplay />
+      <AiDetection />
     {:else}
       <InfoSidebarPlaceholder />
     {/if}

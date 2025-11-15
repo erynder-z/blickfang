@@ -1,8 +1,36 @@
 import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/core";
 import { setLocale } from "$lib/utils/i18n";
-import { imageUrl, imagePath, appConfig, type AppConfig } from "$lib/stores/appState";
+import {
+  imageUrl,
+  imagePath,
+  appConfig,
+  type AppConfig,
+  aiDetectionResult,
+  type AiDetectionResult,
+} from "$lib/stores/appState";
 import { type ImageMetadata, updateImageStores } from "./commands";
+
+/**
+ * Runs AI detection on the given image path and updates the aiDetectionResult store.
+ * If the path is null, it sets the aiDetectionResult store to null.
+ * @param {string | null} path - The path to the image file
+ * @returns {Promise<void>}
+ */
+const runAiDetection = async (path: string | null): Promise<void> => {
+  if (!path) {
+    aiDetectionResult.set(null);
+    return;
+  }
+
+  try {
+    const result = await invoke<AiDetectionResult>("detect_ai_image", { path });
+    aiDetectionResult.set(result);
+  } catch (error) {
+    console.error("Failed to detect AI image:", error);
+    aiDetectionResult.set(null);
+  }
+};
 
 /**
  * Handles the "image-source" event.
@@ -85,6 +113,7 @@ const showMainWindow = () => {
 export const initializeApp = () => {
   let unlistenImageSource: () => void;
   let unlistenConfig: () => void;
+  let unsubscribeImagePath: () => void;
 
   (async () => {
     const unlisteners = await registerEventListeners();
@@ -92,10 +121,13 @@ export const initializeApp = () => {
     unlistenConfig = unlisteners.unlistenConfig;
   })();
 
+  unsubscribeImagePath = imagePath.subscribe(runAiDetection);
+
   showMainWindow();
 
   return () => {
     unlistenImageSource?.();
     unlistenConfig?.();
+    unsubscribeImagePath?.();
   };
 };

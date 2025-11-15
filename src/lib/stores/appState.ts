@@ -91,3 +91,16 @@ export const appConfig = writable<AppConfig>({
     zoomModifierDown: { keys: [], label: "" },
   },
 });
+
+export interface AiDetectionResult {
+  is_ai_generated: boolean;
+  reasons: string[];
+  exif_data: Record<string, string> | null;
+  format: string;
+  png_metadata: Record<string, string> | null;
+  has_c2pa: boolean;
+  c2pa_manifest: string | null;
+}
+
+export const aiDetectionResult = writable<AiDetectionResult | null>(null);
+
