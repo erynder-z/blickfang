@@ -114,7 +114,18 @@
           <p>{$t["hotkeys.remap.finished"]}</p>
           <button on:click={handleSaveRemap} class="remap-button">{$t["general.save"]}</button>
         {/if}
-        <button on:click={handleCancelRemap} class="close-button">{$t["general.cancel"]}</button>
+        <button on:click={handleCancelRemap} class="close-button">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="1.25rem"
+            viewBox="0 -960 960 960"
+            width="1.25rem"
+            fill="var(--color-close-button)"
+            ><path
+              d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+            /></svg
+          >{$t["general.cancel"]}</button
+        >
       </div>
     {/if}
   </div>
@@ -141,7 +152,7 @@
     flex-direction: column;
     align-items: center;
     width: clamp(28ch, 32ch, 90vw);
-    padding: 1.5rem 1.75rem;
+    padding: 2.5rem;
     min-height: auto;
     background-color: var(--color-background);
     border: 0.2rem solid var(--color-outline);
@@ -173,7 +184,7 @@
   button.remap-button,
   button.close-button {
     width: fit-content;
-    min-width: 12rem;
+    min-width: 100%;
     border: 0.15rem solid var(--color-outline);
     padding: 0.5rem 1rem;
     border-radius: 0.1rem;
@@ -187,6 +198,11 @@
   button.close-button {
     margin-top: 1.5rem;
     color: var(--color-close-button);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-width: 0;
   }
 
   button.remap-button:hover,

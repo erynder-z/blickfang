@@ -8,11 +8,12 @@
   import { t } from "$lib/utils/i18n";
   import { invoke } from "@tauri-apps/api/core";
   import RemapDialog from "./RemapDialog.svelte";
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte"; // Added tick import
   import { fly, fade } from "svelte/transition";
   import { focusTrap } from "$lib/actions/focusTrap";
 
   let defaultShortcuts: Shortcuts | null = null;
+  let toggleButtons: HTMLButtonElement[] = [];
 
   onMount(async () => {
     defaultShortcuts = await invoke<Shortcuts>("get_default_shortcuts_command");
@@ -23,9 +24,12 @@
     $appConfig.shortcuts &&
     JSON.stringify($appConfig.shortcuts) === JSON.stringify(defaultShortcuts);
 
-  const handleRemap = () => {
-    isRemapping.set(true);
-  };
+  $: if ($isHotkeysMenuVisible)
+    tick().then(() => {
+      toggleButtons[0]?.focus();
+    });
+
+  const handleRemap = () => isRemapping.set(true);
 
   const handleClose = () => isHotkeysMenuVisible.set(false);
 
@@ -67,11 +71,21 @@
       <h1>{$t["hotkeys.heading"]}</h1>
 
       <div class="toggle-row">
-        <button class="toggle-button" class:active={isUsingDefault} on:click={handleSetDefault}>
+        <button
+          bind:this={toggleButtons[0]}
+          class="toggle-button"
+          class:active={isUsingDefault}
+          on:click={handleSetDefault}
+        >
           {$t["hotkeys.button.default_hotkeys"]}
         </button>
 
-        <button class="toggle-button" class:active={!isUsingDefault} on:click={handleSetCustom}>
+        <button
+          bind:this={toggleButtons[1]}
+          class="toggle-button"
+          class:active={!isUsingDefault}
+          on:click={handleSetCustom}
+        >
           {$t["hotkeys.button.custom_hotkeys"]}
         </button>
       </div>
@@ -79,9 +93,11 @@
       <div class="hotkeys-grid">
         {#if $appConfig.shortcuts}
           {#each Object.keys($appConfig.shortcuts) as action}
-            <div class="hotkey-action">{$t[`hotkeys.${action}`]}</div>
-            <div class="hotkey-key">
-              {$appConfig.shortcuts[action as keyof Shortcuts].label.toLocaleUpperCase()}
+            <div class="action-row">
+              <div class="hotkey-action">{$t[`hotkeys.${action}`]}</div>
+              <div class="hotkey-key">
+                {$appConfig.shortcuts[action as keyof Shortcuts].label.toLocaleUpperCase()}
+              </div>
             </div>
           {/each}
         {/if}
@@ -89,7 +105,19 @@
 
       <button on:click={handleRemap} class="remap-button">{$t["hotkeys.button.remap"]}</button>
 
-      <button on:click={handleClose} class="close-button">{$t["general.close"]}</button>
+      <button on:click={handleClose} class="close-button">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="1.25rem"
+          viewBox="0 -960 960 960"
+          width="1.25rem"
+          fill="var(--color-close-button)"
+          ><path
+            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+          /></svg
+        >
+        {$t["general.close"]}
+      </button>
     </div>
   </div>
 {/if}
@@ -114,16 +142,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: clamp(40ch, 45ch, 90vw);
-    min-height: 25rem;
-    padding: 4rem;
+    width: clamp(50ch, 55ch, 90vw);
+    padding: 2.5rem;
     background-color: var(--color-background);
     border: 0.15rem solid var(--color-outline);
     border-radius: 0.1rem;
     box-shadow:
       0.3rem 0.3rem 0 0 var(--color-outline),
       0.6rem 0.6rem 0 0 var(--color-shadow);
-    transition: height 0.2s ease;
   }
 
   .menu-content {
@@ -131,6 +157,7 @@
     flex-direction: column;
     gap: 0.75rem;
     align-items: center;
+    min-width: 100%;
   }
 
   h1 {
@@ -155,7 +182,6 @@
     box-shadow: 0.25rem 0.25rem 0 var(--color-outline);
     font-size: 0.9rem;
     font-weight: 700;
-    cursor: pointer;
     transition:
       transform 150ms ease,
       box-shadow 150ms ease,
@@ -184,10 +210,15 @@
   }
 
   .hotkeys-grid {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 0.5rem 1.5rem;
-    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .action-row {
+    display: flex;
+    justify-content: space-between;
   }
 
   .hotkey-action {
@@ -195,15 +226,15 @@
   }
 
   .hotkey-key {
+    text-align: end;
     font-weight: bold;
     color: var(--color-text-secondary);
-    justify-self: end;
   }
 
   .remap-button,
   .close-button {
     width: fit-content;
-    min-width: 12rem;
+    min-width: 100%;
     border: 0.15rem solid var(--color-outline);
     padding: 0.5rem 1rem;
     border-radius: 0.1rem;
@@ -239,11 +270,14 @@
   }
 
   .close-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
     margin-top: 1.5rem;
     font-size: 0.9rem;
     padding: 0.5rem 1rem;
-    width: auto;
-    align-self: center;
+    min-width: 0;
     color: var(--color-close-button);
   }
 </style>
