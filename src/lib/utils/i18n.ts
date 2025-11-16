@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { writable, derived } from "svelte/store";
 
 const modules = import.meta.glob("../../i18n/**/*.json", { eager: true });
 
@@ -11,7 +11,7 @@ for (const path in modules) {
 }
 
 export const locale = writable<string>("en");
-export const t = writable<Record<string, string>>(locales.en);
+export const t = derived(locale, ($locale) => locales[$locale]);
 
 /**
  * Sets the current locale and updates the translations.
@@ -20,6 +20,5 @@ export const t = writable<Record<string, string>>(locales.en);
 export const setLocale = (newLocale: string) => {
   if (newLocale in locales) {
     locale.set(newLocale);
-    t.set(locales[newLocale]);
   }
 };
