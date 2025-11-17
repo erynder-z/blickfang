@@ -1,6 +1,6 @@
 use base64::{engine::general_purpose, Engine};
 use exif::Reader;
-use image::{self, DynamicImage, ImageFormat};
+use image::{self, DynamicImage, ImageDecoder, ImageFormat};
 use mime_guess;
 use serde::Serialize;
 use std::fs;
@@ -21,6 +21,7 @@ pub struct ImageMetadata {
     pub height: u32,
     pub aspect_ratio: String,
     pub format: String,
+    pub color_depth: Option<u8>,
 }
 
 fn gcd(a: u32, b: u32) -> u32 {
@@ -46,9 +47,42 @@ async fn read_file_bytes(path: &Path) -> Result<Vec<u8>, String> {
         .map_err(|e| format!("Failed to read file '{}': {}", path.display(), e))
 }
 
+fn get_color_depth(color_type: image::ColorType) -> Option<u8> {
+    match color_type {
+        image::ColorType::L8 => Some(8),
+        image::ColorType::La8 => Some(8),
+        image::ColorType::Rgb8 => Some(8),
+        image::ColorType::Rgba8 => Some(8),
+        image::ColorType::L16 => Some(16),
+        image::ColorType::La16 => Some(16),
+        image::ColorType::Rgb16 => Some(16),
+        image::ColorType::Rgba16 => Some(16),
+        image::ColorType::Rgb32F => Some(32),
+        image::ColorType::Rgba32F => Some(32),
+        _ => None,
+    }
+}
+
+fn get_image_details(bytes: &[u8]) -> Result<((u32, u32), Option<u8>), String> {
+    let reader = image::ImageReader::new(Cursor::new(bytes))
+        .with_guessed_format()
+        .map_err(|e| format!("Failed to guess image format: {}", e))?;
+
+    let decoder = reader
+        .into_decoder()
+        .map_err(|e| format!("Failed to create decoder: {}", e))?;
+
+    let dimensions = decoder.dimensions();
+    let color_type = decoder.color_type();
+    let color_depth = get_color_depth(color_type);
+
+    Ok((dimensions, color_depth))
+}
+
 fn process_image_metadata(path: &Path, bytes: &[u8]) -> Result<ImageMetadata, String> {
     let (mime_type, format) = guess_image_format(path, bytes);
-    let (width, height) = get_image_dimensions(bytes);
+    let ((width, height), color_depth) = get_image_details(bytes)?;
+
     let aspect_ratio = compute_aspect_ratio(width, height);
     let data_url = build_data_url(&mime_type, bytes);
     let exif_data = extract_exif_json(bytes);
@@ -60,6 +94,7 @@ fn process_image_metadata(path: &Path, bytes: &[u8]) -> Result<ImageMetadata, St
         height,
         aspect_ratio,
         format,
+        color_depth,
     })
 }
 
@@ -81,14 +116,6 @@ fn guess_image_format(path: &Path, bytes: &[u8]) -> (String, String) {
             .to_uppercase(),
     };
     (mime_type, format)
-}
-
-fn get_image_dimensions(bytes: &[u8]) -> (u32, u32) {
-    image::ImageReader::new(Cursor::new(bytes))
-        .with_guessed_format()
-        .ok()
-        .and_then(|r| r.into_dimensions().ok())
-        .unwrap_or((0, 0))
 }
 
 fn compute_aspect_ratio(width: u32, height: u32) -> String {

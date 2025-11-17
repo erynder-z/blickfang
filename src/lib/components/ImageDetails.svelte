@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { imageFormat, imageResolution, imageAspectRatio } from "$lib/stores/appState";
+  import { imageFormat, imageResolution, imageAspectRatio, imageColorDepth } from "$lib/stores/appState";
   import { t } from "$lib/utils/i18n";
 </script>
 
@@ -22,6 +22,12 @@
       <div class="info-item">
         <span class="info-tag">{$t["image.aspectRatio"]}</span>
         <span class="info-value">{$imageAspectRatio}</span>
+      </div>
+    {/if}
+    {#if $imageColorDepth}
+      <div class="info-item">
+        <span class="info-tag">{$t["image.colorDepth"]}</span>
+        <span class="info-value">{$imageColorDepth} bit</span>
       </div>
     {/if}
   </div>

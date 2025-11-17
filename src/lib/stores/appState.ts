@@ -35,6 +35,7 @@ export const imageExif = writable<string | null>(null);
 export const imageFormat = writable<string | null>(null);
 export const imageResolution = writable<{ width: number; height: number } | null>(null);
 export const imageAspectRatio = writable<string | null>(null);
+export const imageColorDepth = writable<number | null>(null);
 export const zoomLevel = writable<number>(1);
 export const edgeIndicators = writable({
   top: false,

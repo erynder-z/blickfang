@@ -19,6 +19,7 @@ import {
   imageFormat,
   imageResolution,
   imageAspectRatio,
+  imageColorDepth,
   imageExif,
   isZoomModifierUpActive,
   isZoomModifierDownActive,
@@ -33,6 +34,7 @@ export interface ImageMetadata {
   height: number;
   aspect_ratio: string;
   format: string;
+  color_depth: number | null;
 }
 
 /**
@@ -44,6 +46,7 @@ export interface ImageMetadata {
 export const updateImageStores = (metadata: ImageMetadata) => {
   imageExif.set(metadata.exif_data);
   imageFormat.set(metadata.format);
+  imageColorDepth.set(metadata.color_depth);
 
   if (metadata.width > 0 && metadata.height > 0) {
     imageResolution.set({ width: metadata.width, height: metadata.height });
