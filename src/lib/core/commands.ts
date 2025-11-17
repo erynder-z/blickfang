@@ -323,8 +323,13 @@ export const toggleOptions = () => {
 
 /**
  * Toggles the visibility of the "Save As" menu.
+ * If no image is open, this function does nothing.
+ * Starts feedback for the "saveImageAs" action, and then updates the isSaveAsMenuVisible store.
  */
 export const toggleSaveAsMenu = () => {
+  const isImageOpen = get(imageUrl);
+  if (!isImageOpen) return;
+
   singleShotFeedback("saveImageAs");
   isSaveAsMenuVisible.update((isOpen) => !isOpen);
 };

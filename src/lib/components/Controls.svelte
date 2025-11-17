@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { activeActions, appConfig, isSaveAsMenuVisible } from "$lib/stores/appState";
+  import { activeActions, appConfig, imageUrl, isSaveAsMenuVisible } from "$lib/stores/appState";
   import {
     nextImage,
     openFile,
@@ -11,6 +11,7 @@
     toggleFullscreen,
     saveImageAs,
   } from "$lib/core/commands";
+  import { get } from "svelte/store";
 
   const buttonSizes: Record<string, string> = {
     large: "2.5rem",
@@ -18,6 +19,18 @@
   };
 
   $: size = buttonSizes[$appConfig.toolbarButtonSize];
+
+  /**
+   * Handle the click event on the "Save As" button.
+   * If no image is open, do nothing.
+   * Otherwise, toggle the visibility of the "Save As" menu.
+   */
+  const handleSaveAsButtonClick = () => {
+    const isImageOpen = get(imageUrl);
+    if (!isImageOpen) return;
+
+    isSaveAsMenuVisible.update((v) => !v);
+  };
 </script>
 
 <div
@@ -40,7 +53,7 @@
 
   <!-- Save As -->
   <button
-    on:click={() => isSaveAsMenuVisible.update((v) => !v)}
+    on:click={handleSaveAsButtonClick}
     aria-label="Save As"
     style="--btn-size: {size}"
     class:active={$activeActions.includes("saveImageAs")}
