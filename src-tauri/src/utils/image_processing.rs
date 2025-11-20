@@ -2,7 +2,8 @@ use base64::{engine::general_purpose, Engine};
 use exif::Reader;
 use image::{self, DynamicImage, ImageDecoder, ImageFormat};
 use mime_guess;
-use serde::Serialize;
+
+use crate::models::image::ImageMetadata;
 use std::fs;
 use std::io::Cursor;
 use std::path::{Path, PathBuf};
@@ -13,16 +14,7 @@ const C2PA_UUID: [u8; 16] = [
     0xD8, 0xFE, 0x07, 0xFF, 0xF1, 0xD9, 0x4D, 0x9A, 0xA0, 0x5E, 0xA8, 0x0B, 0x5A, 0x9F, 0xD8, 0x5A,
 ];
 
-#[derive(Serialize, Clone)]
-pub struct ImageMetadata {
-    pub image_data: String,
-    pub exif_data: String,
-    pub width: u32,
-    pub height: u32,
-    pub aspect_ratio: String,
-    pub format: String,
-    pub color_depth: Option<u8>,
-}
+
 
 fn gcd(a: u32, b: u32) -> u32 {
     if b == 0 {

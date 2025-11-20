@@ -1,11 +1,11 @@
 use tauri::Window;
 
+use crate::models::image::ImageMetadata;
 use crate::utils::{
     dialog_utils::{open_image_dialog, show_save_dialog},
     file_system::get_filtered_directory_files,
     image_processing::{
         self, get_supported_image_formats as get_formats, load_image_bytes, read_image_file,
-        ImageMetadata,
     },
 };
 

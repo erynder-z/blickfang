@@ -1,33 +1,6 @@
 import { writable } from "svelte/store";
-
-export interface Shortcut {
-  keys: string[];
-  label: string;
-}
-
-export interface Shortcuts {
-  openFile: Shortcut;
-  saveImageAs: Shortcut;
-  previousImage: Shortcut;
-  nextImage: Shortcut;
-  zoomIn: Shortcut;
-  zoomOut: Shortcut;
-  toggleExif: Shortcut;
-  toggleOptions: Shortcut;
-  zoomModifierUp: Shortcut;
-  zoomModifierDown: Shortcut;
-}
-
-export interface AppConfig {
-  language: string;
-  theme: string;
-  shortcuts: Shortcuts;
-  customShortcuts: Shortcuts;
-  toolbarButtonSize: "large" | "small" | "hide";
-  imageNameDisplayMode: "show" | "hide" | "fade";
-  edgeIndicatorsVisible: boolean;
-  rememberWindowSize: boolean;
-}
+import type { AppConfig } from "$lib/types/app";
+import type { AiDetectionResult } from "$lib/types/image";
 
 export const imageUrl = writable<string | null>(null);
 export const imagePath = writable<string | null>(null);
@@ -92,16 +65,6 @@ export const appConfig = writable<AppConfig>({
     zoomModifierDown: { keys: [], label: "" },
   },
 });
-
-export interface AiDetectionResult {
-  is_ai_generated: boolean;
-  reasons: string[];
-  exif_data: Record<string, string> | null;
-  format: string;
-  png_metadata: Record<string, string> | null;
-  has_c2pa: boolean;
-  c2pa_manifest: string | null;
-}
 
 export const aiDetectionResult = writable<AiDetectionResult | null>(null);
 

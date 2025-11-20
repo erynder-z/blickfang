@@ -1,4 +1,5 @@
-use crate::utils::config_utils::{default_shortcuts, read_config, write_config, Config, Shortcuts};
+use crate::models::config::{default_shortcuts, Config, Shortcuts};
+use crate::utils::config_utils::{read_config, write_config};
 use serde_json;
 use tauri::{AppHandle, Emitter, Manager};
 

@@ -1,4 +1,5 @@
-use crate::utils::config_utils::{read_config, write_config, Config};
+use crate::models::config::Config;
+use crate::utils::config_utils::{read_config, write_config};
 use serde_json;
 use tauri::{App, AppHandle, Manager, PhysicalPosition, PhysicalSize, RunEvent, WindowEvent};
 

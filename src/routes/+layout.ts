@@ -3,7 +3,8 @@
 // See: https://svelte.dev/docs/kit/single-page-apps
 // See: https://v2.tauri.app/start/frontend/sveltekit/ for more info
 
-import { appConfig, type AppConfig } from "$lib/stores/appState";
+import { appConfig } from "$lib/stores/appState";
+import type { AppConfig } from "$lib/types/app";
 import { setLocale } from "$lib/utils/i18n";
 import { browser } from "$app/environment";
 import type { LoadEvent } from "@sveltejs/kit";

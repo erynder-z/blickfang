@@ -5,11 +5,11 @@ import {
   imageUrl,
   imagePath,
   appConfig,
-  type AppConfig,
   aiDetectionResult,
-  type AiDetectionResult,
 } from "$lib/stores/appState";
-import { type ImageMetadata, updateImageStores } from "./commands";
+import type { AppConfig } from "$lib/types/app";
+import type { AiDetectionResult, ImageMetadata } from "$lib/types/image";
+import { updateImageStores } from "./commands";
 
 /**
  * Runs AI detection on the given image path and updates the aiDetectionResult store.

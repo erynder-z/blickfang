@@ -1,14 +1,11 @@
+use crate::models::image::AiDetectionResult;
 use crate::utils::image_processing::{detect_c2pa, extract_png_text_chunks, extract_webp_xmp};
 use exif::Reader as ExifReader;
 use image::ImageReader;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use std::{fs, fs::File, io::BufReader, path::Path};
 
-#[derive(Serialize)]
-pub struct AiDetectionResult {
-    pub is_ai_generated: bool,
-    pub format: String,
-}
+
 
 #[derive(Deserialize)]
 struct AiKeywords {

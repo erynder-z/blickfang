@@ -3,8 +3,8 @@
     isHotkeysMenuVisible,
     appConfig,
     isRemapping,
-    type Shortcuts,
   } from "$lib/stores/appState";
+  import type { Shortcuts } from "$lib/types/app";
   import { t } from "$lib/utils/i18n";
   import { invoke } from "@tauri-apps/api/core";
   import RemapDialog from "./RemapDialog.svelte";

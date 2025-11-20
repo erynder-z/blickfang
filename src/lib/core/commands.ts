@@ -1,4 +1,5 @@
 import { get } from "svelte/store";
+import type { ImageMetadata } from "$lib/types/image";
 import {
   imagePath,
   imageUrl,
@@ -26,16 +27,6 @@ import {
 } from "$lib/stores/appState";
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-
-export interface ImageMetadata {
-  image_data: string;
-  exif_data: string;
-  width: number;
-  height: number;
-  aspect_ratio: string;
-  format: string;
-  color_depth: number | null;
-}
 
 /**
  * Updates the image stores with the new metadata.

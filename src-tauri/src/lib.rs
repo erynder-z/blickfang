@@ -9,6 +9,7 @@ use tauri_plugin_opener;
 
 mod commands;
 mod utils;
+mod models;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
