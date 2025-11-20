@@ -14,8 +14,6 @@ const C2PA_UUID: [u8; 16] = [
     0xD8, 0xFE, 0x07, 0xFF, 0xF1, 0xD9, 0x4D, 0x9A, 0xA0, 0x5E, 0xA8, 0x0B, 0x5A, 0x9F, 0xD8, 0x5A,
 ];
 
-
-
 fn gcd(a: u32, b: u32) -> u32 {
     if b == 0 {
         a
@@ -55,6 +53,12 @@ fn get_color_depth(color_type: image::ColorType) -> Option<u8> {
     }
 }
 
+fn get_file_size(path: &Path) -> Result<u64, String> {
+    fs::metadata(path)
+        .map_err(|e| format!("Failed to get file metadata: {}", e))
+        .map(|m| m.len())
+}
+
 fn get_image_details(bytes: &[u8]) -> Result<((u32, u32), Option<u8>), String> {
     let reader = image::ImageReader::new(Cursor::new(bytes))
         .with_guessed_format()
@@ -78,6 +82,7 @@ fn process_image_metadata(path: &Path, bytes: &[u8]) -> Result<ImageMetadata, St
     let aspect_ratio = compute_aspect_ratio(width, height);
     let data_url = build_data_url(&mime_type, bytes);
     let exif_data = extract_exif_json(bytes);
+    let file_size = get_file_size(path)?;
 
     Ok(ImageMetadata {
         image_data: data_url,
@@ -87,6 +92,7 @@ fn process_image_metadata(path: &Path, bytes: &[u8]) -> Result<ImageMetadata, St
         aspect_ratio,
         format,
         color_depth,
+        file_size,
     })
 }
 

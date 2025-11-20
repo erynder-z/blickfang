@@ -37,6 +37,7 @@
   "image.resolution": "Resolution",
   "image.aspectRatio": "Aspect Ratio",
   "image.colorDepth": "Color Depth",
+  "image.fileSize": "File Size",
   "hotkeys.heading": "Hotkeys",
   "hotkeys.button.default_hotkeys": "Default",
   "hotkeys.button.custom_hotkeys": "Custom",

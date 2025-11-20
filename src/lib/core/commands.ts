@@ -24,6 +24,7 @@ import {
   imageExif,
   isZoomModifierUpActive,
   isZoomModifierDownActive,
+  imageFileSize,
 } from "$lib/stores/appState";
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -38,6 +39,7 @@ export const updateImageStores = (metadata: ImageMetadata) => {
   imageExif.set(metadata.exif_data);
   imageFormat.set(metadata.format);
   imageColorDepth.set(metadata.color_depth);
+  imageFileSize.set(metadata.file_size);
 
   if (metadata.width > 0 && metadata.height > 0) {
     imageResolution.set({ width: metadata.width, height: metadata.height });

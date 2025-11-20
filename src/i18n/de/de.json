@@ -37,6 +37,7 @@
   "image.resolution": "Auflösung",
   "image.aspectRatio": "Seitenverhältnis",
   "image.colorDepth": "Farbtiefe",
+  "image.fileSize": "Dateigröße",
   "hotkeys.heading": "Hotkeys",
   "hotkeys.button.default_hotkeys": "Standard",
   "hotkeys.button.custom_hotkeys": "Custom",

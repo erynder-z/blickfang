@@ -16,4 +16,5 @@ export interface ImageMetadata {
   aspect_ratio: string;
   format: string;
   color_depth: number | null;
+  file_size: number;
 }

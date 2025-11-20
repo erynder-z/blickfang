@@ -37,6 +37,7 @@
   "image.resolution": "解像度",
   "image.aspectRatio": "アスペクト比",
   "image.colorDepth": "色深度",
+  "image.fileSize": "ファイルサイズ",
   "hotkeys.heading": "ショートカットキー",
   "hotkeys.button.default_hotkeys": "デフォルト",
   "hotkeys.button.custom_hotkeys": "カスタム",

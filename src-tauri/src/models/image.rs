@@ -9,6 +9,7 @@ pub struct ImageMetadata {
     pub aspect_ratio: String,
     pub format: String,
     pub color_depth: Option<u8>,
+    pub file_size: u64,
 }
 
 #[derive(Serialize)]

@@ -1,6 +1,13 @@
 <script lang="ts">
-  import { imageFormat, imageResolution, imageAspectRatio, imageColorDepth } from "$lib/stores/appState";
+  import {
+    imageFormat,
+    imageResolution,
+    imageAspectRatio,
+    imageColorDepth,
+    imageFileSize,
+  } from "$lib/stores/appState";
   import { t } from "$lib/utils/i18n";
+  import { prettySize } from "$lib/utils/prettySize";
 </script>
 
 <div class="info-container">
@@ -28,6 +35,12 @@
       <div class="info-item">
         <span class="info-tag">{$t["image.colorDepth"]}</span>
         <span class="info-value">{$imageColorDepth} bit</span>
+      </div>
+    {/if}
+    {#if $imageFileSize}
+      <div class="info-item">
+        <span class="info-tag">{$t["image.fileSize"]}</span>
+        <span class="info-value">{prettySize($imageFileSize)}</span>
       </div>
     {/if}
   </div>
