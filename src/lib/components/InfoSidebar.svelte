@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { isInfoSidebarVisible, imageFormat } from "$lib/stores/appState";
+  import { isInfoSidebarVisible, imageFormat } from "$lib/stores";
   import ExifDisplay from "./ExifDisplay.svelte";
   import AiDetection from "./AiDetection.svelte";
   import ImageDetails from "./ImageDetails.svelte";

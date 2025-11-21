@@ -1,6 +1,5 @@
-// src/lib/themeManager.ts
 import themes from "./themes.json";
-import { appConfig } from "$lib/stores/appState";
+import { appConfig } from "$lib/stores";
 
 /**
  * Sets CSS custom properties for the given theme.

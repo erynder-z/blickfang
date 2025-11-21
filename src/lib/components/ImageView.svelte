@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { imageUrl, zoomLevel } from "$lib/stores/appState";
+  import { imageUrl, zoomLevel } from "$lib/stores";
   import { zoomPan } from "$lib/actions/zoompan";
   import EdgeIndicators from "./EdgeIndicators.svelte";
   import { t } from "$lib/utils/i18n";

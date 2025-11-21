@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { imageExif } from "$lib/stores/appState";
+  import { imageExif } from "$lib/stores";
   import { t } from "$lib/utils/i18n";
 
   let exifData: Record<string, string> | null = null;

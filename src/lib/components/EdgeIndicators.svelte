@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { edgeIndicators, indicatorsVisible } from "$lib/stores/appState";
+  import { edgeIndicators, indicatorsVisible } from "$lib/stores";
 </script>
 
 <div

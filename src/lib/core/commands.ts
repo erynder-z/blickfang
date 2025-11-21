@@ -25,7 +25,7 @@ import {
   isZoomModifierUpActive,
   isZoomModifierDownActive,
   imageFileSize,
-} from "$lib/stores/appState";
+} from "$lib/stores";
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 

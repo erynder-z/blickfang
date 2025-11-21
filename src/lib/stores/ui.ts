@@ -1,0 +1,29 @@
+// src/lib/stores/ui.ts
+import { writable } from "svelte/store";
+
+export const isInfoSidebarVisible = writable(false);
+export const isOptionsMenuVisible = writable(false);
+export const isLanguageMenuVisible = writable(false);
+export const isThemeMenuVisible = writable(false);
+export const isHotkeysMenuVisible = writable(false);
+export const isToolbarMenuVisible = writable(false);
+export const isImageNameDisplayMenuVisible = writable(false);
+export const isEdgeIndicatorMenuVisible = writable(false);
+export const isAppWindowMenuVisible = writable(false);
+export const isSaveAsMenuVisible = writable(false);
+
+export const isFullscreenActive = writable(false);
+export const isRefittingOnResize = writable(false);
+
+export const edgeIndicators = writable({
+  top: false,
+  bottom: false,
+  left: false,
+  right: false,
+});
+
+export const indicatorsVisible = writable(false);
+
+export const zoomLevel = writable(1);
+export const isZoomModifierUpActive = writable(false);
+export const isZoomModifierDownActive = writable(false);

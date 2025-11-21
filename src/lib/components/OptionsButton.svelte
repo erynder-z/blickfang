@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { activeActions, appConfig } from "$lib/stores/appState";
+  import { activeActions } from "$lib/stores";
   import { toggleOptions } from "$lib/core/commands";
 </script>
 

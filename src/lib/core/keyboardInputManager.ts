@@ -4,7 +4,7 @@ import {
   isRemapping,
   isZoomModifierDownActive,
   isZoomModifierUpActive,
-} from "$lib/stores/appState";
+} from "$lib/stores";
 import {
   openFile,
   previousImage,

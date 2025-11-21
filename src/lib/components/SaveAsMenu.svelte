@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { isSaveAsMenuVisible } from "$lib/stores/appState";
+  import { isSaveAsMenuVisible } from "$lib/stores";
   import { saveImageAs } from "$lib/core/commands";
   import { t } from "$lib/utils/i18n";
   import { fly, fade } from "svelte/transition";

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { activeActions, appConfig, imageUrl, isSaveAsMenuVisible } from "$lib/stores/appState";
+  import { activeActions, appConfig, imageUrl, isSaveAsMenuVisible } from "$lib/stores";
   import {
     nextImage,
     openFile,

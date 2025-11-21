@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { isLanguageMenuVisible } from "$lib/stores/appState";
+  import { isLanguageMenuVisible } from "$lib/stores";
   import { locale, setLocale, t, locales } from "$lib/utils/i18n";
   import { invoke } from "@tauri-apps/api/core";
   import { tick } from "svelte";

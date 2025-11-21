@@ -9,7 +9,7 @@
     isImageNameDisplayMenuVisible,
     isEdgeIndicatorMenuVisible,
     isAppWindowMenuVisible,
-  } from "$lib/stores/appState";
+  } from "$lib/stores";
   import { toggleOptions } from "$lib/core/commands";
   import type { Writable } from "svelte/store";
 

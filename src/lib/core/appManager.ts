@@ -1,12 +1,7 @@
 import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/core";
 import { setLocale } from "$lib/utils/i18n";
-import {
-  imageUrl,
-  imagePath,
-  appConfig,
-  aiDetectionResult,
-} from "$lib/stores/appState";
+import { imageUrl, imagePath, appConfig, aiDetectionResult } from "$lib/stores";
 import type { AppConfig } from "$lib/types/app";
 import type { AiDetectionResult, ImageMetadata } from "$lib/types/image";
 import { updateImageStores } from "./commands";

@@ -1,14 +1,10 @@
 <script lang="ts">
-  import {
-    isHotkeysMenuVisible,
-    appConfig,
-    isRemapping,
-  } from "$lib/stores/appState";
+  import { isHotkeysMenuVisible, appConfig, isRemapping } from "$lib/stores";
   import type { Shortcuts } from "$lib/types/app";
   import { t } from "$lib/utils/i18n";
   import { invoke } from "@tauri-apps/api/core";
   import RemapDialog from "./RemapDialog.svelte";
-  import { onMount, tick } from "svelte"; // Added tick import
+  import { onMount, tick } from "svelte";
   import { fly, fade } from "svelte/transition";
   import { focusTrap } from "$lib/actions/focusTrap";
 

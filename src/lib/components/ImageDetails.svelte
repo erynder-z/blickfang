@@ -5,7 +5,7 @@
     imageAspectRatio,
     imageColorDepth,
     imageFileSize,
-  } from "$lib/stores/appState";
+  } from "$lib/stores";
   import { t } from "$lib/utils/i18n";
   import { prettySize } from "$lib/utils/prettySize";
 </script>

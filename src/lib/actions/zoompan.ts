@@ -6,7 +6,7 @@ import {
   isRefittingOnResize,
   isZoomModifierUpActive,
   isZoomModifierDownActive,
-} from "$lib/stores/appState";
+} from "$lib/stores";
 import type { Writable } from "svelte/store";
 import { get } from "svelte/store";
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { isEdgeIndicatorMenuVisible, appConfig } from "$lib/stores/appState";
+  import { isEdgeIndicatorMenuVisible, appConfig } from "$lib/stores";
   import { t } from "$lib/utils/i18n";
   import { invoke } from "@tauri-apps/api/core";
   import { tick } from "svelte";

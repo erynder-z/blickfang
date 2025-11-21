@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { aiDetectionResult } from "$lib/stores/appState";
+  import { aiDetectionResult } from "$lib/stores";
   import { t } from "$lib/utils/i18n";
 </script>
 
