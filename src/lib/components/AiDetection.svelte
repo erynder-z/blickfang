@@ -33,6 +33,7 @@
     font-size: 1.5rem;
     color: var(--color-text-primary);
     line-height: 1.2;
+    margin-bottom: 0;
   }
 
   .ai-detection-grid {

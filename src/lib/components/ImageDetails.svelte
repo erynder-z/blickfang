@@ -13,18 +13,6 @@
 <div class="info-container">
   <h1>{$t["image.info"]}</h1>
   <div class="info-grid">
-    {#if $imageFormat}
-      <div class="info-item">
-        <span class="info-tag">{$t["image.format"]}</span>
-        <span class="info-value">{$imageFormat}</span>
-      </div>
-    {/if}
-    {#if $imageResolution}
-      <div class="info-item">
-        <span class="info-tag">{$t["image.resolution"]}</span>
-        <span class="info-value">{$imageResolution.width} x {$imageResolution.height}</span>
-      </div>
-    {/if}
     {#if $imageAspectRatio}
       <div class="info-item">
         <span class="info-tag">{$t["image.aspectRatio"]}</span>
@@ -41,6 +29,18 @@
       <div class="info-item">
         <span class="info-tag">{$t["image.fileSize"]}</span>
         <span class="info-value">{prettySize($imageFileSize)}</span>
+      </div>
+    {/if}
+    {#if $imageFormat}
+      <div class="info-item">
+        <span class="info-tag">{$t["image.format"]}</span>
+        <span class="info-value">{$imageFormat}</span>
+      </div>
+    {/if}
+    {#if $imageResolution}
+      <div class="info-item">
+        <span class="info-tag">{$t["image.resolution"]}</span>
+        <span class="info-value">{$imageResolution.width} x {$imageResolution.height}</span>
       </div>
     {/if}
   </div>
@@ -60,6 +60,7 @@
     font-size: 1.5rem;
     color: var(--color-text-primary);
     line-height: 1.2;
+    margin-bottom: 0;
   }
 
   .info-grid {
