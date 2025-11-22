@@ -1,5 +1,12 @@
 <script lang="ts">
-  import { activeActions, appConfig, imageUrl, isSaveAsMenuVisible } from "$lib/stores";
+  import {
+    activeActions,
+    appConfig,
+    imageUrl,
+    isSaveAsMenuVisible,
+    isZoomModifierUpActive,
+    isZoomModifierDownActive,
+  } from "$lib/stores";
   import {
     nextImage,
     openFile,
@@ -112,6 +119,8 @@
     aria-label="Zoom In"
     style="--btn-size: {size}"
     class:active={$activeActions.includes("zoomIn")}
+    class:stronger={$isZoomModifierUpActive}
+    class:subdued={$isZoomModifierDownActive}
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -133,6 +142,8 @@
     aria-label="Zoom Out"
     style="--btn-size: {size}"
     class:active={$activeActions.includes("zoomOut")}
+    class:stronger={$isZoomModifierUpActive}
+    class:subdued={$isZoomModifierDownActive}
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -212,24 +223,22 @@
     transition: all 0.2s ease-in-out;
   }
 
-  button:hover {
-    filter: brightness(1.3);
-    transform: scale(1.05);
-  }
-
   button.active {
     background-color: var(--color-accent);
     color: var(--color-text-tertiary);
   }
 
+  button.active.subdued {
+    filter: brightness(0.7);
+  }
+
+  button.active.stronger {
+    filter: brightness(1.5);
+  }
+
   button:hover {
     filter: brightness(1.3);
     transform: scale(1.05);
-  }
-
-  button.active {
-    background-color: var(--color-accent);
-    color: var(--color-text-tertiary);
   }
 
   button svg {
