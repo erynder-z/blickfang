@@ -16,7 +16,6 @@
     stopContinuousZoom,
     toggleExif,
     toggleFullscreen,
-    saveImageAs,
   } from "$lib/core/commands";
   import { get } from "svelte/store";
 
@@ -27,16 +26,15 @@
 
   $: size = buttonSizes[$appConfig.toolbarButtonSize];
 
-  /**
-   * Handle the click event on the "Save As" button.
-   * If no image is open, do nothing.
-   * Otherwise, toggle the visibility of the "Save As" menu.
-   */
-  const handleSaveAsButtonClick = () => {
+  const showSaveAsMenu = () => {
+    isSaveAsMenuVisible.update((v) => !v);
+  };
+
+  const onlyIfImageIsOpen = (action: () => void) => {
     const isImageOpen = get(imageUrl);
     if (!isImageOpen) return;
 
-    isSaveAsMenuVisible.update((v) => !v);
+    action();
   };
 </script>
 
@@ -60,10 +58,11 @@
 
   <!-- Save As -->
   <button
-    on:click={handleSaveAsButtonClick}
+    on:click={showSaveAsMenu}
     aria-label="Save As"
     style="--btn-size: {size}"
     class:active={$activeActions.includes("saveImageAs")}
+    disabled={!$imageUrl}
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -83,6 +82,7 @@
     aria-label="Previous Image"
     style="--btn-size: {size}"
     class:active={$activeActions.includes("previousImage")}
+    disabled={!$imageUrl}
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -100,6 +100,7 @@
     aria-label="Next Image"
     style="--btn-size: {size}"
     class:active={$activeActions.includes("nextImage")}
+    disabled={!$imageUrl}
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -121,6 +122,7 @@
     class:active={$activeActions.includes("zoomIn")}
     class:stronger={$isZoomModifierUpActive}
     class:subdued={$isZoomModifierDownActive}
+    disabled={!$imageUrl}
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -144,6 +146,7 @@
     class:active={$activeActions.includes("zoomOut")}
     class:stronger={$isZoomModifierUpActive}
     class:subdued={$isZoomModifierDownActive}
+    disabled={!$imageUrl}
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -182,6 +185,7 @@
     aria-label="Toggle Info"
     style="--btn-size: {size}"
     class:active={$activeActions.includes("toggleExif")}
+    disabled={!$imageUrl}
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -219,7 +223,6 @@
     background-color: rgb(from var(--color-background) r g b / 0.5);
     color: var(--color-text-primary);
     border: none;
-    cursor: pointer;
     transition: all 0.2s ease-in-out;
   }
 
@@ -239,6 +242,12 @@
   button:hover {
     filter: brightness(1.3);
     transform: scale(1.05);
+  }
+
+  button:disabled {
+    opacity: 0.4;
+    filter: none;
+    transform: none;
   }
 
   button svg {

@@ -28,7 +28,6 @@
     background-color: rgb(from var(--color-background) r g b / 0.5);
     color: var(--color-text-primary);
     border: none;
-    cursor: pointer;
     padding: 0.5rem;
     border-radius: 50%;
     transition: all 0.2s ease-in-out;
