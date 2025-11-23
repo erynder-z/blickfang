@@ -310,10 +310,8 @@ export const toggleExif = () => {
 
 /**
  * Toggles the visibility of the options sidebar.
- * Starts feedback for the "toggleOptions" action, and then updates the isOptionsMenuVisible store.
  */
 export const toggleOptions = () => {
-  singleShotFeedback("toggleOptions");
   isOptionsMenuVisible.update((isOpen) => !isOpen);
 };
 

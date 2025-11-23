@@ -1,13 +1,8 @@
 <script lang="ts">
-  import { activeActions } from "$lib/stores";
   import { toggleOptions } from "$lib/core/commands";
 </script>
 
-<button
-  on:click={toggleOptions}
-  aria-label="Toggle Options"
-  class:active={$activeActions.includes("toggleOptions")}
->
+<button on:click={toggleOptions} aria-label="Toggle Options">
   <svg
     xmlns="http://www.w3.org/2000/svg"
     height="1.5rem"
@@ -30,7 +25,6 @@
     border: none;
     padding: 0.5rem;
     border-radius: 50%;
-    transition: all 0.2s ease-in-out;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -39,10 +33,6 @@
   button:hover {
     filter: brightness(1.3);
     transform: scale(1.05);
-  }
-
-  button.active {
-    background-color: var(--color-accent);
   }
 
   svg {

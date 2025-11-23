@@ -215,7 +215,6 @@
     background-color: rgb(from var(--color-background) r g b / 0.5);
     color: var(--color-text-primary);
     border: none;
-    transition: all 0.2s ease-in-out;
   }
 
   button.active {
