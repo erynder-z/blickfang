@@ -17,7 +17,6 @@
     toggleExif,
     toggleFullscreen,
   } from "$lib/core/commands";
-  import { get } from "svelte/store";
 
   const buttonSizes: Record<string, string> = {
     large: "2.5rem",
@@ -28,13 +27,6 @@
 
   const showSaveAsMenu = () => {
     isSaveAsMenuVisible.update((v) => !v);
-  };
-
-  const onlyIfImageIsOpen = (action: () => void) => {
-    const isImageOpen = get(imageUrl);
-    if (!isImageOpen) return;
-
-    action();
   };
 </script>
 
