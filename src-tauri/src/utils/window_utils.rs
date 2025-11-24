@@ -85,7 +85,7 @@ pub fn handle_window_event(app_handle: &AppHandle, event: &RunEvent) {
                             config.window_width = Some(size.width as f64);
                             config.window_height = Some(size.height as f64);
                         }
-                        if let Ok(pos) = window.inner_position() {
+                        if let Ok(pos) = window.outer_position() {
                             config.window_x = Some(pos.x as f64);
                             config.window_y = Some(pos.y as f64);
                         }
