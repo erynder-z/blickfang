@@ -15,6 +15,7 @@
   import EdgeIndicatorMenu from "$lib/components/EdgeIndicatorMenu.svelte";
   import AppWindowMenu from "$lib/components/AppWindowMenu.svelte";
   import SaveAsMenu from "$lib/components/SaveAsMenu.svelte";
+  import TooltipRenderer from "$lib/components/TooltipRenderer.svelte";
 
   initThemeManager();
 
@@ -36,6 +37,7 @@
 <EdgeIndicatorMenu />
 <AppWindowMenu />
 <SaveAsMenu />
+<TooltipRenderer />
 
 <div class="app-container">
   <InfoSidebar />

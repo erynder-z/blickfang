@@ -6,6 +6,7 @@
     isSaveAsMenuVisible,
     isZoomModifierUpActive,
     isZoomModifierDownActive,
+    tooltip,
   } from "$lib/stores";
   import {
     nextImage,
@@ -37,6 +38,8 @@
   <!-- Open File -->
   <button
     on:click={openFile}
+    on:mouseenter={(e) => tooltip.show("Open File", e.currentTarget)}
+    on:mouseleave={tooltip.hide}
     aria-label="Open File"
     style="--btn-size: {size}"
     class:active={$activeActions.includes("openFile")}
@@ -51,6 +54,8 @@
   <!-- Save As -->
   <button
     on:click={showSaveAsMenu}
+    on:mouseenter={(e) => tooltip.show("Save Image As", e.currentTarget)}
+    on:mouseleave={tooltip.hide}
     aria-label="Save As"
     style="--btn-size: {size}"
     class:active={$activeActions.includes("saveImageAs")}
@@ -71,6 +76,8 @@
   <!-- Previous -->
   <button
     on:click={previousImage}
+    on:mouseenter={(e) => tooltip.show("Previous Image", e.currentTarget)}
+    on:mouseleave={tooltip.hide}
     aria-label="Previous Image"
     style="--btn-size: {size}"
     class:active={$activeActions.includes("previousImage")}
@@ -89,6 +96,8 @@
   <!-- Next -->
   <button
     on:click={nextImage}
+    on:mouseenter={(e) => tooltip.show("Next Image", e.currentTarget)}
+    on:mouseleave={tooltip.hide}
     aria-label="Next Image"
     style="--btn-size: {size}"
     class:active={$activeActions.includes("nextImage")}
@@ -108,7 +117,11 @@
   <button
     on:mousedown={startZoomIn}
     on:mouseup={stopContinuousZoom}
-    on:mouseleave={stopContinuousZoom}
+    on:mouseleave={(e) => {
+      stopContinuousZoom();
+      tooltip.hide();
+    }}
+    on:mouseenter={(e) => tooltip.show("Zoom In", e.currentTarget)}
     aria-label="Zoom In"
     style="--btn-size: {size}"
     class:active={$activeActions.includes("zoomIn")}
@@ -132,7 +145,11 @@
   <button
     on:mousedown={startZoomOut}
     on:mouseup={stopContinuousZoom}
-    on:mouseleave={stopContinuousZoom}
+    on:mouseleave={(e) => {
+      stopContinuousZoom();
+      tooltip.hide();
+    }}
+    on:mouseenter={(e) => tooltip.show("Zoom Out", e.currentTarget)}
     aria-label="Zoom Out"
     style="--btn-size: {size}"
     class:active={$activeActions.includes("zoomOut")}
@@ -155,6 +172,8 @@
   <!-- Fullscreen -->
   <button
     on:click={toggleFullscreen}
+    on:mouseenter={(e) => tooltip.show("Toggle Fullscreen", e.currentTarget)}
+    on:mouseleave={tooltip.hide}
     aria-label="Toggle Fullscreen"
     style="--btn-size: {size}"
     class:active={$activeActions.includes("toggleFullscreen")}
@@ -174,6 +193,8 @@
   <!-- Info -->
   <button
     on:click={toggleExif}
+    on:mouseenter={(e) => tooltip.show("Toggle Image Info", e.currentTarget)}
+    on:mouseleave={tooltip.hide}
     aria-label="Toggle Info"
     style="--btn-size: {size}"
     class:active={$activeActions.includes("toggleExif")}

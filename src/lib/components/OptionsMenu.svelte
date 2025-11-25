@@ -9,6 +9,7 @@
     isImageNameDisplayMenuVisible,
     isEdgeIndicatorMenuVisible,
     isAppWindowMenuVisible,
+    tooltip,
   } from "$lib/stores";
   import { toggleOptions } from "$lib/core/commands";
   import type { Writable } from "svelte/store";
@@ -21,6 +22,8 @@
     <button
       class="hotkeys-button"
       on:click={() => openMenu(isHotkeysMenuVisible)}
+      on:mouseenter={(e) => tooltip.show("Hotkeys", e.currentTarget)}
+      on:mouseleave={tooltip.hide}
       aria-label={$t["options.button.hotkeys"]}
     >
       <svg
@@ -37,6 +40,8 @@
     <button
       class="language-button"
       on:click={() => openMenu(isLanguageMenuVisible)}
+      on:mouseenter={(e) => tooltip.show("Language", e.currentTarget)}
+      on:mouseleave={tooltip.hide}
       aria-label={$t["options.button.language"]}
       ><svg
         xmlns="http://www.w3.org/2000/svg"
@@ -52,6 +57,8 @@
     <button
       class="theme-button"
       on:click={() => openMenu(isThemeMenuVisible)}
+      on:mouseenter={(e) => tooltip.show("Theme", e.currentTarget)}
+      on:mouseleave={tooltip.hide}
       aria-label={$t["options.button.theme"]}
       ><svg
         xmlns="http://www.w3.org/2000/svg"
@@ -67,6 +74,8 @@
     <button
       class="toolbar-button"
       on:click={() => openMenu(isToolbarMenuVisible)}
+      on:mouseenter={(e) => tooltip.show("Toolbar", e.currentTarget)}
+      on:mouseleave={tooltip.hide}
       aria-label={$t["options.button.toolbar"]}
     >
       <svg
@@ -83,6 +92,8 @@
     <button
       class="image-name-button"
       on:click={() => openMenu(isImageNameDisplayMenuVisible)}
+      on:mouseenter={(e) => tooltip.show("Image Name", e.currentTarget)}
+      on:mouseleave={tooltip.hide}
       aria-label={$t["options.button.image_name_display"]}
     >
       <svg
@@ -99,6 +110,8 @@
     <button
       class="edge-indicators-button"
       on:click={() => openMenu(isEdgeIndicatorMenuVisible)}
+      on:mouseenter={(e) => tooltip.show("Edge Indicators", e.currentTarget)}
+      on:mouseleave={tooltip.hide}
       aria-label={$t["options.button.edge_indicators"]}
     >
       <svg
@@ -115,6 +128,8 @@
     <button
       class="app-window-button"
       on:click={() => openMenu(isAppWindowMenuVisible)}
+      on:mouseenter={(e) => tooltip.show("App Window", e.currentTarget)}
+      on:mouseleave={tooltip.hide}
       aria-label={$t["options.button.app_window"]}
     >
       <svg
@@ -131,6 +146,8 @@
     <button
       class="close-options-button"
       on:click={toggleOptions}
+      on:mouseenter={(e) => tooltip.show("Close", e.currentTarget)}
+      on:mouseleave={tooltip.hide}
       aria-label={$t["options.button.close.menu"]}
     >
       <svg

@@ -1,4 +1,4 @@
-// src/lib/stores/ui.ts
+import { createTooltipStore } from "$lib/utils/createTooltipStore";
 import { writable } from "svelte/store";
 
 export const isInfoSidebarVisible = writable(false);
@@ -27,3 +27,4 @@ export const indicatorsVisible = writable(false);
 export const zoomLevel = writable(1);
 export const isZoomModifierUpActive = writable(false);
 export const isZoomModifierDownActive = writable(false);
+export const tooltip = createTooltipStore();

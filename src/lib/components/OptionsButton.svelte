@@ -1,8 +1,14 @@
 <script lang="ts">
   import { toggleOptions } from "$lib/core/commands";
+  import { tooltip } from "$lib/stores";
 </script>
 
-<button on:click={toggleOptions} aria-label="Toggle Options">
+<button
+  on:click={toggleOptions}
+  on:mouseenter={(e) => tooltip.show("Toggle Options", e.currentTarget)}
+  on:mouseleave={tooltip.hide}
+  aria-label="Toggle Options"
+>
   <svg
     xmlns="http://www.w3.org/2000/svg"
     height="1.5rem"
