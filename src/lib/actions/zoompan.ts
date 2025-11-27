@@ -6,6 +6,7 @@ import {
   isRefittingOnResize,
   isZoomModifierUpActive,
   isZoomModifierDownActive,
+  rotation,
 } from "$lib/stores";
 import type { Writable } from "svelte/store";
 import { get } from "svelte/store";
@@ -47,10 +48,28 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions): obj
   let offsetY = 0;
   let startX = 0;
   let startY = 0;
+  let currentRotation = 0;
 
   // --- Lifecycle ---
   let animationFrameId: number;
   let interactionTimeoutId: ReturnType<typeof setTimeout> | null = null;
+
+  /**
+   * Returns the dimensions of the rotated image.
+   *
+   * If the image is rotated by 90 or 270 degrees, the width and height
+   * of the image are swapped.
+   *
+   * @returns { width: number; height: number } An object with the width and height of the rotated image.
+   */
+  const getRotatedImageDimensions = (): { width: number; height: number } => {
+    if (!image) return { width: 0, height: 0 };
+    const isSideways = currentRotation === 90 || currentRotation === 270;
+    return {
+      width: isSideways ? image.naturalHeight : image.naturalWidth,
+      height: isSideways ? image.naturalWidth : image.naturalHeight,
+    };
+  };
 
   /**
    * Debounces the visibility of the edge indicators.
@@ -95,10 +114,24 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions): obj
 
     if (image && image.complete) {
       ctx.save();
+      const w = image.naturalWidth;
+      const h = image.naturalHeight;
+
+      // Translate to the final position
       ctx.translate(offsetX, offsetY);
+
+      // Then rotate around the center of the unscaled, unrotated image
+      if (currentRotation > 0) {
+        const rad = (currentRotation * Math.PI) / 180;
+        ctx.rotate(rad);
+      }
+
+      // Scale relative to the center
       ctx.scale(displayScale, displayScale);
 
-      ctx.drawImage(image, 0, 0);
+      // And finally draw the image centered at the origin
+      ctx.drawImage(image, -w / 2, -h / 2);
+
       ctx.restore();
     }
 
@@ -114,15 +147,21 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions): obj
   const updateEdgeIndicators = () => {
     if (!image || !canvas) return;
 
-    const imageWidth = image.naturalWidth * displayScale;
-    const imageHeight = image.naturalHeight * displayScale;
+    const { width: rotatedWidth, height: rotatedHeight } = getRotatedImageDimensions();
+    const imageWidth = rotatedWidth * displayScale;
+    const imageHeight = rotatedHeight * displayScale;
+
+    const imageLeft = offsetX - imageWidth / 2;
+    const imageRight = offsetX + imageWidth / 2;
+    const imageTop = offsetY - imageHeight / 2;
+    const imageBottom = offsetY + imageHeight / 2;
 
     edgeIndicators.update((indicators) => ({
       ...indicators,
-      left: offsetX < 0,
-      right: offsetX + imageWidth > canvas.width,
-      top: offsetY < 0,
-      bottom: offsetY + imageHeight > canvas.height,
+      left: imageLeft < 0,
+      right: imageRight > canvas.width,
+      top: imageTop < 0,
+      bottom: imageBottom > canvas.height,
     }));
   };
 
@@ -138,17 +177,20 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions): obj
   const setInitialTransform = () => {
     if (!image || !image.complete || !canvas || canvas.width === 0) return;
 
+    const { width: rotatedWidth, height: rotatedHeight } = getRotatedImageDimensions();
+
     const canvasAspect = canvas.width / canvas.height;
-    const imageAspect = image.naturalWidth / image.naturalHeight;
+    const imageAspect = rotatedWidth / rotatedHeight;
 
     if (imageAspect > canvasAspect) {
-      baseScale = canvas.width / image.naturalWidth;
+      baseScale = canvas.width / rotatedWidth;
     } else {
-      baseScale = canvas.height / image.naturalHeight;
+      baseScale = canvas.height / rotatedHeight;
     }
     displayScale = baseScale;
-    offsetX = (canvas.width - image.naturalWidth * displayScale) / 2;
-    offsetY = (canvas.height - image.naturalHeight * displayScale) / 2;
+
+    offsetX = canvas.width / 2;
+    offsetY = canvas.height / 2;
 
     zoomLevelStore.set(1);
     updateEdgeIndicators();
@@ -300,23 +342,22 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions): obj
         canvas.height = height;
         setInitialTransform();
       } else {
-        const centerX = (canvas.width / 2 - offsetX) / displayScale;
-        const centerY = (canvas.height / 2 - offsetY) / displayScale;
+        // Preserve the view by scaling the offset proportionally
+        const oldW = canvas.width;
+        const oldH = canvas.height;
 
         canvas.width = width;
         canvas.height = height;
 
-        offsetX = canvas.width / 2 - centerX * displayScale;
-        offsetY = canvas.height / 2 - centerY * displayScale;
+        if (oldW > 0 && oldH > 0) {
+          const xRatio = width / oldW;
+          const yRatio = height / oldH;
+          offsetX *= xRatio;
+          offsetY *= yRatio;
+        }
       }
 
       updateEdgeIndicators();
-      if (get(appConfig).edgeIndicatorsVisible) {
-        indicatorsVisible.set(true);
-        if (interactionTimeoutId) clearTimeout(interactionTimeoutId);
-        interactionTimeoutId = setTimeout(() => indicatorsVisible.set(false), 100);
-      }
-
       draw();
     }
   });
@@ -350,6 +391,15 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions): obj
     }
   });
 
+  const unSubRotation = rotation.subscribe((r) => {
+    if (!image) return;
+    const oldRotation = currentRotation;
+    currentRotation = r;
+    if (oldRotation !== currentRotation) {
+      setInitialTransform();
+    }
+  });
+
   return {
     /**
      * Destroys the zoompan action and releases all resources.
@@ -365,6 +415,7 @@ export const zoomPan = (canvas: HTMLCanvasElement, options: ZoomPanOptions): obj
       cancelAnimationFrame(animationFrameId);
       unSubImageUrl();
       unSubZoomLevel();
+      unSubRotation();
     },
   };
 };

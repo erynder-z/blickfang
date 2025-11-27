@@ -25,6 +25,7 @@ import {
   isZoomModifierUpActive,
   isZoomModifierDownActive,
   imageFileSize,
+  rotation,
 } from "$lib/stores";
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -100,6 +101,7 @@ export const openFile = async (): Promise<void> => {
       imagePath.set(path);
       updateImageStores(metadata);
       zoomLevel.set(1);
+      rotation.set(0);
     }
   } catch (error) {
     console.error("Failed to open and read file:", error);
@@ -129,6 +131,7 @@ const changeImage = async (direction: "next" | "previous"): Promise<void> => {
     imagePath.set(newPath);
     updateImageStores(metadata);
     zoomLevel.set(1);
+    rotation.set(0);
   } catch (error) {
     console.error("Failed to change image:", error);
   }
@@ -148,6 +151,22 @@ export const previousImage = () => {
 export const nextImage = () => {
   singleShotFeedback("nextImage");
   changeImage("next");
+};
+
+/**
+ * Rotates the image 90 degrees to the right.
+ */
+export const rotateCW = () => {
+  singleShotFeedback("rotateCW");
+  rotation.update((r) => (r + 90) % 360);
+};
+
+/**
+ * Rotates the image 90 degrees to the left.
+ */
+export const rotateCCW = () => {
+  singleShotFeedback("rotateCCW");
+  rotation.update((r) => (r - 90 + 360) % 360);
 };
 
 /**

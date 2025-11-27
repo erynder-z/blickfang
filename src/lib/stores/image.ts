@@ -1,4 +1,3 @@
-// src/lib/stores/image.ts
 import type { AiDetectionResult } from "$lib/types/image";
 import { writable } from "svelte/store";
 
@@ -6,6 +5,7 @@ export const imageUrl = writable<string | null>(null);
 export const imagePath = writable<string | null>(null);
 export const imageExif = writable<string | null>(null);
 export const imageFormat = writable<string | null>(null);
+export const rotation = writable<number>(0);
 
 export const imageResolution = writable<{ width: number; height: number } | null>(null);
 export const imageAspectRatio = writable<string | null>(null);
