@@ -7,9 +7,9 @@
   import InfoSidebar from "$lib/components/InfoSidebar.svelte";
   import OptionsDisplaySidebar from "$lib/components/OptionsMenu.svelte";
   import { initThemeManager } from "$lib/theme/themeManager";
-  import { handleKeyDown, handleKeyUp } from "$lib/core/keyboardInputManager";
+  import { keyboardInputManager } from "$lib/core/keyboardInputManager";
   import HotkeysMenu from "$lib/components/HotkeysMenu.svelte";
-  import { initializeApp } from "$lib/core/appManager";
+  import { appManager } from "$lib/core/appManager";
   import ToolbarMenu from "$lib/components/ToolbarMenu.svelte";
   import ImageNameDisplayMenu from "$lib/components/ImageNameDisplayMenu.svelte";
   import EdgeIndicatorMenu from "$lib/components/EdgeIndicatorMenu.svelte";
@@ -20,13 +20,20 @@
   initThemeManager();
 
   onMount(() => {
-    const unlisten = initializeApp();
+    let unlistenAppManager: () => void = () => {};
 
-    return () => unlisten();
+    appManager.initializeApp().then((unlisten) => {
+      unlistenAppManager = unlisten;
+    });
+
+    return () => unlistenAppManager();
   });
 </script>
 
-<svelte:window on:keydown={handleKeyDown} on:keyup={handleKeyUp} />
+<svelte:window
+  on:keydown={keyboardInputManager.handleKeyDown}
+  on:keyup={keyboardInputManager.handleKeyUp}
+/>
 <svelte:body use:lang={$locale} />
 
 <HotkeysMenu />

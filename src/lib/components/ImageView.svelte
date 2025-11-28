@@ -1,6 +1,6 @@
 <script lang="ts">
   import { imageUrl, zoomLevel } from "$lib/stores";
-  import { zoomPan } from "$lib/actions/zoompan";
+  import { imageViewport } from "$lib/actions/imageViewport";
   import EdgeIndicators from "./EdgeIndicators.svelte";
   import { t } from "$lib/utils/i18n";
   import { openFile } from "$lib/core/commands";
@@ -24,7 +24,7 @@
   {#if $imageUrl}
     {#key $imageUrl}
       <canvas
-        use:zoomPan={{
+        use:imageViewport={{
           imageUrlStore: imageUrl,
           zoomLevelStore: zoomLevel,
           onImageDrawn: () => (canvasOpacity = 1),
