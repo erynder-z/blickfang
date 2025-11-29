@@ -48,6 +48,8 @@
   "hotkeys.nextImage": "次の画像",
   "hotkeys.zoomIn": "ズームイン",
   "hotkeys.zoomOut": "ズームアウト",
+  "hotkeys.rotateClockwise": "90度時計回りに回転",
+  "hotkeys.rotateCounterclockwise": "90度反時計回りに回転",
   "hotkeys.toggleFullscreen": "フルスクリーンモードを切り替え",
   "hotkeys.toggleExif": "EXIF情報の表示/陰る",
   "hotkeys.toggleOptions": "オプションの表示/陰る",

@@ -19,6 +19,8 @@ export const appConfig = writable<AppConfig>({
     toggleOptions: { keys: [], label: "" },
     zoomModifierUp: { keys: [], label: "" },
     zoomModifierDown: { keys: [], label: "" },
+    rotateClockwise: { keys: [], label: "" },
+    rotateCounterclockwise: { keys: [], label: "" },
   },
   customShortcuts: {
     openFile: { keys: [], label: "" },
@@ -31,5 +33,7 @@ export const appConfig = writable<AppConfig>({
     toggleOptions: { keys: [], label: "" },
     zoomModifierUp: { keys: [], label: "" },
     zoomModifierDown: { keys: [], label: "" },
+    rotateClockwise: { keys: [], label: "" },
+    rotateCounterclockwise: { keys: [], label: "" },
   },
 });

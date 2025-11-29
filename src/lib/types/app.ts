@@ -10,6 +10,8 @@ export interface Shortcuts {
   nextImage: Shortcut;
   zoomIn: Shortcut;
   zoomOut: Shortcut;
+  rotateClockwise: Shortcut;
+  rotateCounterclockwise: Shortcut;
   toggleExif: Shortcut;
   toggleOptions: Shortcut;
   zoomModifierUp: Shortcut;

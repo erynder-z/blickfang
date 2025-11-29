@@ -156,16 +156,16 @@ export const nextImage = () => {
 /**
  * Rotates the image 90 degrees to the right.
  */
-export const rotateCW = () => {
-  singleShotFeedback("rotateCW");
+export const rotateClockwise = () => {
+  singleShotFeedback("rotateClockwise");
   rotation.update((r) => (r + 90) % 360);
 };
 
 /**
  * Rotates the image 90 degrees to the left.
  */
-export const rotateCCW = () => {
-  singleShotFeedback("rotateCCW");
+export const rotateCounterclockwise = () => {
+  singleShotFeedback("rotateCounterclockwise");
   rotation.update((r) => (r - 90 + 360) % 360);
 };
 

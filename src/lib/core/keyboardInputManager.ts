@@ -18,6 +18,8 @@ import {
   startZoomOut,
   stopContinuousZoom,
   toggleSaveAsMenu,
+  rotateCounterclockwise,
+  rotateClockwise,
 } from "./commands";
 
 export class KeyboardInputManager {
@@ -26,6 +28,8 @@ export class KeyboardInputManager {
     openFile,
     previousImage,
     nextImage,
+    rotateClockwise,
+    rotateCounterclockwise,
     toggleExif,
     toggleOptions,
     toggleFullscreen,
@@ -44,6 +48,8 @@ export class KeyboardInputManager {
     "toggleExif",
     "zoomIn",
     "zoomOut",
+    "rotateClockwise",
+    "rotateCounterclockwise",
     "saveImageAs",
   ]);
 

@@ -17,8 +17,8 @@
     stopContinuousZoom,
     toggleExif,
     toggleFullscreen,
-    rotateCCW,
-    rotateCW,
+    rotateCounterclockwise,
+    rotateClockwise,
   } from "$lib/core/commands";
 
   const buttonSizes: Record<string, string> = {
@@ -173,12 +173,12 @@
 
   <!-- Rotate Counterclockwise -->
   <button
-    on:click={rotateCCW}
+    on:click={rotateCounterclockwise}
     on:mouseenter={(e) => tooltip.show("Rotate Left", e.currentTarget)}
     on:mouseleave={tooltip.hide}
     aria-label="Rotate Left"
     style="--btn-size: {size}"
-    class:active={$activeActions.includes("rotateCCW")}
+    class:active={$activeActions.includes("rotateCounterclockwise")}
     disabled={!$imageUrl}
   >
     <svg
@@ -195,12 +195,12 @@
 
   <!-- Rotate Clockwise -->
   <button
-    on:click={rotateCW}
+    on:click={rotateClockwise}
     on:mouseenter={(e) => tooltip.show("Rotate Right", e.currentTarget)}
     on:mouseleave={tooltip.hide}
     aria-label="Rotate Right"
     style="--btn-size: {size}"
-    class:active={$activeActions.includes("rotateCW")}
+    class:active={$activeActions.includes("rotateClockwise")}
     disabled={!$imageUrl}
   >
     <svg

@@ -48,6 +48,8 @@
   "hotkeys.nextImage": "Nächstes Bild",
   "hotkeys.zoomIn": "Vergrößern",
   "hotkeys.zoomOut": "Verkleinern",
+  "hotkeys.rotateClockwise": "90° im Uhrzeigersinn drehen",
+  "hotkeys.rotateCounterclockwise": "90° gegen den Uhrzeigersinn drehen",
   "hotkeys.toggleFullscreen": "Vollbildmodus verwenden/beenden",
   "hotkeys.toggleExif": "EXIF-Infos zeigen/verbergen",
   "hotkeys.toggleOptions": "Optionen zeigen/verbergen",
