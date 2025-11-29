@@ -31,6 +31,7 @@
     transition: transform 0.2s ease-in-out;
     z-index: 20;
     border-left: 0.2rem solid var(--color-outline);
+    opacity: 0.9;
   }
 
   .info-sidebar-overlay.visible {

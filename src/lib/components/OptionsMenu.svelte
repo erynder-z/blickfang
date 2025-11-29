@@ -176,6 +176,7 @@
     transition: transform 0.2s ease-in-out;
     z-index: 20;
     border-top: 0.2rem solid var(--color-outline);
+    opacity: 0.9;
   }
 
   .options-sidebar-overlay.visible {
