@@ -22,9 +22,9 @@
     <button
       class="hotkeys-button"
       on:click={() => openMenu(isHotkeysMenuVisible)}
-      on:mouseenter={(e) => tooltip.show("Hotkeys", e.currentTarget)}
+      on:mouseenter={(e) => tooltip.show($t["tooltip.hotkeys"], e.currentTarget)}
       on:mouseleave={tooltip.hide}
-      aria-label={$t["options.button.hotkeys"]}
+      aria-label={$t["tooltip.hotkeys"]}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -40,9 +40,9 @@
     <button
       class="language-button"
       on:click={() => openMenu(isLanguageMenuVisible)}
-      on:mouseenter={(e) => tooltip.show("Language", e.currentTarget)}
+      on:mouseenter={(e) => tooltip.show($t["tooltip.language"], e.currentTarget)}
       on:mouseleave={tooltip.hide}
-      aria-label={$t["options.button.language"]}
+      aria-label={$t["tooltip.language"]}
       ><svg
         xmlns="http://www.w3.org/2000/svg"
         height="1.25rem"
@@ -57,9 +57,9 @@
     <button
       class="theme-button"
       on:click={() => openMenu(isThemeMenuVisible)}
-      on:mouseenter={(e) => tooltip.show("Theme", e.currentTarget)}
+      on:mouseenter={(e) => tooltip.show($t["tooltip.theme"], e.currentTarget)}
       on:mouseleave={tooltip.hide}
-      aria-label={$t["options.button.theme"]}
+      aria-label={$t["tooltip.theme"]}
       ><svg
         xmlns="http://www.w3.org/2000/svg"
         height="1.25rem"
@@ -74,9 +74,9 @@
     <button
       class="toolbar-button"
       on:click={() => openMenu(isToolbarMenuVisible)}
-      on:mouseenter={(e) => tooltip.show("Toolbar", e.currentTarget)}
+      on:mouseenter={(e) => tooltip.show($t["tooltip.toolbar"], e.currentTarget)}
       on:mouseleave={tooltip.hide}
-      aria-label={$t["options.button.toolbar"]}
+      aria-label={$t["tooltip.toolbar"]}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -92,9 +92,9 @@
     <button
       class="image-name-button"
       on:click={() => openMenu(isImageNameDisplayMenuVisible)}
-      on:mouseenter={(e) => tooltip.show("Image Name", e.currentTarget)}
+      on:mouseenter={(e) => tooltip.show($t["tooltip.imageName"], e.currentTarget)}
       on:mouseleave={tooltip.hide}
-      aria-label={$t["options.button.image_name_display"]}
+      aria-label={$t["tooltip.imageName"]}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -110,9 +110,9 @@
     <button
       class="edge-indicators-button"
       on:click={() => openMenu(isEdgeIndicatorMenuVisible)}
-      on:mouseenter={(e) => tooltip.show("Edge Indicators", e.currentTarget)}
+      on:mouseenter={(e) => tooltip.show($t["tooltip.edgeIndicators"], e.currentTarget)}
       on:mouseleave={tooltip.hide}
-      aria-label={$t["options.button.edge_indicators"]}
+      aria-label={$t["tooltip.edgeIndicators"]}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -128,9 +128,9 @@
     <button
       class="app-window-button"
       on:click={() => openMenu(isAppWindowMenuVisible)}
-      on:mouseenter={(e) => tooltip.show("App Window", e.currentTarget)}
+      on:mouseenter={(e) => tooltip.show($t["tooltip.appWindow"], e.currentTarget)}
       on:mouseleave={tooltip.hide}
-      aria-label={$t["options.button.app_window"]}
+      aria-label={$t["tooltip.appWindow"]}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -146,9 +146,9 @@
     <button
       class="close-options-button"
       on:click={toggleOptions}
-      on:mouseenter={(e) => tooltip.show("Close", e.currentTarget)}
+      on:mouseenter={(e) => tooltip.show($t["tooltip.closeMenu"], e.currentTarget)}
       on:mouseleave={tooltip.hide}
-      aria-label={$t["options.button.close.menu"]}
+      aria-label={$t["tooltip.closeMenu"]}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

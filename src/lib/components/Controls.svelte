@@ -20,6 +20,7 @@
     rotateCounterclockwise,
     rotateClockwise,
   } from "$lib/core/commands";
+  import { t } from "$lib/utils/i18n";
 
   const buttonSizes: Record<string, string> = {
     large: "2.5rem",
@@ -40,9 +41,9 @@
   <!-- Open File -->
   <button
     on:click={openFile}
-    on:mouseenter={(e) => tooltip.show("Open File", e.currentTarget)}
+    on:mouseenter={(e) => tooltip.show($t["tooltip.openFile"], e.currentTarget)}
     on:mouseleave={tooltip.hide}
-    aria-label="Open File"
+    aria-label={$t["tooltip.openFile"]}
     style="--btn-size: {size}"
     class:active={$activeActions.includes("openFile")}
   >
@@ -56,9 +57,9 @@
   <!-- Save As -->
   <button
     on:click={showSaveAsMenu}
-    on:mouseenter={(e) => tooltip.show("Save Image As", e.currentTarget)}
+    on:mouseenter={(e) => tooltip.show($t["tooltip.saveImageAs"], e.currentTarget)}
     on:mouseleave={tooltip.hide}
-    aria-label="Save As"
+    aria-label={$t["tooltip.saveImageAs"]}
     style="--btn-size: {size}"
     class:active={$activeActions.includes("saveImageAs")}
     disabled={!$imageUrl}
@@ -78,9 +79,9 @@
   <!-- Previous -->
   <button
     on:click={previousImage}
-    on:mouseenter={(e) => tooltip.show("Previous Image", e.currentTarget)}
+    on:mouseenter={(e) => tooltip.show($t["tooltip.previousImage"], e.currentTarget)}
     on:mouseleave={tooltip.hide}
-    aria-label="Previous Image"
+    aria-label={$t["tooltip.previousImage"]}
     style="--btn-size: {size}"
     class:active={$activeActions.includes("previousImage")}
     disabled={!$imageUrl}
@@ -98,9 +99,9 @@
   <!-- Next -->
   <button
     on:click={nextImage}
-    on:mouseenter={(e) => tooltip.show("Next Image", e.currentTarget)}
+    on:mouseenter={(e) => tooltip.show($t["tooltip.nextImage"], e.currentTarget)}
     on:mouseleave={tooltip.hide}
-    aria-label="Next Image"
+    aria-label={$t["tooltip.nextImage"]}
     style="--btn-size: {size}"
     class:active={$activeActions.includes("nextImage")}
     disabled={!$imageUrl}
@@ -123,8 +124,8 @@
       stopContinuousZoom();
       tooltip.hide();
     }}
-    on:mouseenter={(e) => tooltip.show("Zoom In", e.currentTarget)}
-    aria-label="Zoom In"
+    on:mouseenter={(e) => tooltip.show($t["tooltip.zoomIn"], e.currentTarget)}
+    aria-label={$t["tooltip.zoomIn"]}
     style="--btn-size: {size}"
     class:active={$activeActions.includes("zoomIn")}
     class:stronger={$isZoomModifierUpActive}
@@ -151,8 +152,8 @@
       stopContinuousZoom();
       tooltip.hide();
     }}
-    on:mouseenter={(e) => tooltip.show("Zoom Out", e.currentTarget)}
-    aria-label="Zoom Out"
+    on:mouseenter={(e) => tooltip.show($t["tooltip.zoomOut"], e.currentTarget)}
+    aria-label={$t["tooltip.zoomOut"]}
     style="--btn-size: {size}"
     class:active={$activeActions.includes("zoomOut")}
     class:stronger={$isZoomModifierUpActive}
@@ -174,9 +175,9 @@
   <!-- Rotate Counterclockwise -->
   <button
     on:click={rotateCounterclockwise}
-    on:mouseenter={(e) => tooltip.show("Rotate Left", e.currentTarget)}
+    on:mouseenter={(e) => tooltip.show($t["tooltip.rotateCounterclockwise"], e.currentTarget)}
     on:mouseleave={tooltip.hide}
-    aria-label="Rotate Left"
+    aria-label={$t["tooltip.rotateClockwise"]}
     style="--btn-size: {size}"
     class:active={$activeActions.includes("rotateCounterclockwise")}
     disabled={!$imageUrl}
@@ -196,9 +197,9 @@
   <!-- Rotate Clockwise -->
   <button
     on:click={rotateClockwise}
-    on:mouseenter={(e) => tooltip.show("Rotate Right", e.currentTarget)}
+    on:mouseenter={(e) => tooltip.show($t["tooltip.rotateClockwise"], e.currentTarget)}
     on:mouseleave={tooltip.hide}
-    aria-label="Rotate Right"
+    aria-label={$t["tooltip.rotateCounterclockwise"]}
     style="--btn-size: {size}"
     class:active={$activeActions.includes("rotateClockwise")}
     disabled={!$imageUrl}
@@ -218,9 +219,9 @@
   <!-- Fullscreen -->
   <button
     on:click={toggleFullscreen}
-    on:mouseenter={(e) => tooltip.show("Toggle Fullscreen", e.currentTarget)}
+    on:mouseenter={(e) => tooltip.show($t["tooltip.toggleFullscreen"], e.currentTarget)}
     on:mouseleave={tooltip.hide}
-    aria-label="Toggle Fullscreen"
+    aria-label={$t["tooltip.toggleFullscreen"]}
     style="--btn-size: {size}"
     class:active={$activeActions.includes("toggleFullscreen")}
   >
@@ -239,9 +240,9 @@
   <!-- Info -->
   <button
     on:click={toggleExif}
-    on:mouseenter={(e) => tooltip.show("Toggle Image Info", e.currentTarget)}
+    on:mouseenter={(e) => tooltip.show($t["tooltip.toggleImageInfo"], e.currentTarget)}
     on:mouseleave={tooltip.hide}
-    aria-label="Toggle Info"
+    aria-label={$t["tooltip.toggleImageInfo"]}
     style="--btn-size: {size}"
     class:active={$activeActions.includes("toggleExif")}
     disabled={!$imageUrl}
