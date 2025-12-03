@@ -78,5 +78,10 @@
   "initialConfig.heading": "Willkommen bei Blickfang!",
   "initialConfig.message": "Es sieht so aus, als würden Sie Blickfang zum ersten Mal ausführen. Möchten Sie paar grundlegende Einstellungen konfigurieren?",
   "initialConfig.configureButton": "Konfigurieren",
-  "initialConfig.dontCareButton": "Ist mir egal!"
+  "initialConfig.dontCareButton": "Ist mir egal!",
+  "initialConfigSettings.heading": "Konfiguration",
+  "initialConfigSettings.message": "Ein paar grundlegende Einstellungen. Weitere Optionen im Hauptmenü.",
+  "initialConfigSettings.selectThemeButton": "Farbschema",
+  "initialConfigSettings.selectLanguageButton": "Sprache",
+  "initialConfigSettings.toggleHotkeysButton": "Benutzerdefinierte Hotkeys nuutzen"
 }

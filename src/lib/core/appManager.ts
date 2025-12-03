@@ -2,10 +2,7 @@ import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/core";
 import { setLocale } from "$lib/utils/i18n";
 import { imageUrl, imagePath, appConfig, aiDetectionResult } from "$lib/stores";
-import {
-  isInitialConfigDialogVisible,
-  hasConfiguredInitialSettings,
-} from "$lib/stores/initialConfigDialog";
+import { isInitialDialogVisible, hasConfiguredInitialSettings } from "$lib/stores/initialDialog";
 import type { AppConfig } from "$lib/types/app";
 import type { AiDetectionResult, ImageMetadata } from "$lib/types/image";
 import { updateImageStores } from "./commands";
@@ -90,14 +87,14 @@ export class AppManager {
   }> {
     this.unlistenImageSource = await listen<string[]>(
       "image-source",
-      this.handleImageSourceEvent.bind(this),
+      this.handleImageSourceEvent.bind(this)
     );
 
     await invoke("frontend_is_ready");
 
     this.unlistenConfig = await listen<AppConfig>(
       "config-updated",
-      this.handleConfigUpdatedEvent.bind(this),
+      this.handleConfigUpdatedEvent.bind(this)
     );
 
     return { unlistenImageSource: this.unlistenImageSource, unlistenConfig: this.unlistenConfig };
@@ -130,13 +127,11 @@ export class AppManager {
     invoke("get_has_configured_initial_settings_command")
       .then((configured) => {
         hasConfiguredInitialSettings.set(configured as boolean);
-        if (!configured) {
-          isInitialConfigDialogVisible.set(true);
-        }
+        if (!configured) isInitialDialogVisible.set(true);
       })
       .catch((error) => {
         console.error("Failed to get initial config settings:", error);
-        isInitialConfigDialogVisible.set(true);
+        isInitialDialogVisible.set(true);
       });
 
     this.showMainWindow();

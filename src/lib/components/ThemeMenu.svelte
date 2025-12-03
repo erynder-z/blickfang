@@ -32,7 +32,10 @@
 
   const handleKeydown = (event: KeyboardEvent) => {
     if (!$isThemeMenuVisible) return;
-    if (event.key === "Escape") handleClose();
+    if (event.key === "Escape") {
+      event.stopPropagation();
+      handleClose();
+    }
   };
 </script>
 

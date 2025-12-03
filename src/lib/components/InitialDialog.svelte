@@ -1,59 +1,37 @@
 <script lang="ts">
-  import { isLanguageMenuVisible } from "$lib/stores";
-  import { locale, setLocale, t, locales } from "$lib/utils/i18n";
+  import { isInitialDialogVisible, hasConfiguredInitialSettings } from "$lib/stores/InitialDialog";
+  import { isInitialConfigSettingsDialogVisible } from "$lib/stores/initialConfigSettingsDialog";
+  import { t } from "$lib/utils/i18n";
   import { invoke } from "@tauri-apps/api/core";
-  import { tick } from "svelte";
   import { fly, fade } from "svelte/transition";
   import { focusTrap } from "$lib/actions/focusTrap";
 
-  type i18nLanguage = [string, Record<string, string>];
-
-  const languages: i18nLanguage[] = Object.entries(locales);
-  const langCodes = languages.map(([langCode]) => langCode);
-
   let buttons: HTMLButtonElement[] = [];
 
-  $: if ($isLanguageMenuVisible) {
-    tick().then(() => {
-      const currentIndex = langCodes.indexOf($locale);
-      if (currentIndex !== -1) buttons[currentIndex]?.focus();
-    });
-  }
-
-  const saveLanguage = async (lang: string) => {
-    try {
-      await invoke("update_language_command", { language: lang });
-    } catch (error) {
-      console.error("Failed to save language:", error);
-    }
+  const handleConfigureClick = async () => {
+    await invoke("set_has_configured_initial_settings_command", { value: true });
+    hasConfiguredInitialSettings.set(true);
+    isInitialDialogVisible.set(false);
+    isInitialConfigSettingsDialogVisible.set(true); // Open the new dialog
   };
 
-  const handleButtonClick = (lang: string) => {
-    setLocale(lang);
-    saveLanguage(lang);
+  const handleDontCareClick = async () => {
+    await invoke("set_has_configured_initial_settings_command", { value: true });
+    hasConfiguredInitialSettings.set(true);
+    isInitialDialogVisible.set(false);
   };
-
-  const handleClose = () => isLanguageMenuVisible.set(false);
 
   const handleKeydown = (event: KeyboardEvent) => {
-    if (!$isLanguageMenuVisible) return;
-    if (event.key === "Escape") {
-      event.stopPropagation();
-      handleClose();
-    }
+    if (!$isInitialDialogVisible) return;
+    if (event.key === "Escape") handleDontCareClick();
   };
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
 
-{#if $isLanguageMenuVisible}
+{#if $isInitialDialogVisible}
   <!-- svelte-ignore a11y-no-static-element-interactions, a11y-click-events-have-key-events -->
-  <div
-    class="backdrop"
-    on:click={handleClose}
-    in:fade={{ duration: 100 }}
-    out:fade={{ duration: 100 }}
-  ></div>
+  <div class="backdrop" in:fade={{ duration: 100 }} out:fade={{ duration: 100 }}></div>
   <div
     use:focusTrap
     class="menu-dialog"
@@ -63,32 +41,17 @@
     out:fade={{ duration: 100 }}
   >
     <div class="menu-content">
-      <h1>{$t["options.language.heading"]}</h1>
-      <div class="option-buttons">
-        {#each languages as [lang, translations], i}
-          <button
-            bind:this={buttons[i]}
-            on:click={() => handleButtonClick(lang)}
-            class:active={$locale === lang}
-          >
-            {translations["language.name"]}
-          </button>
-        {/each}
-      </div>
+      <h1>{$t["initialConfig.heading"]}</h1>
+      <p>{$t["initialConfig.message"]}</p>
 
-      <button on:click={handleClose} class="close-button">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          height="1.25rem"
-          viewBox="0 -960 960 960"
-          width="1.25rem"
-          fill="var(--color-close-button)"
-          ><path
-            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
-          /></svg
-        >
-        {$t["general.close"]}
-      </button>
+      <div class="option-buttons">
+        <button bind:this={buttons[0]} on:click={handleConfigureClick}>
+          {$t["initialConfig.configureButton"]}
+        </button>
+        <button bind:this={buttons[1]} on:click={handleDontCareClick}>
+          {$t["initialConfig.dontCareButton"]}
+        </button>
+      </div>
     </div>
   </div>
 {/if}
@@ -137,6 +100,12 @@
     text-wrap: balance;
   }
 
+  p {
+    margin: 0 0 1.5rem 0;
+    color: var(--color-text-secondary);
+    text-align: center;
+  }
+
   .option-buttons {
     display: flex;
     flex-direction: column;
@@ -177,17 +146,5 @@
     outline: none;
     background-color: var(--color-accent);
     color: var(--color-text-tertiary);
-  }
-
-  .close-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-top: 1.5rem;
-    font-size: 0.9rem;
-    padding: 0.5rem 1rem;
-    min-width: 0;
-    color: var(--color-close-button);
   }
 </style>

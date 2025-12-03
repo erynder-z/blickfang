@@ -1,40 +1,54 @@
 <script lang="ts">
-  import {
-    isInitialConfigDialogVisible,
-    hasConfiguredInitialSettings,
-  } from "$lib/stores/initialConfigDialog";
+  import { isInitialConfigSettingsDialogVisible } from "$lib/stores/initialConfigSettingsDialog";
+  import { isThemeMenuVisible, isLanguageMenuVisible } from "$lib/stores";
   import { t } from "$lib/utils/i18n";
-  import { invoke } from "@tauri-apps/api/core";
   import { fly, fade } from "svelte/transition";
   import { focusTrap } from "$lib/actions/focusTrap";
 
   let buttons: HTMLButtonElement[] = [];
+  let isSubMenuOpen = false;
 
-  const handleConfigureClick = async () => {
-    // TODO: Implement logic to open configuration dialog
-    console.log("Configure button clicked - will open full config dialog.");
-    await invoke("set_has_configured_initial_settings_command", { value: true });
-    hasConfiguredInitialSettings.set(true);
-    isInitialConfigDialogVisible.set(false);
+  $: if (!$isThemeMenuVisible && !$isLanguageMenuVisible && isSubMenuOpen) {
+    isSubMenuOpen = false;
+    isInitialConfigSettingsDialogVisible.set(true);
+  }
+
+  const handleSelectThemeClick = () => {
+    isSubMenuOpen = true;
+    isInitialConfigSettingsDialogVisible.set(false);
+    isThemeMenuVisible.set(true);
   };
 
-  const handleDontCareClick = async () => {
-    await invoke("set_has_configured_initial_settings_command", { value: true });
-    hasConfiguredInitialSettings.set(true);
-    isInitialConfigDialogVisible.set(false);
+  const handleSelectLanguageClick = () => {
+    isSubMenuOpen = true;
+    isInitialConfigSettingsDialogVisible.set(false);
+    isLanguageMenuVisible.set(true);
   };
+
+  const handleToggleHotkeys = () => {
+    // TODO: Implement hotkey toggle logic
+    console.log("Toggle hotkeys clicked");
+  };
+
+  const handleClose = () => isInitialConfigSettingsDialogVisible.set(false);
 
   const handleKeydown = (event: KeyboardEvent) => {
-    if (!$isInitialConfigDialogVisible) return;
-    if (event.key === "Escape") handleDontCareClick();
+    if (!$isInitialConfigSettingsDialogVisible || $isThemeMenuVisible || $isLanguageMenuVisible)
+      return;
+    if (event.key === "Escape") handleClose();
   };
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
 
-{#if $isInitialConfigDialogVisible}
+{#if $isInitialConfigSettingsDialogVisible}
   <!-- svelte-ignore a11y-no-static-element-interactions, a11y-click-events-have-key-events -->
-  <div class="backdrop" in:fade={{ duration: 100 }} out:fade={{ duration: 100 }}></div>
+  <div
+    class="backdrop"
+    on:click={handleClose}
+    in:fade={{ duration: 100 }}
+    out:fade={{ duration: 100 }}
+  ></div>
   <div
     use:focusTrap
     class="menu-dialog"
@@ -44,17 +58,34 @@
     out:fade={{ duration: 100 }}
   >
     <div class="menu-content">
-      <h1>{$t["initialConfig.heading"]}</h1>
-      <p>{$t["initialConfig.message"]}</p>
+      <h1>{$t["initialConfigSettings.heading"]}</h1>
+      <p>{$t["initialConfigSettings.message"]}</p>
 
       <div class="option-buttons">
-        <button bind:this={buttons[0]} on:click={handleConfigureClick}>
-          {$t["initialConfig.configureButton"]}
+        <button bind:this={buttons[0]} on:click={handleSelectThemeClick}>
+          {$t["initialConfigSettings.selectThemeButton"]}
         </button>
-        <button bind:this={buttons[1]} on:click={handleDontCareClick}>
-          {$t["initialConfig.dontCareButton"]}
+        <button bind:this={buttons[1]} on:click={handleSelectLanguageClick}>
+          {$t["initialConfigSettings.selectLanguageButton"]}
+        </button>
+        <button bind:this={buttons[2]} on:click={handleToggleHotkeys}>
+          {$t["initialConfigSettings.toggleHotkeysButton"]}
         </button>
       </div>
+
+      <button on:click={handleClose} class="close-button">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="1.25rem"
+          viewBox="0 -960 960 960"
+          width="1.25rem"
+          fill="var(--color-close-button)"
+          ><path
+            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+          /></svg
+        >
+        {$t["general.close"]}
+      </button>
     </div>
   </div>
 {/if}
@@ -149,5 +180,18 @@
     outline: none;
     background-color: var(--color-accent);
     color: var(--color-text-tertiary);
+  }
+
+  .close-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    min-width: 0;
+    align-self: center;
+    color: var(--color-close-button);
   }
 </style>

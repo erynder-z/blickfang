@@ -15,7 +15,8 @@
   import EdgeIndicatorMenu from "$lib/components/EdgeIndicatorMenu.svelte";
   import AppWindowMenu from "$lib/components/AppWindowMenu.svelte";
   import SaveAsMenu from "$lib/components/SaveAsMenu.svelte";
-  import InitialConfigDialog from "$lib/components/InitialConfigDialog.svelte";
+  import InitialDialog from "$lib/components/InitialDialog.svelte";
+  import InitialConfigSettingsDialog from "$lib/components/InitialConfigSettingsDialog.svelte";
   import TooltipRenderer from "$lib/components/TooltipRenderer.svelte";
 
   initThemeManager();
@@ -37,18 +38,18 @@
 />
 <svelte:body use:lang={$locale} />
 
-<HotkeysMenu />
-<LanguageMenu />
-<ThemeMenu />
-<ToolbarMenu />
-<ImageNameDisplayMenu />
-<EdgeIndicatorMenu />
-<AppWindowMenu />
-<SaveAsMenu />
-<InitialConfigDialog />
-<TooltipRenderer />
-
 <div class="app-container">
+  <HotkeysMenu />
+  <LanguageMenu />
+  <ThemeMenu />
+  <ToolbarMenu />
+  <ImageNameDisplayMenu />
+  <EdgeIndicatorMenu />
+  <AppWindowMenu />
+  <SaveAsMenu />
+  <InitialDialog />
+  <InitialConfigSettingsDialog />
+  <TooltipRenderer />
   <InfoSidebar />
   <OptionsDisplaySidebar />
 
