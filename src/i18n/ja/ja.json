@@ -75,5 +75,9 @@
   "tooltip.rotateClockwise": "90度時計回りに回転",
   "tooltip.rotateCounterclockwise": "90度反時計回りに回転",
   "tooltip.toggleFullscreen": "フルスクリーン表示の切り替え",
-  "tooltip.toggleImageInfo": "画像情報の表示/非表示"
+  "tooltip.toggleImageInfo": "画像情報の表示/非表示",
+  "initialConfig.heading": "Blickfangへようこそ！",
+  "initialConfig.message": "Blickfangを初めて実行するようです。基本的な設定を構成しますか？",
+  "initialConfig.configureButton": "設定する",
+  "initialConfig.dontCareButton": "そのままでスタート！"
 }

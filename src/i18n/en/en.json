@@ -74,5 +74,9 @@
   "tooltip.rotateClockwise": "Rotate 90° clockwise",
   "tooltip.rotateCounterclockwise": "Rotate 90° counter-clockwise",
   "tooltip.toggleFullscreen": "Toggle Fullscreen",
-  "tooltip.toggleImageInfo": "Toggle Image Info"
+  "tooltip.toggleImageInfo": "Toggle Image Info",
+  "initialConfig.heading": "Welcome to Blickfang!",
+  "initialConfig.message": "It looks like this is your first time running Blickfang. Would you like to configure some basic settings?",
+  "initialConfig.configureButton": "Configure",
+  "initialConfig.dontCareButton": "I don't care!"
 }

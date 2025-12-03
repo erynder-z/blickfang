@@ -51,7 +51,14 @@ pub struct Config {
     pub window_x: Option<f64>,
     #[serde(default)]
     pub window_y: Option<f64>,
+    #[serde(default = "default_has_configured_initial_settings")]
+    pub has_configured_initial_settings: bool,
 }
+
+fn default_has_configured_initial_settings() -> bool {
+    false
+}
+
 
 fn default_language() -> String {
     "en".into()
@@ -144,6 +151,7 @@ impl Default for Config {
             window_height: None,
             window_x: None,
             window_y: None,
+            has_configured_initial_settings: default_has_configured_initial_settings(),
         }
     }
 }

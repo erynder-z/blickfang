@@ -74,5 +74,9 @@
   "tooltip.rotateClockwise": "90° im Uhrzeigersinn drehen",
   "tooltip.rotateCounterclockwise": "90° gegen den Uhrzeigersinn drehen",
   "tooltip.toggleFullscreen": "Vollbildmodus verwenden/beenden",
-  "tooltip.toggleImageInfo": "Bildinformationen zeigen/verbergen"
+  "tooltip.toggleImageInfo": "Bildinformationen zeigen/verbergen",
+  "initialConfig.heading": "Willkommen bei Blickfang!",
+  "initialConfig.message": "Es sieht so aus, als würden Sie Blickfang zum ersten Mal ausführen. Möchten Sie paar grundlegende Einstellungen konfigurieren?",
+  "initialConfig.configureButton": "Konfigurieren",
+  "initialConfig.dontCareButton": "Ist mir egal!"
 }

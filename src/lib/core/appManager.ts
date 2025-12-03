@@ -2,6 +2,10 @@ import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/core";
 import { setLocale } from "$lib/utils/i18n";
 import { imageUrl, imagePath, appConfig, aiDetectionResult } from "$lib/stores";
+import {
+  isInitialConfigDialogVisible,
+  hasConfiguredInitialSettings,
+} from "$lib/stores/initialConfigDialog";
 import type { AppConfig } from "$lib/types/app";
 import type { AiDetectionResult, ImageMetadata } from "$lib/types/image";
 import { updateImageStores } from "./commands";
@@ -122,6 +126,18 @@ export class AppManager {
     this.unlistenConfig = unlisteners.unlistenConfig;
 
     this.unsubscribeImagePath = imagePath.subscribe(this.runAiDetection.bind(this));
+
+    invoke("get_has_configured_initial_settings_command")
+      .then((configured) => {
+        hasConfiguredInitialSettings.set(configured as boolean);
+        if (!configured) {
+          isInitialConfigDialogVisible.set(true);
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to get initial config settings:", error);
+        isInitialConfigDialogVisible.set(true);
+      });
 
     this.showMainWindow();
 

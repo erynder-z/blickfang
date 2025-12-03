@@ -115,3 +115,20 @@ pub fn update_remember_window_size_command(app: AppHandle, remember: bool) -> Re
         }
     })
 }
+
+#[tauri::command]
+pub fn get_has_configured_initial_settings_command(app: AppHandle) -> Result<bool, String> {
+    let config_str = read_config(&app)?;
+    let config: Config = serde_json::from_str(&config_str)
+        .map_err(|e| format!("Failed to deserialize config: {}", e))?;
+    Ok(config.has_configured_initial_settings)
+}
+
+#[tauri::command]
+pub fn set_has_configured_initial_settings_command(
+    app: AppHandle,
+    value: bool,
+) -> Result<(), String> {
+    update_config(&app, |config| config.has_configured_initial_settings = value)
+}
+

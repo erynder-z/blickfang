@@ -15,6 +15,7 @@
   import EdgeIndicatorMenu from "$lib/components/EdgeIndicatorMenu.svelte";
   import AppWindowMenu from "$lib/components/AppWindowMenu.svelte";
   import SaveAsMenu from "$lib/components/SaveAsMenu.svelte";
+  import InitialConfigDialog from "$lib/components/InitialConfigDialog.svelte";
   import TooltipRenderer from "$lib/components/TooltipRenderer.svelte";
 
   initThemeManager();
@@ -44,6 +45,7 @@
 <EdgeIndicatorMenu />
 <AppWindowMenu />
 <SaveAsMenu />
+<InitialConfigDialog />
 <TooltipRenderer />
 
 <div class="app-container">
