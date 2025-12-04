@@ -25,6 +25,13 @@
       toggleButtons[0]?.focus();
     });
 
+  const shouldShowRemapDialog = () => {
+    return (
+      defaultShortcuts &&
+      JSON.stringify($appConfig.customShortcuts) === JSON.stringify(defaultShortcuts)
+    );
+  };
+
   const handleRemap = () => isRemapping.set(true);
 
   const handleClose = () => isHotkeysMenuVisible.set(false);
@@ -35,6 +42,7 @@
 
   const handleSetCustom = () => {
     invoke("set_active_shortcuts_to_custom");
+    if (shouldShowRemapDialog()) handleRemap();
   };
 
   const handleKeydown = (event: KeyboardEvent) => {
