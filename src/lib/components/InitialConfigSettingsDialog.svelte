@@ -1,14 +1,19 @@
 <script lang="ts">
-  import { isInitialConfigSettingsDialogVisible } from "$lib/stores/initialConfigSettingsDialog";
-  import { isThemeMenuVisible, isLanguageMenuVisible } from "$lib/stores";
+  import { isThemeMenuVisible, isLanguageMenuVisible, isHotkeysMenuVisible } from "$lib/stores";
   import { t } from "$lib/utils/i18n";
   import { fly, fade } from "svelte/transition";
   import { focusTrap } from "$lib/actions/focusTrap";
+  import { isInitialConfigSettingsDialogVisible } from "$lib/stores/initialDialog";
 
   let buttons: HTMLButtonElement[] = [];
   let isSubMenuOpen = false;
 
-  $: if (!$isThemeMenuVisible && !$isLanguageMenuVisible && isSubMenuOpen) {
+  $: if (
+    !$isThemeMenuVisible &&
+    !$isLanguageMenuVisible &&
+    !$isHotkeysMenuVisible &&
+    isSubMenuOpen
+  ) {
     isSubMenuOpen = false;
     isInitialConfigSettingsDialogVisible.set(true);
   }
@@ -26,8 +31,9 @@
   };
 
   const handleToggleHotkeys = () => {
-    // TODO: Implement hotkey toggle logic
-    console.log("Toggle hotkeys clicked");
+    isSubMenuOpen = true;
+    isInitialConfigSettingsDialogVisible.set(false);
+    isHotkeysMenuVisible.set(true);
   };
 
   const handleClose = () => isInitialConfigSettingsDialogVisible.set(false);

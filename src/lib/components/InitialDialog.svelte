@@ -1,10 +1,13 @@
 <script lang="ts">
-  import { isInitialDialogVisible, hasConfiguredInitialSettings } from "$lib/stores/InitialDialog";
-  import { isInitialConfigSettingsDialogVisible } from "$lib/stores/initialConfigSettingsDialog";
   import { t } from "$lib/utils/i18n";
   import { invoke } from "@tauri-apps/api/core";
   import { fly, fade } from "svelte/transition";
   import { focusTrap } from "$lib/actions/focusTrap";
+  import {
+    hasConfiguredInitialSettings,
+    isInitialConfigSettingsDialogVisible,
+    isInitialDialogVisible,
+  } from "$lib/stores/initialDialog";
 
   let buttons: HTMLButtonElement[] = [];
 
@@ -12,7 +15,7 @@
     await invoke("set_has_configured_initial_settings_command", { value: true });
     hasConfiguredInitialSettings.set(true);
     isInitialDialogVisible.set(false);
-    isInitialConfigSettingsDialogVisible.set(true); // Open the new dialog
+    isInitialConfigSettingsDialogVisible.set(true);
   };
 
   const handleDontCareClick = async () => {

@@ -83,5 +83,5 @@
   "initialConfigSettings.message": "Ein paar grundlegende Einstellungen. Weitere Optionen im Hauptmenü.",
   "initialConfigSettings.selectThemeButton": "Farbschema",
   "initialConfigSettings.selectLanguageButton": "Sprache",
-  "initialConfigSettings.toggleHotkeysButton": "Benutzerdefinierte Hotkeys nuutzen"
+  "initialConfigSettings.toggleHotkeysButton": "Hotkeys"
 }

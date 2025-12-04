@@ -84,5 +84,5 @@
   "initialConfigSettings.message": "基本的なアプリケーション設定を構成。その他のオプションはメインメニューで設定できます。",
   "initialConfigSettings.selectThemeButton": "テーマ",
   "initialConfigSettings.selectLanguageButton": "言語",
-  "initialConfigSettings.toggleHotkeysButton": "カスタムホットキーを使う"
+  "initialConfigSettings.toggleHotkeysButton": "ホットキー"
 }

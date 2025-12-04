@@ -39,7 +39,10 @@
 
   const handleKeydown = (event: KeyboardEvent) => {
     if (!$isHotkeysMenuVisible) return;
-    if (event.key === "Escape") handleClose();
+    if (event.key === "Escape") {
+      event.stopPropagation();
+      handleClose();
+    }
   };
 </script>
 

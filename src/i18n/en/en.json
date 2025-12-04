@@ -83,5 +83,5 @@
   "initialConfigSettings.message": "Some basic application settings. More options are available in main menu.",
   "initialConfigSettings.selectThemeButton": "Theme",
   "initialConfigSettings.selectLanguageButton": "Language",
-  "initialConfigSettings.toggleHotkeysButton": "Use Custom Hotkeys"
+  "initialConfigSettings.toggleHotkeysButton": "Hotkeys"
 }
