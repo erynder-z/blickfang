@@ -43,4 +43,7 @@ codegen-units = 1
 lto = true
 opt-level = "s"
 panic = "abort" 
-strip = true 
+strip = "debuginfo" 
+
+# Memo:
+# Run build command with prepended "NO_STRIP=true" to workaround failed linuxdeploy
