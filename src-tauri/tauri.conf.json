@@ -13,7 +13,8 @@
     "windows": [
       {
         "title": "Blickfang",
-        "visible": false
+        "visible": false,
+        "theme": "Dark"
       }
     ],
     "security": {
