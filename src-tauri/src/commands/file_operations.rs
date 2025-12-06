@@ -9,6 +9,16 @@ use crate::utils::{
     },
 };
 
+/// Opens a file dialog, reads the selected image, and returns its metadata,
+/// path, and a list of other image files in the same directory.
+///
+/// # Arguments
+/// * `window` - The Tauri window handle.
+///
+/// # Returns
+/// `Result<Option<(ImageMetadata, String, Vec<String>)>, String>` - A result containing
+/// an `Option` with the image metadata, its path, and a list of other files in the
+/// directory if a file was selected, or `None` if the dialog was cancelled.
 #[tauri::command]
 pub async fn open_and_read_file(
     window: Window,
@@ -25,6 +35,14 @@ pub async fn open_and_read_file(
     }
 }
 
+/// Reads image metadata and lists other files in the same directory given a specific path.
+///
+/// # Arguments
+/// * `path` - The path to the image file as a `String`.
+///
+/// # Returns
+/// `Result<(ImageMetadata, String, Vec<String>)>, String>` - A result containing
+/// the image metadata, its path, and a list of other files in the directory.
 #[tauri::command]
 pub async fn read_image_from_path(
     path: String,
@@ -36,6 +54,17 @@ pub async fn read_image_from_path(
     Ok((metadata, path, directory_files))
 }
 
+/// Saves an image to a specified path and format, with optional quality.
+///
+/// # Arguments
+/// * `window` - The Tauri window handle.
+/// * `path` - The source path of the image to save.
+/// * `format` - The desired output format (e.g., "png", "jpeg").
+/// * `quality` - Optional quality setting for formats like JPEG (0.0-1.0).
+///
+/// # Returns
+/// `Result<Option<String>, String>` - A result containing an `Option` with the
+/// path to the saved file if successful, or `None` if the save operation was cancelled.
 #[tauri::command]
 pub async fn save_image_as(
     window: Window,
@@ -56,11 +85,25 @@ pub async fn save_image_as(
     }
 }
 
+/// Returns a list of image formats supported for saving.
+///
+/// # Returns
+/// `Result<Vec<String>, String>` - A result containing a vector of supported
+/// image format strings.
 #[tauri::command]
 pub fn get_supported_image_formats() -> Result<Vec<String>, String> {
     get_formats()
 }
 
+/// Navigates to the next or previous image in the current directory.
+///
+/// # Arguments
+/// * `current_path` - The path of the currently displayed image.
+/// * `direction` - The navigation direction, either "next" or "previous".
+///
+/// # Returns
+/// `Result<(ImageMetadata, String), String>` - A result containing the metadata
+/// and path of the new image.
 #[tauri::command]
 pub async fn change_image(
     current_path: String,

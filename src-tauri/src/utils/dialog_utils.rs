@@ -3,6 +3,14 @@ use tauri::Window;
 use tauri_plugin_dialog::DialogExt;
 use tokio::sync::oneshot;
 
+/// Opens a file dialog for the user to select an image file.
+///
+/// # Arguments
+/// * `window` - The Tauri window handle.
+///
+/// # Returns
+/// `Result<Option<PathBuf>, String>` - An `Option` containing the path to the selected file,
+/// or `None` if the dialog is cancelled by the user.
 pub async fn open_image_dialog(window: Window) -> Result<Option<PathBuf>, String> {
     let (tx, rx) = oneshot::channel();
 
@@ -22,6 +30,16 @@ pub async fn open_image_dialog(window: Window) -> Result<Option<PathBuf>, String
         .map_err(|e| format!("Failed to receive file path from dialog: {}", e))
 }
 
+/// Opens a save file dialog, suggesting a filename based on the source path and desired format.
+///
+/// # Arguments
+/// * `window` - The Tauri window handle.
+/// * `source_path` - The original path of the file being saved, used to suggest a filename.
+/// * `format` - The desired file format/extension (e.g., "png", "jpeg").
+///
+/// # Returns
+/// `Result<Option<PathBuf>, String>` - An `Option` containing the path where the file should be saved,
+/// or `None` if the dialog is cancelled by the user.
 pub async fn show_save_dialog(
     window: Window,
     source_path: &str,

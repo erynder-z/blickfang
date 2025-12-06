@@ -23,26 +23,65 @@ where
     Ok(())
 }
 
+/// Reads the current application configuration.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+///
+/// # Returns
+/// `Result<String, String>` - A JSON string representation of the configuration.
 #[tauri::command]
 pub fn read_config_command(app: AppHandle) -> Result<String, String> {
     read_config(&app)
 }
 
+/// Writes a new configuration to the application's config file.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+/// * `content` - The new configuration content as a JSON string.
+///
+/// # Returns
+/// `Result<(), String>`.
 #[tauri::command]
 pub fn write_config_command(app: AppHandle, content: String) -> Result<(), String> {
     write_config(&app, &content)
 }
 
+/// Updates the application's language setting.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+/// * `language` - The new language code (e.g., "en", "de").
+///
+/// # Returns
+/// `Result<(), String>`.
 #[tauri::command]
 pub fn update_language_command(app: AppHandle, language: String) -> Result<(), String> {
     update_config(&app, |config| config.language = language)
 }
 
+/// Updates the application's theme setting.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+/// * `theme` - The new theme name.
+///
+/// # Returns
+/// `Result<(), String>`.
 #[tauri::command]
 pub fn update_theme_command(app: AppHandle, theme: String) -> Result<(), String> {
     update_config(&app, |config| config.theme = theme)
 }
 
+/// Updates the size of toolbar buttons.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+/// * `toolbar_button_size` - The new size setting for toolbar buttons.
+///
+/// # Returns
+/// `Result<(), String>`.
 #[tauri::command]
 pub fn update_toolbar_button_size_command(
     app: AppHandle,
@@ -53,16 +92,36 @@ pub fn update_toolbar_button_size_command(
     })
 }
 
+/// Updates the image name display mode.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+/// * `mode` - The new display mode.
+///
+/// # Returns
+/// `Result<(), String>`.
 #[tauri::command]
 pub fn update_image_name_display_mode_command(app: AppHandle, mode: String) -> Result<(), String> {
     update_config(&app, |config| config.image_name_display_mode = mode)
 }
 
+/// Retrieves the default keyboard shortcuts.
+///
+/// # Returns
+/// `Result<Shortcuts, String>` - The default shortcuts.
 #[tauri::command]
 pub fn get_default_shortcuts_command() -> Result<Shortcuts, String> {
     Ok(default_shortcuts())
 }
 
+/// Updates the custom keyboard shortcuts.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+/// * `new_shortcuts` - The new custom shortcuts.
+///
+/// # Returns
+/// `Result<(), String>`.
 #[tauri::command]
 pub fn update_custom_shortcuts_command(
     app: AppHandle,
@@ -74,11 +133,25 @@ pub fn update_custom_shortcuts_command(
     })
 }
 
+/// Sets the active shortcuts to the default configuration.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+///
+/// # Returns
+/// `Result<(), String>`.
 #[tauri::command]
 pub fn set_active_shortcuts_to_default(app: AppHandle) -> Result<(), String> {
     update_config(&app, |config| config.shortcuts = default_shortcuts())
 }
 
+/// Sets the active shortcuts to the custom configuration.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+///
+/// # Returns
+/// `Result<(), String>`.
 #[tauri::command]
 pub fn set_active_shortcuts_to_custom(app: AppHandle) -> Result<(), String> {
     update_config(&app, |config| {
@@ -86,11 +159,28 @@ pub fn set_active_shortcuts_to_custom(app: AppHandle) -> Result<(), String> {
     })
 }
 
+/// Updates the visibility setting for edge indicators.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+/// * `visible` - Whether edge indicators should be visible.
+///
+/// # Returns
+/// `Result<(), String>`.
 #[tauri::command]
 pub fn update_edge_indicators_visible_command(app: AppHandle, visible: bool) -> Result<(), String> {
     update_config(&app, |config| config.edge_indicators_visible = visible)
 }
 
+/// Updates the setting for remembering window size and position.
+/// If `remember` is true, it captures the current window size and position.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+/// * `remember` - Whether to remember window size/position.
+///
+/// # Returns
+/// `Result<(), String>`.
 #[tauri::command]
 pub fn update_remember_window_size_command(app: AppHandle, remember: bool) -> Result<(), String> {
     update_config(&app, |config| {
@@ -116,6 +206,13 @@ pub fn update_remember_window_size_command(app: AppHandle, remember: bool) -> Re
     })
 }
 
+/// Checks if the initial application settings have been configured.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+///
+/// # Returns
+/// `Result<bool, String>` - `true` if initial settings are configured, `false` otherwise.
 #[tauri::command]
 pub fn get_has_configured_initial_settings_command(app: AppHandle) -> Result<bool, String> {
     let config_str = read_config(&app)?;
@@ -124,6 +221,14 @@ pub fn get_has_configured_initial_settings_command(app: AppHandle) -> Result<boo
     Ok(config.has_configured_initial_settings)
 }
 
+/// Sets the flag indicating whether initial application settings have been configured.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+/// * `value` - The new value for the flag.
+///
+/// # Returns
+/// `Result<(), String>`.
 #[tauri::command]
 pub fn set_has_configured_initial_settings_command(
     app: AppHandle,

@@ -22,6 +22,13 @@ fn gcd(a: u32, b: u32) -> u32 {
     }
 }
 
+/// Reads an image file from the specified path and extracts its metadata.
+///
+/// # Arguments
+/// * `path` - The path to the image file.
+///
+/// # Returns
+/// `Result<ImageMetadata, String>` - The extracted image metadata.
 pub async fn read_image_file(path: &str) -> Result<ImageMetadata, String> {
     let path_buf = PathBuf::from(&path);
     let bytes = read_file_bytes(&path_buf).await?;
@@ -157,12 +164,29 @@ fn extract_exif_json(bytes: &[u8]) -> String {
     }
 }
 
+/// Loads the raw bytes of an image file from the specified path.
+///
+/// # Arguments
+/// * `path` - The path to the image file.
+///
+/// # Returns
+/// `Result<Vec<u8>, String>` - The raw bytes of the image.
 pub async fn load_image_bytes(path: &str) -> Result<Vec<u8>, String> {
     tokio::fs::read(path)
         .await
         .map_err(|e| format!("Failed to read original file '{}': {}", path, e))
 }
 
+/// Saves image bytes to a specified path and format, with optional quality settings.
+///
+/// # Arguments
+/// * `bytes` - The raw image data as a byte slice.
+/// * `save_path` - The destination path to save the image.
+/// * `format` - The desired output format (e.g., "png", "jpeg", "webp").
+/// * `quality` - Optional quality setting for formats like JPEG/WebP (0.0-100.0).
+///
+/// # Returns
+/// `Result<String, String>` - The path to the saved file if successful.
 pub fn save_image_to_format(
     bytes: &[u8],
     save_path: &Path,
@@ -202,6 +226,10 @@ fn save_jpeg(img: &DynamicImage, save_path: &Path, quality: Option<f32>) -> Resu
         .map_err(|e| format!("Failed to save JPEG image: {}", e))
 }
 
+/// Returns a list of image formats supported for saving.
+///
+/// # Returns
+/// `Result<Vec<String>, String>` - A vector of supported image format strings (e.g., "png", "jpeg", "webp", "bmp").
 pub fn get_supported_image_formats() -> Result<Vec<String>, String> {
     let formats = vec![
         "png".to_string(),
@@ -212,6 +240,14 @@ pub fn get_supported_image_formats() -> Result<Vec<String>, String> {
     Ok(formats)
 }
 
+/// Detects C2PA (Content Authenticity Initiative) metadata in an image file.
+///
+/// # Arguments
+/// * `path` - The path to the image file.
+///
+/// # Returns
+/// `Result<(bool, Option<String>), String>` - A tuple where the boolean indicates
+/// if C2PA data was found, and the `Option<String>` contains the C2PA JSON payload if available.
 pub fn detect_c2pa(path: &Path) -> Result<(bool, Option<String>), String> {
     let bytes =
         fs::read(path).map_err(|e| format!("Failed to read file for C2PA detection: {}", e))?;
@@ -239,6 +275,13 @@ pub fn extract_c2pa_store(bytes: &[u8]) -> Option<(String, Vec<u8>)> {
     None
 }
 
+/// Extracts text chunks (tEXt, iTXt) from PNG image bytes.
+///
+/// # Arguments
+/// * `bytes` - The raw PNG image data.
+///
+/// # Returns
+/// `Vec<(String, String)>` - A list of (key, value) pairs for extracted text chunks.
 pub fn extract_png_text_chunks(bytes: &[u8]) -> Vec<(String, String)> {
     let mut chunks = Vec::new();
     let mut cursor = 8;
@@ -265,6 +308,13 @@ pub fn extract_png_text_chunks(bytes: &[u8]) -> Vec<(String, String)> {
     chunks
 }
 
+/// Extracts XMP metadata from WebP image bytes.
+///
+/// # Arguments
+/// * `bytes` - The raw WebP image data.
+///
+/// # Returns
+/// `Option<String>` - An `Option` containing the XMP XML string if found.
 pub fn extract_webp_xmp(bytes: &[u8]) -> Option<String> {
     if bytes.len() < 12 || &bytes[0..4] != b"RIFF" || &bytes[8..12] != b"WEBP" {
         return None;

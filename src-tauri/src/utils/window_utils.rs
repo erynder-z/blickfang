@@ -18,6 +18,15 @@ fn save_config(app_handle: &AppHandle, config: &Config) {
     }
 }
 
+/// Configures the main application window's size and position based on saved settings
+/// in the config file, or calculates a default size/position if no settings are found
+/// or `remember_window_size` is false.
+///
+/// # Arguments
+/// * `app` - A mutable reference to the Tauri `App` instance.
+///
+/// # Returns
+/// `Result<(), String>`.
 pub fn setup_main_window(app: &mut App) -> Result<(), String> {
     let window = app
         .get_webview_window("main")
@@ -63,6 +72,10 @@ pub fn setup_main_window(app: &mut App) -> Result<(), String> {
     Ok(())
 }
 
+/// Shows the specified Tauri window.
+///
+/// # Arguments
+/// * `window` - The Tauri `Window` to show.
 #[tauri::command]
 pub fn show_window(window: tauri::Window) {
     if let Err(e) = window.show() {
@@ -70,6 +83,12 @@ pub fn show_window(window: tauri::Window) {
     }
 }
 
+/// Handles Tauri window events, specifically `Moved` and `Resized` for the main window.
+/// If `remember_window_size` is enabled in the config, it saves the new position and size.
+///
+/// # Arguments
+/// * `app_handle` - The Tauri application handle.
+/// * `event` - The `RunEvent` to handle.
 pub fn handle_window_event(app_handle: &AppHandle, event: &RunEvent) {
     if let RunEvent::WindowEvent {
         label,

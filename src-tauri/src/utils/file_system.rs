@@ -1,6 +1,14 @@
 use std::path::{Path, PathBuf};
 use tokio::fs;
 
+/// Reads the parent directory of the given file path and returns a sorted list of
+/// paths to image files found within that directory.
+///
+/// # Arguments
+/// * `file_path` - A path to a file within the target directory.
+///
+/// # Returns
+/// `Result<Vec<String>, String>` - A sorted vector of absolute paths to image files.
 pub async fn get_directory_files(file_path: &str) -> Result<Vec<String>, String> {
     let path = Path::new(file_path);
     let parent_dir = path
@@ -36,6 +44,13 @@ pub async fn get_directory_files(file_path: &str) -> Result<Vec<String>, String>
     Ok(image_files)
 }
 
+/// Filters a list of file paths, removing any files whose names start with a dot ('.').
+///
+/// # Arguments
+/// * `paths` - A vector of file paths (as Strings).
+///
+/// # Returns
+/// `Vec<String>` - The filtered list of file paths.
 pub fn filter_dot_files(paths: Vec<String>) -> Vec<String> {
     paths
         .into_iter()
@@ -49,6 +64,16 @@ pub fn filter_dot_files(paths: Vec<String>) -> Vec<String> {
         .collect()
 }
 
+/// Retrieves a sorted list of non-hidden image files from the directory
+/// containing the given path.
+///
+/// This function combines `get_directory_files` and `filter_dot_files`.
+///
+/// # Arguments
+/// * `path` - A path within the target directory.
+///
+/// # Returns
+/// `Result<Vec<String>, String>` - A list of filtered image file paths.
 pub async fn get_filtered_directory_files(path: &str) -> Result<Vec<String>, String> {
     let files = get_directory_files(path).await?;
     Ok(filter_dot_files(files))

@@ -17,6 +17,14 @@ fn get_config_path(app: &AppHandle) -> Result<PathBuf, String> {
     Ok(config_path)
 }
 
+/// Reads the application configuration from the config file.
+/// If the configuration file does not exist, a default configuration is created and written.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+///
+/// # Returns
+/// `Result<String, String>` - A JSON string representation of the configuration.
 pub fn read_config(app: &AppHandle) -> Result<String, String> {
     let config_path = get_config_path(app)?;
 
@@ -44,6 +52,14 @@ pub fn read_config(app: &AppHandle) -> Result<String, String> {
     Ok(normalized)
 }
 
+/// Writes the provided configuration content to the config file.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+/// * `content` - The configuration content as a string (expected to be JSON).
+///
+/// # Returns
+/// `Result<(), String>`.
 pub fn write_config(app: &AppHandle, content: &str) -> Result<(), String> {
     let config_path = get_config_path(app)?;
     fs::write(config_path, content).map_err(|e| format!("Failed to write config file: {}", e))?;
