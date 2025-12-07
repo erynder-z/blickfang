@@ -76,6 +76,7 @@
   "tooltip.rotateCounterclockwise": "90度反時計回りに回転",
   "tooltip.toggleFullscreen": "フルスクリーン表示の切り替え",
   "tooltip.toggleImageInfo": "画像情報の表示/非表示",
+  "tooltip.about": "このアプリについて",
   "initialConfig.heading": "Blickfangへようこそ！",
   "initialConfig.message": "Blickfangを初めて実行するようです。基本的な設定を構成しますか？",
   "initialConfig.configureButton": "設定する",
@@ -84,5 +85,9 @@
   "initialConfigSettings.message": "基本的なアプリケーション設定を構成。その他のオプションはメインメニューで設定できます。",
   "initialConfigSettings.selectThemeButton": "テーマ",
   "initialConfigSettings.selectLanguageButton": "言語",
-  "initialConfigSettings.toggleHotkeysButton": "ホットキー"
+  "initialConfigSettings.toggleHotkeysButton": "ホットキー",
+  "about.heading": "Blickfangについて",
+  "about.message": "BlickfangはSvelteKitとTauriで構築された画像ビューアアプリケーションです。",
+  "about.sourcecode": "Blickfangのソースコードはここで公開されています: https://github.com/erynder-z/blickfang",
+  "about.fontAttribution": "このアプリは'SUSE Mono'のフォントを使っています. 'SUSE タイプフェーズは'SIL Open Font License, Version 1.1'でライセンスされてます。 そのライセンスとFAQはここで確認できます: https://scripts.sil.org/OFL"
 }

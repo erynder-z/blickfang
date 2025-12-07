@@ -18,6 +18,7 @@
   import InitialDialog from "$lib/components/InitialDialog.svelte";
   import InitialConfigSettingsDialog from "$lib/components/InitialConfigSettingsDialog.svelte";
   import TooltipRenderer from "$lib/components/TooltipRenderer.svelte";
+  import AboutMenu from "$lib/components/AboutMenu.svelte";
 
   initThemeManager();
 
@@ -47,6 +48,7 @@
   <EdgeIndicatorMenu />
   <AppWindowMenu />
   <SaveAsMenu />
+  <AboutMenu />
   <InitialDialog />
   <InitialConfigSettingsDialog />
   <TooltipRenderer />

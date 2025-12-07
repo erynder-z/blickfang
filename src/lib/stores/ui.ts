@@ -11,6 +11,7 @@ export const isImageNameDisplayMenuVisible = writable(false);
 export const isEdgeIndicatorMenuVisible = writable(false);
 export const isAppWindowMenuVisible = writable(false);
 export const isSaveAsMenuVisible = writable(false);
+export const isAboutMenuVisible = writable(false);
 
 export const isFullscreenActive = writable(false);
 export const isRefittingOnResize = writable(false);

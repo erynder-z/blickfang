@@ -75,6 +75,7 @@
   "tooltip.rotateCounterclockwise": "90° gegen den Uhrzeigersinn drehen",
   "tooltip.toggleFullscreen": "Vollbildmodus verwenden/beenden",
   "tooltip.toggleImageInfo": "Bildinformationen zeigen/verbergen",
+  "tooltip.about": "Über",
   "initialConfig.heading": "Willkommen bei Blickfang!",
   "initialConfig.message": "Es sieht so aus, als würden Sie Blickfang zum ersten Mal ausführen. Möchten Sie paar grundlegende Einstellungen konfigurieren?",
   "initialConfig.configureButton": "Konfigurieren",
@@ -83,5 +84,9 @@
   "initialConfigSettings.message": "Ein paar grundlegende Einstellungen. Weitere Optionen im Hauptmenü.",
   "initialConfigSettings.selectThemeButton": "Farbschema",
   "initialConfigSettings.selectLanguageButton": "Sprache",
-  "initialConfigSettings.toggleHotkeysButton": "Hotkeys"
+  "initialConfigSettings.toggleHotkeysButton": "Hotkeys",
+  "about.heading": "Über Blickfang",
+  "about.message": "Blickfang ist eine Bildbetrachter-Anwendung, die mit SvelteKit und Tauri erstellt wurde.",
+  "about.sourcecode": "Der Quellcode von Blickfang ist verfügbar auf https://github.com/erynder-z/blickfang",
+  "about.fontAttribution": "Diese App benutzt die SUSE Mono font. SUSE typeface ist unter lizensiert unter der SIL Open Font License, Version 1.1. Diese Lizenz und ein FAQ findet sich unter https://scripts.sil.org/OFL"
 }

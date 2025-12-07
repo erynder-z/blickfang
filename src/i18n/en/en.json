@@ -75,6 +75,7 @@
   "tooltip.rotateCounterclockwise": "Rotate 90° counter-clockwise",
   "tooltip.toggleFullscreen": "Toggle Fullscreen",
   "tooltip.toggleImageInfo": "Toggle Image Info",
+  "tooltip.about": "About",
   "initialConfig.heading": "Welcome to Blickfang!",
   "initialConfig.message": "It looks like this is your first time running Blickfang. Would you like to configure some basic settings?",
   "initialConfig.configureButton": "Configure",
@@ -83,5 +84,9 @@
   "initialConfigSettings.message": "Some basic application settings. More options are available in main menu.",
   "initialConfigSettings.selectThemeButton": "Theme",
   "initialConfigSettings.selectLanguageButton": "Language",
-  "initialConfigSettings.toggleHotkeysButton": "Hotkeys"
+  "initialConfigSettings.toggleHotkeysButton": "Hotkeys",
+  "about.heading": "About Blickfang",
+  "about.message": "Blickfang is an image viewer application built with SvelteKit and Tauri.",
+  "about.sourcecode": "The source code for Blickfang is available at https://github.com/erynder-z/blickfang",
+  "about.fontAttribution": "This app uses the SUSE Mono font. SUSE typeface is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at https://scripts.sil.org/OFL"
 }
