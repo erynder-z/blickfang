@@ -48,7 +48,7 @@
   "hotkeys.zoomModifierUp": "Zoomgeschwindigkeit erhöhen (Taste halten)",
   "hotkeys.zoomModifierDown": "Zoomgeschwindigkeit verringern (Taste halten)",
   "hotkeys.remap.title": "Hotkeys neu zuweisen",
-  "hotkeys.remap.press_key_for": "Taste drücken für",
+  "hotkeys.remap.press_key_for_action": "Taste drücken für Aktion:",
   "hotkeys.remap.finished": "Alle Tasten wurden neu zugewiesen.",
   "hotkeys.remap.error.key_in_use": "Taste '{key}' wird bereits verwendet.",
   "placeholder.no-image": "Kein Bild geladen.",

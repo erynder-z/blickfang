@@ -48,7 +48,7 @@
   "hotkeys.zoomModifierUp": "Increase zoom speed modifier (hold)",
   "hotkeys.zoomModifierDown": "Decrease zoom speed modifier (hold)",
   "hotkeys.remap.title": "Remap Hotkeys",
-  "hotkeys.remap.press_key_for": "Press a key for",
+  "hotkeys.remap.press_key_for_action": "Press a key for action:",
   "hotkeys.remap.finished": "All keys have been remapped.",
   "hotkeys.remap.error.key_in_use": "Key '{key}' is already in use.",
   "placeholder.no-image": "No image loaded. ",

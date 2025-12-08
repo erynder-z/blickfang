@@ -102,8 +102,9 @@
       <div class="menu-content">
         <h1>{$t["hotkeys.remap.title"]}</h1>
         {#if remapStep < actionsToRemap.length}
+          <h2>{$t["hotkeys.remap.press_key_for_action"]}</h2>
           <p>
-            {$t["hotkeys.remap.press_key_for"]} "{$t[`hotkeys.${actionsToRemap[remapStep]}`]}"
+            {$t[`hotkeys.${actionsToRemap[remapStep]}`]}
           </p>
           {#if errorMessage}
             <p class="error">{errorMessage}</p>
@@ -173,7 +174,15 @@
     color: var(--color-text-primary);
     line-height: 1.2;
     font-size: 1.25rem;
-    text-wrap: balance;
+    text-wrap: pretty;
+  }
+
+  h2 {
+    margin: 0 0 0.5rem 0;
+    color: var(--color-text-primary);
+    line-height: 1.2;
+    font-size: 1rem;
+    text-wrap: pretty;
   }
 
   .hotkey-key {
