@@ -71,11 +71,12 @@ pub async fn save_image_as(
     path: String,
     format: String,
     quality: Option<f32>,
+    rotation: i32,
 ) -> Result<Option<String>, String> {
     if let Some(save_path) = show_save_dialog(window, &path, &format).await? {
         let bytes = load_image_bytes(&path).await?;
         let result = tokio::task::spawn_blocking(move || {
-            image_processing::save_image_to_format(&bytes, &save_path, &format, quality)
+            image_processing::save_image_to_format(&bytes, &save_path, &format, quality, rotation)
         })
         .await
         .map_err(|e| format!("Task spawn error: {}", e))??;

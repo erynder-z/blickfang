@@ -185,6 +185,7 @@ export const saveImageAs = async (format: string, quality: number | undefined): 
       path: currentPath,
       format,
       quality,
+      rotation: get(rotation),
     });
   } catch (error) {
     console.error("Failed to save image:", error);

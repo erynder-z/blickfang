@@ -184,6 +184,7 @@ pub async fn load_image_bytes(path: &str) -> Result<Vec<u8>, String> {
 /// * `save_path` - The destination path to save the image.
 /// * `format` - The desired output format (e.g., "png", "jpeg", "webp").
 /// * `quality` - Optional quality setting for formats like JPEG/WebP (0.0-100.0).
+/// * `rotation` - Optional rotation angle in degrees (0, 90, 180, 270).
 ///
 /// # Returns
 /// `Result<String, String>` - The path to the saved file if successful.
@@ -192,11 +193,19 @@ pub fn save_image_to_format(
     save_path: &Path,
     format: &str,
     quality: Option<f32>,
+    rotation: i32,
 ) -> Result<String, String> {
     let image_format = ImageFormat::from_extension(format)
         .ok_or_else(|| format!("Invalid image format: {}", format))?;
-    let img =
+    let mut img =
         image::load_from_memory(bytes).map_err(|e| format!("Failed to decode image: {}", e))?;
+
+    img = match rotation {
+        90 => img.rotate90(),
+        180 => img.rotate180(),
+        270 => img.rotate270(),
+        _ => img,
+    };
 
     match image_format {
         ImageFormat::WebP => save_webp(&img, save_path, quality)?,
