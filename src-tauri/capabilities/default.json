@@ -35,6 +35,16 @@
     "permissions": []
   },
   {
+    "identifier": "opener:allow-open-url",
+    "windows": ["main"],
+    "allow": [
+      {
+        "url": "https://github.com/erynder-z/blickfang"
+      }
+    ],
+    "permissions": ["opener:default"]
+  },
+  {
     "identifier": "webview:devtools",
     "windows": ["main"],
     "permissions": ["core:webview:allow-internal-toggle-devtools"]

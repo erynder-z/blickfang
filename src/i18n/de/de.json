@@ -88,6 +88,6 @@
   "initialConfigSettings.toggleHotkeysButton": "Hotkeys",
   "about.heading": "Über Blickfang",
   "about.message": "Blickfang ist eine Bildbetrachter-Anwendung, die mit SvelteKit und Tauri erstellt wurde.",
-  "about.sourcecode": "Der Quellcode von Blickfang ist verfügbar auf https://github.com/erynder-z/blickfang",
-  "about.fontAttribution": "Diese App benutzt die SUSE Mono font. SUSE typeface ist unter lizensiert unter der SIL Open Font License, Version 1.1. Diese Lizenz und ein FAQ findet sich unter https://scripts.sil.org/OFL"
+  "about.sourcecode": "Der Quellcode von Blickfang ist verfügbar auf ",
+  "about.fontAttribution": "Diese App benutzt die SUSE Mono font. SUSE typeface ist unter lizensiert unter der SIL Open Font License, Version 1.1. Diese Lizenz und ein FAQ findet sich unter "
 }

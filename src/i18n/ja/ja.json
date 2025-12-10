@@ -89,6 +89,6 @@
   "initialConfigSettings.toggleHotkeysButton": "ホットキー",
   "about.heading": "Blickfangについて",
   "about.message": "BlickfangはSvelteKitとTauriで構築された画像ビューアアプリケーションです。",
-  "about.sourcecode": "Blickfangのソースコードはここで公開されています: https://github.com/erynder-z/blickfang",
-  "about.fontAttribution": "このアプリは'SUSE Mono'のフォントを使っています. 'SUSE タイプフェーズは'SIL Open Font License, Version 1.1'でライセンスされてます。 そのライセンスとFAQはここで確認できます: https://scripts.sil.org/OFL"
+  "about.sourcecode": "Blickfangのソースコードはここで公開されています: ",
+  "about.fontAttribution": "このアプリは'SUSE Mono'のフォントを使っています. 'SUSE タイプフェーズは'SIL Open Font License, Version 1.1'でライセンスされてます。 そのライセンスとFAQはここで確認できます: "
 }

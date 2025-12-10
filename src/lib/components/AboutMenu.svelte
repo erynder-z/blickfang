@@ -3,6 +3,7 @@
   import { t } from "$lib/utils/i18n";
   import { fly, fade } from "svelte/transition";
   import { focusTrap } from "$lib/actions/focusTrap";
+  import { openUrl } from "@tauri-apps/plugin-opener";
 
   const handleClose = () => isAboutMenuVisible.set(false);
 
@@ -12,6 +13,14 @@
       event.stopPropagation();
       handleClose();
     }
+  };
+
+  const handleSourceLinkClick = async () => {
+    await openUrl("https://github.com/erynder-z/blickfang");
+  };
+
+  const handleFontLicenseLinkClick = async () => {
+    await openUrl("https://scripts.sil.org/OFL");
   };
 </script>
 
@@ -36,8 +45,18 @@
     <div class="menu-content">
       <h1>{$t["about.heading"]}</h1>
       <p>{$t["about.message"]}</p>
-      <p>{$t["about.sourcecode"]}</p>
-      <p>{$t["about.fontAttribution"]}</p>
+      <p>
+        {$t["about.sourcecode"]}
+        <button on:click={handleSourceLinkClick} class="sourceLink"
+          >https://github.com/erynder-z/blickfang</button
+        >
+      </p>
+      <p>
+        {$t["about.fontAttribution"]}
+        <button on:click={handleFontLicenseLinkClick} class="sourceLink"
+          >https://scripts.sil.org/OFL</button
+        >
+      </p>
 
       <button on:click={handleClose} class="close-button">
         <svg
@@ -154,5 +173,22 @@
     padding: 0.5rem 1rem;
     min-width: 0;
     color: var(--color-close-button);
+  }
+
+  .sourceLink {
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .sourceLink:hover {
+    background: none;
+    border: none;
+    box-shadow: none;
+    transform: none;
   }
 </style>
