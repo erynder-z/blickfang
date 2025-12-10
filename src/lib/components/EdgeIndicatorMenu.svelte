@@ -53,7 +53,7 @@
     out:fade={{ duration: 100 }}
   >
     <div class="menu-content">
-      <h1>{$t["options.button.edge_indicators"]}</h1>
+      <h1>{$t["edge.indicators.title"]}</h1>
       <div class="option-buttons">
         <button
           bind:this={showButton}

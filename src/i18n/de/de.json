@@ -19,6 +19,7 @@
   "saveAs.quality": "Encoder-Qualität",
   "image_name_display.title": "Dateinamenanzeige",
   "image_name_display.option.fade": "Ausblenden (3s)",
+  "edge.indicators.title": "Kantenindikatoren",
   "app_window.title": "App-Fenster",
   "app_window.option.default": "Standard Fenstergröße und Position",
   "app_window.option.remember": "Fenstergröße und Position merken",
