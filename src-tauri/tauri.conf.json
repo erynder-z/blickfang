@@ -33,9 +33,29 @@
     ],
     "fileAssociations": [
       {
-        "ext": ["jpg", "jpeg", "png", "webp", "gif", "bmp"],
-        "name": "Image File",
-        "role": "Viewer"
+        "ext": ["png"],
+        "mimeType": "image/png",
+        "name": "Blickfang Image"
+      },
+      {
+        "ext": ["jpg", "jpeg"],
+        "mimeType": "image/jpeg",
+        "name": "Blickfang Image"
+      },
+      {
+        "ext": ["webp"],
+        "mimeType": "image/webp",
+        "name": "Blickfang Image"
+      },
+      {
+        "ext": ["gif"],
+        "mimeType": "image/gif",
+        "name": "Blickfang Image"
+      },
+      {
+        "ext": ["bmp"],
+        "mimeType": "image/bmp",
+        "name": "Blickfang Image"
       }
     ]
   }
