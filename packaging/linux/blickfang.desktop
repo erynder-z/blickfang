@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Blickfang
+GenericName=Image Viewer
+Comment=An image viewer app
+Exec=env %APPIMAGE_PATH% %U
+Icon=blickfang
+Terminal=false
+StartupWMClass=blickfang
+Categories=Graphics;Viewer;
+MimeType=image/png;image/jpeg;image/webp;image/gif;image/bmp;

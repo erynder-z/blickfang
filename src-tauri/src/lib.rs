@@ -11,6 +11,7 @@ mod commands;
 mod utils;
 mod models;
 
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let context = tauri::generate_context!();
@@ -19,6 +20,10 @@ pub fn run() {
         .manage(OpenedPathsState::default())
         .manage(AppReady::default())
         .setup(|app| {
+            #[cfg(target_os = "linux")]
+            {
+                let _ = crate::utils::os_integration_linux::install_desktop_file();
+            }
             setup_main_window(app)?;
             Ok(())
         })
