@@ -237,3 +237,34 @@ pub fn set_has_configured_initial_settings_command(
     update_config(&app, |config| config.has_configured_initial_settings = value)
 }
 
+/// Sets the user's choice for Linux desktop file installation.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+/// * `choice` - The user's choice ("installed", "skipped", or "not_asked").
+///
+/// # Returns
+/// `Result<(), String>`.
+#[tauri::command]
+pub fn set_linux_desktop_install_choice_command(
+    app: AppHandle,
+    choice: String,
+) -> Result<(), String> {
+    update_config(&app, |config| config.linux_desktop_install_choice = choice)
+}
+
+/// Gets the user's choice for Linux desktop file installation.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+///
+/// # Returns
+/// `Result<String, String>` - The user's choice.
+#[tauri::command]
+pub fn get_linux_desktop_install_choice_command(app: AppHandle) -> Result<String, String> {
+    let config_str = read_config(&app)?;
+    let config: Config = serde_json::from_str(&config_str)
+        .map_err(|e| format!("Failed to deserialize config: {}", e))?;
+    Ok(config.linux_desktop_install_choice)
+}
+

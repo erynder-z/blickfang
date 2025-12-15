@@ -17,6 +17,7 @@
   import SaveAsMenu from "$lib/components/SaveAsMenu.svelte";
   import InitialDialog from "$lib/components/InitialDialog.svelte";
   import InitialConfigSettingsDialog from "$lib/components/InitialConfigSettingsDialog.svelte";
+  import LinuxDesktopInstallDialog from "$lib/components/LinuxDesktopInstallDialog.svelte";
   import TooltipRenderer from "$lib/components/TooltipRenderer.svelte";
   import AboutMenu from "$lib/components/AboutMenu.svelte";
 
@@ -49,11 +50,12 @@
   <AppWindowMenu />
   <SaveAsMenu />
   <AboutMenu />
-  <InitialDialog />
-  <InitialConfigSettingsDialog />
   <TooltipRenderer />
   <InfoSidebar />
   <OptionsDisplaySidebar />
+  <InitialDialog />
+  <InitialConfigSettingsDialog />
+  <LinuxDesktopInstallDialog />
 
   <slot />
 </div>

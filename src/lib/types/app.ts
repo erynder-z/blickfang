@@ -27,4 +27,5 @@ export interface AppConfig {
   imageNameDisplayMode: "show" | "hide" | "fade";
   edgeIndicatorsVisible: boolean;
   rememberWindowSize: boolean;
+  linuxDesktopInstallChoice?: "installed" | "skipped" | "not_asked";
 }

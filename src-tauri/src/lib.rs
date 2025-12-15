@@ -1,4 +1,5 @@
 use crate::utils::{
+    os_specific_setup::perform_os_specific_setup,
     startup_handler::{AppReady, OpenedPathsState},
     window_utils::setup_main_window,
 };
@@ -20,10 +21,7 @@ pub fn run() {
         .manage(OpenedPathsState::default())
         .manage(AppReady::default())
         .setup(|app| {
-            #[cfg(target_os = "linux")]
-            {
-                let _ = crate::utils::os_integration_linux::install_desktop_file();
-            }
+            perform_os_specific_setup(&app.handle())?;
             setup_main_window(app)?;
             Ok(())
         })
@@ -52,6 +50,10 @@ pub fn run() {
             commands::config_commands::update_remember_window_size_command,
             commands::config_commands::get_has_configured_initial_settings_command,
             commands::config_commands::set_has_configured_initial_settings_command,
+            commands::config_commands::set_linux_desktop_install_choice_command,
+            commands::config_commands::get_linux_desktop_install_choice_command,
+            commands::linux_integration::install_linux_desktop_file_command,
+            commands::linux_integration::is_running_as_appimage_command,
             commands::image_analyze::detect_ai_image
         ])
         .build(context)

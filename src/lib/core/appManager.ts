@@ -2,7 +2,11 @@ import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/core";
 import { setLocale } from "$lib/utils/i18n";
 import { imageUrl, imagePath, appConfig, aiDetectionResult } from "$lib/stores";
-import { isInitialDialogVisible, hasConfiguredInitialSettings } from "$lib/stores/initialDialog";
+import { 
+  isInitialDialogVisible, 
+  hasConfiguredInitialSettings,
+  isLinuxDesktopInstallDialogVisible 
+} from "$lib/stores/initialDialog";
 import type { AppConfig } from "$lib/types/app";
 import type { AiDetectionResult, ImageMetadata } from "$lib/types/image";
 import { updateImageStores } from "./commands";
@@ -111,12 +115,12 @@ export class AppManager {
     }, timeout);
   }
 
-  /**
-   * Initializes the app by registering event listeners for the "image-source" and "config-updated" events.
-   * The event listeners are registered asynchronously, and the main window of the app is shown after a short delay (150ms) to allow the frontend to finish initializing.
-   * The function returns a function that can is used to unregister the event listeners.
-   * @returns {() => void} - A function that is used to unregister the event listeners.
-   */
+
+/**
+ * Initializes the app by registering event listeners and showing the main window.
+ * This function returns a promise that resolves to a function that can be used to unregister the event listeners.
+ * @returns {Promise<() => void>} A promise that resolves to a function that can be used to unregister the event listeners.
+ */
   public async initializeApp(): Promise<() => void> {
     const unlisteners = await this.registerEventListeners();
     this.unlistenImageSource = unlisteners.unlistenImageSource;
@@ -133,6 +137,17 @@ export class AppManager {
         console.error("Failed to get initial config settings:", error);
         isInitialDialogVisible.set(true);
       });
+
+    try {
+      const isAppImage = await invoke("is_running_as_appimage_command") as boolean;
+      const linuxDesktopChoice = await invoke("get_linux_desktop_install_choice_command") as string;
+      
+      if (isAppImage && linuxDesktopChoice === "not_asked") {
+        isLinuxDesktopInstallDialogVisible.set(true);
+      }
+    } catch (error) {
+      console.error("Failed to check Linux desktop install status:", error);
+    }
 
     this.showMainWindow();
 
