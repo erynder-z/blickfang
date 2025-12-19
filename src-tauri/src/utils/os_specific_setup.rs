@@ -1,7 +1,3 @@
-use crate::models::config::Config;
-use crate::utils::config_utils::read_config;
-use serde_json;
-use std::env;
 use tauri::AppHandle;
 
 /// Performs all necessary OS-specific setup tasks.
@@ -14,7 +10,7 @@ use tauri::AppHandle;
 ///
 /// # Returns
 /// `Result<(), String>` - Ok if setup succeeds, Err with error message otherwise.
-pub fn perform_os_specific_setup(app: &AppHandle) -> Result<(), String> {
+pub fn perform_os_specific_setup(_app: &AppHandle) -> Result<(), String> {
     #[cfg(target_os = "linux")]
     {
         perform_linux_setup(app)?;
@@ -70,7 +66,7 @@ fn perform_linux_setup(app: &AppHandle) -> Result<(), String> {
 /// # Returns
 /// `Result<(), String>` - Ok if setup succeeds, Err with error message otherwise.
 #[cfg(target_os = "windows")]
-fn perform_windows_setup(_app: &AppHandle) -> Result<(), String> {
+fn _perform_windows_setup(_app: &AppHandle) -> Result<(), String> {
     // No Windows-specific setup needed at the moment
     Ok(())
 }
@@ -85,7 +81,7 @@ fn perform_windows_setup(_app: &AppHandle) -> Result<(), String> {
 /// # Returns
 /// `Result<(), String>` - Ok if setup succeeds, Err with error message otherwise.
 #[cfg(target_os = "macos")]
-fn perform_macos_setup(_app: &AppHandle) -> Result<(), String> {
+fn _perform_macos_setup(_app: &AppHandle) -> Result<(), String> {
     // No macOS-specific setup needed at the moment
     Ok(())
 }
