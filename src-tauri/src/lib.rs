@@ -9,9 +9,8 @@ use tauri_plugin_fs;
 use tauri_plugin_opener;
 
 mod commands;
-mod utils;
 mod models;
-
+mod utils;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -54,7 +53,8 @@ pub fn run() {
             commands::config_commands::get_linux_desktop_install_choice_command,
             commands::linux_integration::install_linux_desktop_file_command,
             commands::linux_integration::is_running_as_appimage_command,
-            commands::image_analyze::detect_ai_image
+            commands::image_analyze::detect_ai_image,
+            commands::ascii_art::convert_image_to_ascii_art
         ])
         .build(context)
         .expect("error while building tauri application")

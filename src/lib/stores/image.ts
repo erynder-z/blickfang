@@ -6,9 +6,9 @@ export const imagePath = writable<string | null>(null);
 export const imageExif = writable<string | null>(null);
 export const imageFormat = writable<string | null>(null);
 export const rotation = writable<number>(0);
-
 export const imageResolution = writable<{ width: number; height: number } | null>(null);
 export const imageAspectRatio = writable<string | null>(null);
 export const imageColorDepth = writable<number | null>(null);
 export const imageFileSize = writable<number | null>(null);
 export const aiDetectionResult = writable<AiDetectionResult | null>(null);
+export const isConvertedToAscii = writable(false);

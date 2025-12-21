@@ -26,6 +26,7 @@ import {
   isZoomModifierDownActive,
   imageFileSize,
   rotation,
+  isConvertedToAscii,
 } from "$lib/stores";
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -102,6 +103,7 @@ export const openFile = async (): Promise<void> => {
       updateImageStores(metadata);
       zoomLevel.set(1);
       rotation.set(0);
+      isConvertedToAscii.set(false);
     }
   } catch (error) {
     console.error("Failed to open and read file:", error);
@@ -132,6 +134,7 @@ const changeImage = async (direction: "next" | "previous"): Promise<void> => {
     updateImageStores(metadata);
     zoomLevel.set(1);
     rotation.set(0);
+    isConvertedToAscii.set(false);
   } catch (error) {
     console.error("Failed to change image:", error);
   }
@@ -300,8 +303,9 @@ export const triggerWheelZoom = (direction: "in" | "out") => {
  * Toggles the fullscreen mode of the application window.
  * If the application window is not in fullscreen mode, it will be set to fullscreen mode, and vice versa.
  * Starts feedback for the "toggleFullscreen" action, and then updates the isFullscreenActive store with the new state.
+ * @returns {Promise<void>}
  */
-export const toggleFullscreen = async () => {
+export const toggleFullscreen = async (): Promise<void> => {
   singleShotFeedback("toggleFullscreen");
 
   const fullscreen = !get(isFullscreenActive);
@@ -346,6 +350,31 @@ export const toggleSaveAsMenu = () => {
 
   singleShotFeedback("saveImageAs");
   isSaveAsMenuVisible.update((isOpen) => !isOpen);
+};
+
+/**
+ * Converts the currently open image to ASCII art and updates the imageUrl store with the result.
+ * If no image is open, this function does nothing and logs a warning to the console.
+ * @returns {Promise<void>}
+ */
+export const convertImageToAsciiArt = async (): Promise<void> => {
+  const path = get(imagePath);
+
+  if (!path) {
+    console.warn("No image path available for conversion");
+    return;
+  }
+
+  singleShotFeedback("convertToAscii");
+
+  try {
+    const asciiImageData = (await invoke("convert_image_to_ascii_art", { path })) as string;
+
+    imageUrl.set(asciiImageData);
+    isConvertedToAscii.set(true);
+  } catch (error) {
+    console.error("Failed to convert image to ASCII art:", error);
+  }
 };
 
 // --- Utility Functions ---

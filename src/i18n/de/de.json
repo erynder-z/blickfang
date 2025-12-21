@@ -76,6 +76,7 @@
   "tooltip.rotateCounterclockwise": "90° gegen den Uhrzeigersinn drehen",
   "tooltip.toggleFullscreen": "Vollbildmodus verwenden/beenden",
   "tooltip.toggleImageInfo": "Bildinformationen zeigen/verbergen",
+  "tooltip.convertToAscii": "In Ascii-Bild umwandeln",
   "tooltip.about": "Über",
   "initialConfig.heading": "Willkommen bei Blickfang!",
   "initialConfig.message": "Es sieht so aus, als wird Blickfang zum ersten Mal ausgeführt. Möchtest Du paar grundlegende Einstellungen konfigurieren?",
