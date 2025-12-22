@@ -164,19 +164,6 @@ fn extract_exif_json(bytes: &[u8]) -> String {
     }
 }
 
-/// Loads the raw bytes of an image file from the specified path.
-///
-/// # Arguments
-/// * `path` - The path to the image file.
-///
-/// # Returns
-/// `Result<Vec<u8>, String>` - The raw bytes of the image.
-pub async fn load_image_bytes(path: &str) -> Result<Vec<u8>, String> {
-    tokio::fs::read(path)
-        .await
-        .map_err(|e| format!("Failed to read original file '{}': {}", path, e))
-}
-
 /// Saves image bytes to a specified path and format, with optional quality settings.
 ///
 /// # Arguments

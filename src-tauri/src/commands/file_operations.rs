@@ -4,10 +4,9 @@ use crate::models::image::ImageMetadata;
 use crate::utils::{
     dialog_utils::{open_image_dialog, show_save_dialog},
     file_system::get_filtered_directory_files,
-    image_processing::{
-        self, get_supported_image_formats as get_formats, load_image_bytes, read_image_file,
-    },
+    image_processing::{self, get_supported_image_formats as get_formats, read_image_file},
 };
+use base64::Engine;
 
 /// Opens a file dialog, reads the selected image, and returns its metadata,
 /// path, and a list of other image files in the same directory.
@@ -54,27 +53,34 @@ pub async fn read_image_from_path(
     Ok((metadata, path, directory_files))
 }
 
-/// Saves an image to a specified path and format, with optional quality.
+/// Saves an image from base64 encoded data to a specified path and format, with optional quality.
+/// This unified command works for both normal and ASCII-converted images.
 ///
 /// # Arguments
 /// * `window` - The Tauri window handle.
-/// * `path` - The source path of the image to save.
+/// * `base64data` - The base64 encoded image data.
+/// * `source_name` - The source name for filename suggestion (file path or "ascii_art").
 /// * `format` - The desired output format (e.g., "png", "jpeg").
 /// * `quality` - Optional quality setting for formats like JPEG (0.0-1.0).
+/// * `rotation` - The rotation angle in degrees (0, 90, 180, 270).
 ///
 /// # Returns
 /// `Result<Option<String>, String>` - A result containing an `Option` with the
 /// path to the saved file if successful, or `None` if the save operation was cancelled.
 #[tauri::command]
-pub async fn save_image_as(
+pub async fn save_base64_image_as(
     window: Window,
-    path: String,
+    base64data: String,
+    source_name: String,
     format: String,
     quality: Option<f32>,
     rotation: i32,
 ) -> Result<Option<String>, String> {
-    if let Some(save_path) = show_save_dialog(window, &path, &format).await? {
-        let bytes = load_image_bytes(&path).await?;
+    if let Some(save_path) = show_save_dialog(window, &source_name, &format).await? {
+        let bytes = base64::engine::general_purpose::STANDARD
+            .decode(base64data)
+            .map_err(|e| format!("Failed to decode base64: {}", e))?;
+
         let result = tokio::task::spawn_blocking(move || {
             image_processing::save_image_to_format(&bytes, &save_path, &format, quality, rotation)
         })

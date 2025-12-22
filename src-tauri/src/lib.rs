@@ -33,7 +33,7 @@ pub fn run() {
             commands::file_operations::open_and_read_file,
             commands::file_operations::read_image_from_path,
             commands::file_operations::change_image,
-            commands::file_operations::save_image_as,
+            commands::file_operations::save_base64_image_as,
             commands::file_operations::get_supported_image_formats,
             commands::config_commands::read_config_command,
             commands::config_commands::write_config_command,

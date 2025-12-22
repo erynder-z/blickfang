@@ -174,6 +174,7 @@ export const rotateCounterclockwise = () => {
 
 /**
  * Saves the current image to a new file with a different format.
+ * Uses a unified approach that works for both normal and ASCII-converted images.
  * @param {string} format - The new format to save the image as (e.g., "png", "jpg").
  * @param {number | undefined} quality - The quality of the saved image (0-100).
  * @returns {Promise<void>}
@@ -184,12 +185,22 @@ export const saveImageAs = async (format: string, quality: number | undefined): 
 
   startFeedback("saveImageAs");
   try {
-    const result = await invoke<string | null>("save_image_as", {
-      path: currentPath,
-      format,
-      quality,
-      rotation: get(rotation),
-    });
+    const imageData = get(imageUrl);
+    if (imageData) {
+      const base64Data = imageData.split(",")[1];
+      if (base64Data) {
+        const isAscii = get(isConvertedToAscii);
+        const sourceName = isAscii ? "ascii_art" : currentPath;
+
+        await invoke<string | null>("save_base64_image_as", {
+          base64data: base64Data,
+          sourceName,
+          format,
+          quality,
+          rotation: get(rotation),
+        });
+      }
+    }
   } catch (error) {
     console.error("Failed to save image:", error);
   } finally {
