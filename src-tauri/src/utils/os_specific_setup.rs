@@ -1,4 +1,9 @@
+use std::env;
+use serde_json;
 use tauri::AppHandle;
+
+use crate::models::config::Config;
+use crate::utils::config_utils::read_config;
 
 /// Performs all necessary OS-specific setup tasks.
 ///
@@ -10,7 +15,7 @@ use tauri::AppHandle;
 ///
 /// # Returns
 /// `Result<(), String>` - Ok if setup succeeds, Err with error message otherwise.
-pub fn perform_os_specific_setup(_app: &AppHandle) -> Result<(), String> {
+pub fn perform_os_specific_setup(app: &AppHandle) -> Result<(), String> {
     #[cfg(target_os = "linux")]
     {
         perform_linux_setup(app)?;

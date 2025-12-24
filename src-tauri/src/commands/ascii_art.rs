@@ -49,7 +49,7 @@ fn create_ascii_image(img: &DynamicImage) -> DynamicImage {
     let cols = (w / cell_w).max(1);
     let rows = (h / cell_h).max(1);
 
-    let font_data = include_bytes!("../../../src/assets/SuseMono-ExtraBold.ttf");
+    let font_data = include_bytes!("../../../src/assets/SUSEMono-ExtraBold.ttf");
     let font = Font::try_from_bytes(font_data as &[u8]).expect("Failed to load font");
 
     let scale = Scale::uniform(cell_h as f32 * 1.15);
