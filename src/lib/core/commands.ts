@@ -368,7 +368,7 @@ export const toggleSaveAsMenu = () => {
  * If no image is open, this function does nothing and logs a warning to the console.
  * @returns {Promise<void>}
  */
-export const convertImageToAsciiArt = async (): Promise<void> => {
+export const convertToAsciiArt = async (): Promise<void> => {
   const path = get(imagePath);
 
   if (!path) {

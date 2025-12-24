@@ -16,6 +16,8 @@ export interface Shortcuts {
   toggleOptions: Shortcut;
   zoomModifierUp: Shortcut;
   zoomModifierDown: Shortcut;
+  toggleFullscreen: Shortcut;
+  convertToAsciiArt: Shortcut;
 }
 
 export interface AppConfig {

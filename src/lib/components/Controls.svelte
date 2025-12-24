@@ -20,7 +20,7 @@
     toggleFullscreen,
     rotateCounterclockwise,
     rotateClockwise,
-    convertImageToAsciiArt,
+    convertToAsciiArt,
   } from "$lib/core/commands";
   import { t } from "$lib/utils/i18n";
 
@@ -220,7 +220,7 @@
 
   <!-- ASCII Image -->
   <button
-    on:click={convertImageToAsciiArt}
+    on:click={convertToAsciiArt}
     on:mouseenter={(e) => tooltip.show($t["tooltip.convertToAscii"], e.currentTarget)}
     on:mouseleave={tooltip.hide}
     aria-label={$t["tooltip.convertToAscii"]}

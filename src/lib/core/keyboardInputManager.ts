@@ -20,6 +20,7 @@ import {
   toggleSaveAsMenu,
   rotateCounterclockwise,
   rotateClockwise,
+  convertToAsciiArt,
 } from "./commands";
 
 export class KeyboardInputManager {
@@ -34,6 +35,7 @@ export class KeyboardInputManager {
     toggleOptions,
     toggleFullscreen,
     saveImageAs: toggleSaveAsMenu,
+    convertToAsciiArt,
   };
 
   // Actions that are continuous (toggled by holding a key)
@@ -51,6 +53,7 @@ export class KeyboardInputManager {
     "rotateClockwise",
     "rotateCounterclockwise",
     "saveImageAs",
+    "convertToAsciiArt",
   ]);
 
   private activeContinuousKey: string | null = null;

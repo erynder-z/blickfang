@@ -22,6 +22,7 @@ pub struct Shortcuts {
     pub toggle_options: Shortcut,
     pub zoom_modifier_up: Shortcut,
     pub zoom_modifier_down: Shortcut,
+    pub convert_to_ascii_art: Shortcut,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -64,7 +65,6 @@ fn default_linux_desktop_install_choice() -> String {
 fn default_has_configured_initial_settings() -> bool {
     false
 }
-
 
 fn default_language() -> String {
     "en".into()
@@ -138,6 +138,10 @@ pub fn default_shortcuts() -> Shortcuts {
         zoom_modifier_down: Shortcut {
             keys: vec!["Alt".into()],
             label: "Alt / Command".into(),
+        },
+        convert_to_ascii_art: Shortcut {
+            keys: vec!["a".into()],
+            label: "a".into(),
         },
     }
 }
