@@ -8,6 +8,7 @@ import {
   isZoomModifierDownActive,
   rotation,
 } from "$lib/stores";
+
 import type { ViewportOptions } from "$lib/types/viewport";
 import { get } from "svelte/store";
 import type { Unsubscriber } from "svelte/store";
@@ -45,6 +46,8 @@ class ImageViewport {
     this.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
     this.canvas.style.willChange = "transform";
+
+    this.ctx.imageSmoothingQuality = "high";
 
     this.setupSubscriptions();
     this.setupEventListeners();
@@ -180,6 +183,8 @@ class ImageViewport {
       this.ctx.save();
       const w = this.image.naturalWidth;
       const h = this.image.naturalHeight;
+
+      this.ctx.imageSmoothingQuality = "high";
 
       // 1. Translate to the center of the canvas where the image will be panned to.
       this.ctx.translate(this.offsetX, this.offsetY);
