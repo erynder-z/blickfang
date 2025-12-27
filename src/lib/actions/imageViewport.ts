@@ -18,26 +18,22 @@ class ImageViewport {
   private container: HTMLElement;
   private ctx: CanvasRenderingContext2D;
   private options: ViewportOptions;
-
-  // --- State ---
-  private image: HTMLImageElement | null = null;
-  private isDragging = false;
-  private lastWheelTime = 0;
-  private isAnimating = false;
-
-  // --- Transformation State ---
-  private baseScale = 1;
-  private displayScale = 1;
-  private offsetX = 0;
-  private offsetY = 0;
-  private startX = 0;
-  private startY = 0;
-  private currentRotation = 0;
-
-  // --- Lifecycle ---
+  private image: HTMLImageElement | null;
+  private isDragging: boolean;
+  private lastWheelTime: number;
+  private isAnimating: boolean;
+  private baseScale: number;
+  private displayScale: number;
+  private offsetX: number;
+  private offsetY: number;
+  private startX: number;
+  private startY: number;
+  private currentRotation: number;
   private animationFrameId: number;
-  private interactionTimeoutId: ReturnType<typeof setTimeout> | null = null;
-  private unsubscribers: Unsubscriber[] = [];
+  private interactionTimeoutId: ReturnType<typeof setTimeout> | null;
+  private unsubscribers: Unsubscriber[];
+  private canvasCache: HTMLCanvasElement | null;
+  private canvasScale: number;
 
   constructor(canvas: HTMLCanvasElement, options: ViewportOptions) {
     this.canvas = canvas;
@@ -45,8 +41,29 @@ class ImageViewport {
     this.container = canvas.parentElement as HTMLElement;
     this.ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
+    this.image = null;
+    this.isDragging = false;
+    this.lastWheelTime = 0;
+    this.isAnimating = false;
+
+    this.baseScale = 1;
+    this.displayScale = 1;
+    this.offsetX = 0;
+    this.offsetY = 0;
+    this.startX = 0;
+    this.startY = 0;
+    this.currentRotation = 0;
+
+    this.animationFrameId = 0;
+    this.interactionTimeoutId = null;
+    this.unsubscribers = [];
+
+    this.canvasCache = null;
+    this.canvasScale = 0;
+
     this.canvas.style.willChange = "transform";
 
+    this.ctx.imageSmoothingEnabled = true;
     this.ctx.imageSmoothingQuality = "high";
 
     this.setupSubscriptions();
@@ -60,6 +77,13 @@ class ImageViewport {
     this.animationFrameId = requestAnimationFrame(() => this.draw());
   }
 
+  /**
+   * Sets up subscriptions to relevant stores.
+   * Listens to changes in the image URL and zoom level.
+   * Also listens to changes in the rotation of the image.
+   * When any of these values change, it updates the canvas
+   * and redraws the image.
+   */
   private setupSubscriptions() {
     const { zoomLevelStore, imageUrlStore } = this.options;
 
@@ -87,16 +111,25 @@ class ImageViewport {
 
     const unSubRotation = rotation.subscribe((r) => {
       if (!this.image) return;
+
+      this.canvasCache = null; // Invalidate cache on rotation
       const oldRotation = this.currentRotation;
+
       this.currentRotation = r;
-      if (oldRotation !== this.currentRotation) {
-        this.setInitialTransform();
-      }
+      if (oldRotation !== this.currentRotation) this.setInitialTransform();
     });
 
     this.unsubscribers.push(unSubImageUrl, unSubZoomLevel, unSubRotation);
   }
 
+  /**
+   * Sets up event listeners for the container element.
+   * Listens to mousedown, mousemove, mouseup, and mouseleave events to handle image dragging.
+   * Listens to wheel events to handle zooming.
+   * Also sets up a ResizeObserver to handle resizing of the container element.
+   * When the container element is resized, it updates the canvas element's width and height,
+   * and redraws the image.
+   */
   private setupEventListeners() {
     this.container.addEventListener("mousedown", this.onMouseDown);
     this.container.addEventListener("mousemove", this.onMouseMove);
@@ -111,6 +144,7 @@ class ImageViewport {
       const { width, height } = entry.contentRect;
 
       if (this.canvas.width !== width || this.canvas.height !== height) {
+        this.canvasCache = null; // Invalidate cache on resize
         if (get(isRefittingOnResize)) {
           this.canvas.width = width;
           this.canvas.height = height;
@@ -168,6 +202,72 @@ class ImageViewport {
   };
 
   /**
+   * Draws the given image onto the canvas with high quality.
+   * If the current scale is close to the scale of the cached canvas, the cached canvas is used.
+   * Otherwise, the image is drawn onto a temporary canvas using the highest quality available,
+   * and then scaled down to fit the canvas element.
+   * @param image The image to draw onto the canvas.
+   * @param w The width of the canvas element.
+   * @param h The height of the canvas element.
+   */
+  private drawWithQuality(image: HTMLImageElement, w: number, h: number) {
+    // If cache is valid for the current scale, draw from cache.
+    if (this.canvasCache && Math.abs(this.canvasScale - this.displayScale) < 0.01) {
+      this.ctx.drawImage(
+        this.canvasCache,
+        0,
+        0,
+        this.canvasCache.width,
+        this.canvasCache.height,
+        -w / 2,
+        -h / 2,
+        w,
+        h
+      );
+      return;
+    }
+
+    // Regenerate the high-quality canvas if the cache is invalid.
+    const c1 = document.createElement("canvas");
+    const ctx1 = c1.getContext("2d");
+    const c2 = document.createElement("canvas");
+    const ctx2 = c2.getContext("2d");
+
+    if (!ctx1 || !ctx2) {
+      this.ctx.drawImage(image, -w / 2, -h / 2);
+      return;
+    }
+
+    c1.width = w;
+    c1.height = h;
+    ctx1.drawImage(image, 0, 0);
+
+    let currentW = w;
+    let currentH = h;
+    const targetW = w * this.displayScale;
+
+    while (currentW * 0.5 > targetW) {
+      currentW *= 0.5;
+      currentH *= 0.5;
+
+      c2.width = currentW;
+      c2.height = currentH;
+      ctx2.imageSmoothingEnabled = true;
+      ctx2.imageSmoothingQuality = "high";
+      ctx2.drawImage(c1, 0, 0, currentW * 2, currentH * 2, 0, 0, currentW, currentH);
+
+      c1.width = currentW;
+      c1.height = currentH;
+      ctx1.drawImage(c2, 0, 0);
+    }
+
+    this.canvasCache = c1;
+    this.canvasScale = this.displayScale;
+
+    this.ctx.drawImage(this.canvasCache, 0, 0, currentW, currentH, -w / 2, -h / 2, w, h);
+  }
+
+  /**
    * The main rendering loop. Clears the canvas and draws the image with all transformations.
    */
   private draw = () => {
@@ -184,22 +284,24 @@ class ImageViewport {
       const w = this.image.naturalWidth;
       const h = this.image.naturalHeight;
 
+      this.ctx.imageSmoothingEnabled = true;
       this.ctx.imageSmoothingQuality = "high";
 
-      // 1. Translate to the center of the canvas where the image will be panned to.
       this.ctx.translate(this.offsetX, this.offsetY);
 
-      // 2. Rotate the context around this new origin.
       if (this.currentRotation > 0) {
         const rad = (this.currentRotation * Math.PI) / 180;
         this.ctx.rotate(rad);
       }
 
-      // 3. Scale the context from the center.
       this.ctx.scale(this.displayScale, this.displayScale);
 
-      // 4. Draw the image centered at the origin (0,0), which is now translated, rotated, and scaled.
-      this.ctx.drawImage(this.image, -w / 2, -h / 2);
+      if (this.displayScale < 0.75 && !isInteracting) {
+        this.drawWithQuality(this.image, w, h);
+      } else {
+        if (isInteracting) this.canvasCache = null;
+        this.ctx.drawImage(this.image, -w / 2, -h / 2);
+      }
 
       this.ctx.restore();
     }
@@ -294,7 +396,6 @@ class ImageViewport {
     requestAnimationFrame(frame);
   };
 
-  // --- Event Handlers ---
   private onMouseDown = (event: MouseEvent) => {
     if (!this.image) return;
     this.isAnimating = false;
