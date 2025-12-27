@@ -5,25 +5,84 @@ use std::io::Cursor;
 
 static ASCII_CHARS: &str = "@#W$9876543210?!abc;:+=-,._ ";
 
-/// Converts an image located at the given path into ASCII art, returning it as a base64 encoded PNG string.
+/// Converts an image to its ASCII art representation.
 ///
-/// # Arguments
-/// * `path` - The file path to the image to be converted.
+/// This command reads the image file from the given path, corrects the image orientation if necessary,
+/// creates an ASCII art representation of the image, and encodes it to a base64 string.
+///
+/// # Parameters
+///
+/// * `path` - The path to the image file to be converted.
 ///
 /// # Returns
-/// `Result<String, String>` - A `Result` containing the base64 encoded PNG string of the ASCII art image
-/// on success, or an error message string on failure.
+///
+/// `Result<String, String>` - A result containing the base64 encoded ASCII art string if successful,
+/// or an error string if the operation failed.
 #[tauri::command]
 pub fn convert_image_to_ascii_art(path: String) -> Result<String, String> {
-    let img = image::open(&path).map_err(|e| format!("Failed to open image: {e}"))?;
-
+    let file_bytes = std::fs::read(&path).map_err(|e| format!("Failed to read file: {e}"))?;
+    let mut img = image::open(&path).map_err(|e| format!("Failed to open image: {e}"))?;
+    img = correct_image_orientation(img, &file_bytes);
     let ascii_img = create_ascii_image(&img);
+    encode_image_to_base64(&ascii_img)
+}
 
+/// Corrects the image orientation according to the EXIF data.
+///
+/// The function takes a DynamicImage and the file bytes as input, and returns a new DynamicImage with the correct orientation.
+///
+/// If the EXIF data does not contain the Orientation tag, or if the tag value is not recognized, the function returns the original image.
+///
+/// The function supports the following Orientation tag values:
+///
+/// * 1: The 0th row of pixels is on the top side of the image and the 0th column is on the left side.
+/// * 2: The 0th row of pixels is on the right side of the image and the 0th column is on the top side.
+/// * 3: The 0th row of pixels is on the bottom side of the image and the 0th column is on the right side.
+/// * 4: The 0th row of pixels is on the left side of the image and the 0th column is on the bottom side.
+/// * 5: The 0th row of pixels is on the right side of the image and the 0th column is on the top side.
+/// * 6: The 0th row of pixels is on the top side of the image and the 0th column is on the right side.
+/// * 7: The 0th row of pixels is on the bottom side of the image and the 0th column is on the left side.
+/// * 8: The 0th row of pixels is on the left side of the image and the 0th column is on the top side.
+fn correct_image_orientation(img: DynamicImage, file_bytes: &[u8]) -> DynamicImage {
+    if let Ok(exif_data) = exif::Reader::new().read_from_container(&mut Cursor::new(file_bytes)) {
+        if let Some(orientation_field) =
+            exif_data.get_field(exif::Tag::Orientation, exif::In::PRIMARY)
+        {
+            if let Some(orientation) = orientation_field.value.get_uint(0) {
+                return match orientation {
+                    2 => img.fliph(),
+                    3 => img.rotate180(),
+                    4 => img.flipv(),
+                    5 => img.rotate90().fliph(),
+                    6 => img.rotate90(),
+                    7 => img.rotate270().fliph(),
+                    8 => img.rotate270(),
+                    _ => img,
+                };
+            }
+        }
+    }
+    img
+}
+
+/// Encodes a given image to a base64 string.
+///
+/// This function writes the given image to a PNG buffer, encodes the buffer to a base64 string,
+/// and returns the resulting string. The returned string is in the format of a data URI,
+/// suitable for use in a web page's `<img>` tag.
+///
+/// # Parameters
+///
+/// * `img` - The image to be encoded.
+///
+/// # Returns
+///
+/// `Result<String, String>` - A result containing the base64 encoded image string if successful,
+/// or an error string if the operation failed.
+fn encode_image_to_base64(img: &DynamicImage) -> Result<String, String> {
     let mut buffer = Cursor::new(Vec::new());
-    ascii_img
-        .write_to(&mut buffer, ImageFormat::Png)
+    img.write_to(&mut buffer, ImageFormat::Png)
         .map_err(|e| format!("Failed to encode image: {e}"))?;
-
     let base64 = base64::engine::general_purpose::STANDARD.encode(buffer.into_inner());
     Ok(format!("data:image/png;base64,{base64}"))
 }
