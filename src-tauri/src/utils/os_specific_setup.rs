@@ -14,12 +14,6 @@ use tauri::AppHandle;
 pub fn perform_os_specific_setup(app: &AppHandle) -> Result<(), String> {
     #[cfg(target_os = "linux")]
     {
-        use crate::models::config::Config;
-        use crate::utils::config_utils::read_config;
-        use crate::utils::os_integration_linux::install_desktop_file;
-        use serde_json;
-        use std::env;
-
         perform_linux_setup(app)?;
     }
 
@@ -48,13 +42,15 @@ pub fn perform_os_specific_setup(app: &AppHandle) -> Result<(), String> {
 /// `Result<(), String>` - Ok if setup succeeds, Err with error message otherwise.
 #[cfg(target_os = "linux")]
 fn perform_linux_setup(app: &AppHandle) -> Result<(), String> {
-    // Check if we should show the desktop install dialog
+    use crate::models::config::Config;
+    use crate::utils::config_utils::read_config;
+
+    use serde_json;
+    use std::env;
     let config_str = read_config(app)?;
     let config: Config = serde_json::from_str(&config_str)
         .map_err(|e| format!("Failed to deserialize config: {}", e))?;
 
-    // Only install automatically if user has already chosen to install
-    // or if this is not an AppImage (for backwards compatibility)
     if config.linux_desktop_install_choice == "installed" || !env::var("APPIMAGE").is_ok() {
         let _ = crate::utils::os_integration_linux::install_desktop_file();
     }
