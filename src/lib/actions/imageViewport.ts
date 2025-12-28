@@ -34,6 +34,10 @@ class ImageViewport {
   private unsubscribers: Unsubscriber[];
   private canvasCache: HTMLCanvasElement | null;
   private canvasScale: number;
+  private downscaleCanvas1: HTMLCanvasElement;
+  private downscaleCtx1: CanvasRenderingContext2D;
+  private downscaleCanvas2: HTMLCanvasElement;
+  private downscaleCtx2: CanvasRenderingContext2D;
 
   constructor(canvas: HTMLCanvasElement, options: ViewportOptions) {
     this.canvas = canvas;
@@ -60,6 +64,15 @@ class ImageViewport {
 
     this.canvasCache = null;
     this.canvasScale = 0;
+
+    this.downscaleCanvas1 = document.createElement("canvas");
+    this.downscaleCtx1 = this.downscaleCanvas1.getContext("2d", {
+      alpha: false,
+    }) as CanvasRenderingContext2D;
+    this.downscaleCanvas2 = document.createElement("canvas");
+    this.downscaleCtx2 = this.downscaleCanvas2.getContext("2d", {
+      alpha: false,
+    }) as CanvasRenderingContext2D;
 
     this.canvas.style.willChange = "transform";
 
@@ -202,37 +215,50 @@ class ImageViewport {
   };
 
   /**
-   * Draws the given image onto the canvas with high quality.
-   * If the current scale is close to the scale of the cached canvas, the cached canvas is used.
-   * Otherwise, the image is drawn onto a temporary canvas using the highest quality available,
-   * and then scaled down to fit the canvas element.
-   * @param image The image to draw onto the canvas.
-   * @param w The width of the canvas element.
-   * @param h The height of the canvas element.
+   * Renders a preview of the image. This method is optimized for speed during interactions.
+   * When zoomed out significantly (scale < 0.5), it uses a single-step downscaling
+   * to provide a better-than-default preview. When zoomed in, it uses the browser's
+   * fast native drawing.
    */
-  private drawWithQuality(image: HTMLImageElement, w: number, h: number) {
-    // If cache is valid for the current scale, draw from cache.
-    if (this.canvasCache && Math.abs(this.canvasScale - this.displayScale) < 0.01) {
-      this.ctx.drawImage(
-        this.canvasCache,
-        0,
-        0,
-        this.canvasCache.width,
-        this.canvasCache.height,
-        -w / 2,
-        -h / 2,
-        w,
-        h
-      );
+  private renderPreview(image: HTMLImageElement, w: number, h: number) {
+    if (this.displayScale > 0.5) {
+      this.ctx.drawImage(image, -w / 2, -h / 2);
       return;
     }
 
-    // Regenerate the high-quality canvas if the cache is invalid.
-    const c1 = document.createElement("canvas");
-    const ctx1 = c1.getContext("2d");
-    const c2 = document.createElement("canvas");
-    const ctx2 = c2.getContext("2d");
+    const { downscaleCanvas1: c, downscaleCtx1: ctx } = this;
+    if (!ctx) {
+      this.ctx.drawImage(image, -w / 2, -h / 2);
+      return;
+    }
 
+    const halfW = w / 2;
+    const halfH = h / 2;
+    c.width = halfW;
+    c.height = halfH;
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(image, 0, 0, halfW, halfH);
+    this.ctx.drawImage(c, -w / 2, -h / 2, w, h);
+  }
+
+  /**
+   * Renders the image using a multi-step downscaling algorithm. This produces a
+   * high-quality result when the image is zoomed out, but is computationally more
+   * expensive. It should only be used when the viewport is idle.
+   */
+  private renderHighQuality(image: HTMLImageElement, w: number, h: number) {
+    if (this.canvasCache && Math.abs(this.canvasScale - this.displayScale) < 0.01) {
+      this.ctx.drawImage(this.canvasCache, -w / 2, -h / 2, w, h);
+      return;
+    }
+
+    const {
+      downscaleCanvas1: c1,
+      downscaleCtx1: ctx1,
+      downscaleCanvas2: c2,
+      downscaleCtx2: ctx2,
+    } = this;
     if (!ctx1 || !ctx2) {
       this.ctx.drawImage(image, -w / 2, -h / 2);
       return;
@@ -240,13 +266,15 @@ class ImageViewport {
 
     c1.width = w;
     c1.height = h;
-    ctx1.drawImage(image, 0, 0);
+    ctx1.drawImage(image, 0, 0, w, h);
 
     let currentW = w;
     let currentH = h;
     const targetW = w * this.displayScale;
 
     while (currentW * 0.5 > targetW) {
+      const prevW = currentW;
+      const prevH = currentH;
       currentW *= 0.5;
       currentH *= 0.5;
 
@@ -254,7 +282,7 @@ class ImageViewport {
       c2.height = currentH;
       ctx2.imageSmoothingEnabled = true;
       ctx2.imageSmoothingQuality = "high";
-      ctx2.drawImage(c1, 0, 0, currentW * 2, currentH * 2, 0, 0, currentW, currentH);
+      ctx2.drawImage(c1, 0, 0, prevW, prevH, 0, 0, currentW, currentH);
 
       c1.width = currentW;
       c1.height = currentH;
@@ -264,7 +292,7 @@ class ImageViewport {
     this.canvasCache = c1;
     this.canvasScale = this.displayScale;
 
-    this.ctx.drawImage(this.canvasCache, 0, 0, currentW, currentH, -w / 2, -h / 2, w, h);
+    this.ctx.drawImage(this.canvasCache, -w / 2, -h / 2, w, h);
   }
 
   /**
@@ -296,11 +324,13 @@ class ImageViewport {
 
       this.ctx.scale(this.displayScale, this.displayScale);
 
-      if (this.displayScale < 0.75 && !isInteracting) {
-        this.drawWithQuality(this.image, w, h);
+      const isZoomedOut = this.displayScale < 0.75;
+
+      if (isZoomedOut && !isInteracting) {
+        this.renderHighQuality(this.image, w, h);
       } else {
         if (isInteracting) this.canvasCache = null;
-        this.ctx.drawImage(this.image, -w / 2, -h / 2);
+        this.renderPreview(this.image, w, h);
       }
 
       this.ctx.restore();
