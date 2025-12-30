@@ -1,29 +1,50 @@
 use base64::Engine;
 use image::{DynamicImage, GenericImageView, ImageBuffer, ImageFormat, Rgb};
 use rusttype::{Font, Scale};
+use serde_json::{self, Value};
 use std::io::Cursor;
 
-static ASCII_CHARS: &str = "@#W$9876543210?!abc;:+=-,._ ";
+use crate::models::config::Config;
+use crate::utils::config_utils::read_config;
+
+// Helper function to read and parse ascii_chars.json
+fn read_ascii_chars_json() -> Value {
+    let ascii_chars_json = include_str!("../resources/ascii_chars.json");
+    serde_json::from_str(ascii_chars_json).expect("Failed to parse ASCII chars JSON")
+}
+
+/// Returns a list of available ASCII character set IDs from `ascii_chars.json`.
+#[tauri::command]
+pub fn get_available_ascii_char_sets() -> Result<Vec<String>, String> {
+    let ascii_chars_map = read_ascii_chars_json();
+
+    let char_set_ids = ascii_chars_map
+        .as_object()
+        .ok_or_else(|| "ASCII chars JSON is not an object".to_string())?
+        .keys()
+        .cloned()
+        .collect();
+
+    Ok(char_set_ids)
+}
 
 /// Converts an image to its ASCII art representation.
 ///
 /// This command reads the image file from the given path, corrects the image orientation if necessary,
 /// creates an ASCII art representation of the image, and encodes it to a base64 string.
-///
-/// # Parameters
-///
-/// * `path` - The path to the image file to be converted.
-///
-/// # Returns
-///
-/// `Result<String, String>` - A result containing the base64 encoded ASCII art string if successful,
-/// or an error string if the operation failed.
 #[tauri::command]
-pub fn convert_image_to_ascii_art(path: String) -> Result<String, String> {
+pub fn convert_image_to_ascii_art(path: String, app: tauri::AppHandle) -> Result<String, String> {
     let file_bytes = std::fs::read(&path).map_err(|e| format!("Failed to read file: {e}"))?;
     let mut img = image::open(&path).map_err(|e| format!("Failed to open image: {e}"))?;
     img = correct_image_orientation(img, &file_bytes);
-    let ascii_img = create_ascii_image(&img);
+
+    // Get the ASCII character set from config
+    let config_str = read_config(&app)?;
+    let config: Config = serde_json::from_str(&config_str)
+        .map_err(|e| format!("Failed to deserialize config: {}", e))?;
+
+    let ascii_chars = get_ascii_chars_from_config(&config);
+    let ascii_img = create_ascii_image_with_chars(&img, &ascii_chars);
     encode_image_to_base64(&ascii_img)
 }
 
@@ -65,6 +86,31 @@ fn correct_image_orientation(img: DynamicImage, file_bytes: &[u8]) -> DynamicIma
     img
 }
 
+/// Gets the ASCII character set from the configuration.
+///
+/// # Arguments
+/// * `config` - The application configuration.
+///
+/// # Returns
+/// `String` - The ASCII character set.
+fn get_ascii_chars_from_config(config: &Config) -> String {
+    // Load the ASCII character sets from the JSON file
+    let ascii_chars_map = read_ascii_chars_json();
+
+    // Get the selected character set from config, default to "classic"
+    let char_set_name = if config.ascii_chars.is_empty() {
+        "classic".to_string()
+    } else {
+        config.ascii_chars.clone()
+    };
+
+    // Get the character set from the map
+    ascii_chars_map[&char_set_name]
+        .as_str()
+        .unwrap_or("@#W$9876543210?!abc;:+=-,._ ")
+        .to_string()
+}
+
 /// Encodes a given image to a base64 string.
 ///
 /// This function writes the given image to a PNG buffer, encodes the buffer to a base64 string,
@@ -95,10 +141,11 @@ fn encode_image_to_base64(img: &DynamicImage) -> Result<String, String> {
 ///
 /// # Arguments
 /// * `img` - A reference to the input `DynamicImage` to be converted.
+/// * `ascii_chars` - The ASCII character set to use.
 ///
 /// # Returns
 /// `DynamicImage` - A new `DynamicImage` representing the ASCII art version of the input image.
-fn create_ascii_image(img: &DynamicImage) -> DynamicImage {
+fn create_ascii_image_with_chars(img: &DynamicImage, ascii_chars: &str) -> DynamicImage {
     let cell_w: u32 = 10;
     let cell_h: u32 = 18;
     let gamma: f32 = 0.6;
@@ -108,7 +155,7 @@ fn create_ascii_image(img: &DynamicImage) -> DynamicImage {
     let cols = (w / cell_w).max(1);
     let rows = (h / cell_h).max(1);
 
-    let font_data = include_bytes!("../../../src/assets/SUSEMono-ExtraBold.ttf");
+    let font_data = include_bytes!("../../../src/assets/0xProtoNerdFontMono-Bold.ttf");
     let font = Font::try_from_bytes(font_data as &[u8]).expect("Failed to load font");
 
     let scale = Scale::uniform(cell_h as f32 * 1.15);
@@ -120,7 +167,7 @@ fn create_ascii_image(img: &DynamicImage) -> DynamicImage {
         for x in 0..cols {
             let avg_color = average_cell(img, x, y, cell_w, cell_h);
             let luma = perceptual_luminance(&avg_color, gamma);
-            let ch = brightness_to_char(luma);
+            let ch = brightness_to_char(luma, ascii_chars);
 
             let glyph = font.glyph(ch).scaled(scale).positioned(rusttype::point(
                 (x * cell_w) as f32,
@@ -209,23 +256,30 @@ fn perceptual_luminance(p: &Rgb<u8>, gamma: f32) -> f32 {
     (l.powf(gamma)) * 255.0
 }
 
-/// Maps a brightness (luminance) value to a character from `ASCII_CHARS`.
+/// Maps a brightness (luminance) value to a character from the provided ASCII character set.
 ///
 /// Brighter values map to characters earlier in the string, and darker values to characters later in the string.
 ///
 /// # Arguments
 /// * `luma` - The luminance value (0.0 - 255.0).
+/// * `ascii_chars` - The ASCII character set to use.
 ///
 /// # Returns
 /// `char` - The ASCII character corresponding to the brightness.
-fn brightness_to_char(luma: f32) -> char {
-    let idx = (luma / 255.0 * (ASCII_CHARS.len() - 1) as f32)
+fn brightness_to_char(luma: f32, ascii_chars: &str) -> char {
+    let num_chars = ascii_chars.chars().count();
+    if num_chars == 0 {
+        return ' '; // Return a space if the charset is empty
+    }
+
+    // Map luma so that 0.0 (dark) maps to index 0, and 255.0 (bright) maps to the end of the string.
+    let idx = (luma / 255.0 * (num_chars - 1) as f32)
         .round()
-        .clamp(0.0, (ASCII_CHARS.len() - 1) as f32) as usize;
+        .clamp(0.0, (num_chars - 1) as f32) as usize;
 
-    ASCII_CHARS.as_bytes()[idx] as char
+    // Use .chars().nth() to correctly handle multi-byte characters
+    ascii_chars.chars().nth(idx).unwrap_or(' ')
 }
-
 /// Blends a foreground color with a background color using a given alpha value.
 ///
 /// # Arguments

@@ -20,6 +20,7 @@
   import LinuxDesktopInstallDialog from "$lib/components/LinuxDesktopInstallDialog.svelte";
   import TooltipRenderer from "$lib/components/TooltipRenderer.svelte";
   import AboutMenu from "$lib/components/AboutMenu.svelte";
+import AsciiCharsMenu from "$lib/components/AsciiCharsMenu.svelte";
 
   initThemeManager();
 
@@ -50,6 +51,7 @@
   <AppWindowMenu />
   <SaveAsMenu />
   <AboutMenu />
+  <AsciiCharsMenu />
   <TooltipRenderer />
   <InfoSidebar />
   <OptionsDisplaySidebar />

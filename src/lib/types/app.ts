@@ -30,4 +30,13 @@ export interface AppConfig {
   edgeIndicatorsVisible: boolean;
   rememberWindowSize: boolean;
   linuxDesktopInstallChoice?: "installed" | "skipped" | "not_asked";
+  asciiChars:
+    | "blocks"
+    | "stripes"
+    | "minimal"
+    | "classic"
+    | "extended"
+    | "dense_gradient"
+    | "line_art"
+    | "high_detail";
 }

@@ -56,10 +56,16 @@ pub struct Config {
     pub has_configured_initial_settings: bool,
     #[serde(default = "default_linux_desktop_install_choice")]
     pub linux_desktop_install_choice: String,
+    #[serde(default = "default_ascii_chars")]
+    pub ascii_chars: String,
 }
 
 fn default_linux_desktop_install_choice() -> String {
     "not_asked".into()
+}
+
+fn default_ascii_chars() -> String {
+    "minimal".into()
 }
 
 fn default_has_configured_initial_settings() -> bool {
@@ -163,6 +169,7 @@ impl Default for Config {
             window_y: None,
             has_configured_initial_settings: default_has_configured_initial_settings(),
             linux_desktop_install_choice: default_linux_desktop_install_choice(),
+            ascii_chars: default_ascii_chars(),
         }
     }
 }

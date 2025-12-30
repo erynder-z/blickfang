@@ -1,0 +1,10 @@
+{
+  "blocks": "█▓▒░ ",
+  "stripes": "█▉▊▋▌▍▎▏",
+  "minimal": "@%#*+=-:. ",
+  "classic": "@#W$9876543210?!abc;:+=-,._ ",
+  "extended": "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ",
+  "dense_gradient": "▇█▆▅▄▃▂▁",
+  "line_art": "│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═",
+  "high_detail": "@#&%*o+;:,.'`^\"~-"
+}

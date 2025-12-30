@@ -268,3 +268,16 @@ pub fn get_linux_desktop_install_choice_command(app: AppHandle) -> Result<String
     Ok(config.linux_desktop_install_choice)
 }
 
+/// Updates the ASCII character set used for ASCII art conversion.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle. 
+/// * `ascii_chars` - The new ASCII character set name.
+///
+/// # Returns
+/// `Result<(), String>`.
+#[tauri::command]
+pub fn update_ascii_chars_command(app: AppHandle, ascii_chars: String) -> Result<(), String> {
+    update_config(&app, |config| config.ascii_chars = ascii_chars)
+}
+

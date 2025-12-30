@@ -9,6 +9,7 @@ export const appConfig = writable<AppConfig>({
   edgeIndicatorsVisible: false,
   rememberWindowSize: false,
   linuxDesktopInstallChoice: "not_asked",
+  asciiChars: "minimal",
   shortcuts: {
     openFile: { keys: [], label: "" },
     saveImageAs: { keys: [], label: "" },
