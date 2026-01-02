@@ -1,31 +1,98 @@
 use base64::Engine;
 use image::{DynamicImage, GenericImageView, ImageBuffer, ImageFormat, Rgb};
 use rusttype::{Font, Scale};
+use serde::{Deserialize, Serialize};
 use serde_json::{self, Value};
 use std::io::Cursor;
 
 use crate::models::config::Config;
 use crate::utils::config_utils::read_config;
 
-// Helper function to read and parse ascii_chars.json
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct AsciiCharSetInfo {
+    pub id: String,
+    pub label: String,
+    pub chars: String,
+}
+
+impl AsciiCharSetInfo {
+    pub fn new(id: String, chars: String) -> Self {
+        let label = parse_ascii_charset_label(&id);
+        Self {
+            id: id.clone(),
+            label,
+            chars,
+        }
+    }
+}
+
+/// Parse an ASCII character set ID into a human-readable label.
+///
+/// The ID is split by underscores, and each segment is capitalized
+/// and joined together with spaces. For example, "blocks" becomes
+/// "Blocks".
+///
+/// # Returns
+/// A human-readable label for the ASCII character set ID.
+///
+/// # Examples
+///
+///
+fn parse_ascii_charset_label(id: &str) -> String {
+    id.split('_')
+        .map(|word| {
+            let mut chars = word.chars();
+            match chars.next() {
+                None => String::new(),
+                Some(first) => first.to_ascii_uppercase().to_string() + chars.as_str(),
+            }
+        })
+        .collect::<Vec<String>>()
+        .join(" ")
+}
+
+/// Reads the `ascii_chars.json` file and parses it into a JSON value.
+///
+/// # Returns
+///
+/// A JSON value containing the ASCII character sets from the `ascii_chars.json` file.
+///
+/// # Panics
+///
+/// If the JSON file cannot be parsed into a JSON value, this function will panic.
 fn read_ascii_chars_json() -> Value {
     let ascii_chars_json = include_str!("../resources/ascii_chars.json");
     serde_json::from_str(ascii_chars_json).expect("Failed to parse ASCII chars JSON")
 }
 
-/// Returns a list of available ASCII character set IDs from `ascii_chars.json`.
+/// Gets the available ASCII character sets from the `ascii_chars.json` file.
+///
+/// This command reads the `ascii_chars.json` file, parses it into a JSON value,
+/// and extracts the available ASCII character sets from it. The character sets
+/// are converted into a `Vec<AsciiCharSetInfo>` and returned as a result.
+///
+/// # Returns
+///
+/// A `Result` containing a `Vec<AsciiCharSetInfo>` of the available ASCII character sets.
+///
+/// # Panics
+///
+/// If the JSON file cannot be parsed into a JSON value, this function will panic.
 #[tauri::command]
-pub fn get_available_ascii_char_sets() -> Result<Vec<String>, String> {
+pub fn get_available_ascii_char_sets() -> Result<Vec<AsciiCharSetInfo>, String> {
     let ascii_chars_map = read_ascii_chars_json();
 
-    let char_set_ids = ascii_chars_map
+    let char_sets = ascii_chars_map
         .as_object()
         .ok_or_else(|| "ASCII chars JSON is not an object".to_string())?
-        .keys()
-        .cloned()
+        .iter()
+        .map(|(id, value)| {
+            let chars = value["chars"].as_str().unwrap_or("").to_string();
+            AsciiCharSetInfo::new(id.clone(), chars)
+        })
         .collect();
 
-    Ok(char_set_ids)
+    Ok(char_sets)
 }
 
 /// Converts an image to its ASCII art representation.

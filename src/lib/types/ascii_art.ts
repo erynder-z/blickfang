@@ -1,4 +1,4 @@
-export type AsciiCharSet =
+export type AsciiCharSetId =
   | "blocks"
   | "stripes"
   | "minimal"
@@ -8,7 +8,8 @@ export type AsciiCharSet =
   | "line_art"
   | "high_detail";
 
-export interface AsciiCharSetOption {
-  id: AsciiCharSet;
+export interface AsciiCharSet {
+  id: AsciiCharSetId;
   label: string;
+  chars: string;
 }

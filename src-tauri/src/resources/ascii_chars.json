@@ -1,10 +1,26 @@
 {
-  "blocks": "█▓▒░ ",
-  "stripes": "█▉▊▋▌▍▎▏",
-  "minimal": "@%#*+=-:. ",
-  "classic": "@#W$9876543210?!abc;:+=-,._ ",
-  "extended": "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ",
-  "dense_gradient": "▇█▆▅▄▃▂▁",
-  "line_art": "│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═",
-  "high_detail": "@#&%*o+;:,.'`^\"~-"
+  "blocks": {
+    "chars": "█▓▒░ "
+  },
+  "stripes": {
+    "chars": "█▉▊▋▌▍▎▏"
+  },
+  "minimal": {
+    "chars": "@%#*+=-:. "
+  },
+  "classic": {
+    "chars": "@#W$9876543210?!abc;:+=-,._ "
+  },
+  "extended": {
+    "chars": "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
+  },
+  "dense_gradient": {
+    "chars": "▇█▆▅▄▃▂▁"
+  },
+  "line_art": {
+    "chars": "│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═"
+  },
+  "high_detail": {
+    "chars": "@#&%*o+;:,.'`^\"~-"
+  }
 }

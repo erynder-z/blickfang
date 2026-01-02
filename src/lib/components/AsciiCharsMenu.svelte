@@ -6,17 +6,14 @@
   import { fly, fade } from "svelte/transition";
   import { focusTrap } from "$lib/actions/focusTrap";
   import { appConfig } from "$lib/stores/config";
-  import type { AsciiCharSet, AsciiCharSetOption } from "$lib/types/ascii_art";
+  import type { AsciiCharSetId, AsciiCharSet } from "$lib/types/ascii_art";
 
-  let asciiCharSets: AsciiCharSetOption[] = [];
+  let asciiCharSets: AsciiCharSet[] = [];
 
   onMount(async () => {
     try {
-      const charSetIds: string[] = await invoke("get_available_ascii_char_sets");
-      asciiCharSets = charSetIds.map((id) => ({
-        id: id as AsciiCharSet,
-        label: `asciiChars.${id}`,
-      }));
+      const charSets: AsciiCharSet[] = await invoke("get_available_ascii_char_sets");
+      asciiCharSets = charSets;
     } catch (error) {
       console.error("Failed to fetch ASCII character sets:", error);
     }
@@ -36,7 +33,7 @@
     });
   }
 
-  const saveAsciiChars = async (charSet: AsciiCharSet) => {
+  const saveAsciiChars = async (charSet: AsciiCharSetId) => {
     try {
       await invoke("update_ascii_chars_command", { asciiChars: charSet });
       appConfig.update((config) => ({ ...config, asciiChars: charSet }));
@@ -45,7 +42,7 @@
     }
   };
 
-  const handleButtonClick = (charSet: AsciiCharSet) => {
+  const handleButtonClick = (charSet: AsciiCharSetId) => {
     saveAsciiChars(charSet);
     handleClose();
   };
@@ -82,13 +79,14 @@
     <div class="menu-content">
       <h1>{$t["options.asciiChars.heading"]}</h1>
       <div class="option-buttons">
-        {#each asciiCharSets as { id, label }, i}
+        {#each asciiCharSets as { id, label, chars }, i}
           <button
             bind:this={buttons[i]}
             on:click={() => handleButtonClick(id)}
             class:active={$appConfig.asciiChars === id}
           >
-            {$t[label]}
+            <div class="charset-label">{label}</div>
+            <div class="charset-preview">{chars}</div>
           </button>
         {/each}
       </div>
@@ -163,10 +161,9 @@
   }
 
   button {
-    width: fit-content;
-    min-width: 100%;
+    width: 80%;
     border: 0.15rem solid var(--color-outline);
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 1rem;
     border-radius: 0.1rem;
     color: var(--color-text-primary);
     background-color: var(--color-button);
@@ -178,6 +175,21 @@
       box-shadow 150ms ease,
       background-color 150ms ease,
       color 150ms ease;
+  }
+
+  .charset-label {
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .charset-preview {
+    font-family: monospace;
+    font-size: 0.8rem;
+    opacity: 0.8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--color-text-secondary);
   }
 
   button:hover {
@@ -198,6 +210,10 @@
 
   button.active {
     background-color: var(--color-accent);
+    color: var(--color-text-tertiary);
+  }
+
+  button.active .charset-preview {
     color: var(--color-text-tertiary);
   }
 
