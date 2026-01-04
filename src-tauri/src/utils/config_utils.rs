@@ -4,6 +4,14 @@ use std::fs;
 use std::path::PathBuf;
 use tauri::{AppHandle, Manager};
 
+/// Returns the path to the application configuration file.
+///
+/// The configuration file is located in the application's data directory, which is specific to the current user.
+/// The configuration file is named `config.json` and is created if it does not already exist.
+///
+/// # Errors
+/// If the application's data directory cannot be retrieved, or if the configuration directory cannot be created,
+/// an error is returned.
 fn get_config_path(app: &AppHandle) -> Result<PathBuf, String> {
     let mut config_path = app
         .path()

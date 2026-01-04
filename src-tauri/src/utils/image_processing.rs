@@ -38,12 +38,30 @@ pub async fn read_image_file(path: &str) -> Result<ImageMetadata, String> {
     Ok(metadata)
 }
 
+/// Reads the contents of a file at the specified path.
+///
+/// # Arguments
+/// * `path` - The path to the file to read.
+///
+/// # Returns
+/// `Result<Vec<u8>, String>` - A result containing the file contents as a vector of bytes if successful,
+/// or an error string if the file cannot be read.
 async fn read_file_bytes(path: &Path) -> Result<Vec<u8>, String> {
     tokio::fs::read(path)
         .await
         .map_err(|e| format!("Failed to read file '{}': {}", path.display(), e))
 }
 
+/// Returns the color depth of the given image color type in bits.
+///
+/// The color depth is the number of bits used to represent each pixel in the image.
+///
+/// # Arguments
+/// * `color_type` - The image color type to get the color depth of.
+///
+/// # Returns
+/// `Option<u8>` - The color depth of the given color type if it is supported,
+/// or `None` if the color type is not supported.
 fn get_color_depth(color_type: image::ColorType) -> Option<u8> {
     match color_type {
         image::ColorType::L8 => Some(8),
@@ -60,12 +78,32 @@ fn get_color_depth(color_type: image::ColorType) -> Option<u8> {
     }
 }
 
+/// Returns the size of the file at the given path in bytes.
+///
+/// # Arguments
+/// * `path` - The path to the file to get the size of.
+///
+/// # Returns
+/// `Result<u64, String>` - The size of the file in bytes if successful, or an error string if the file cannot be accessed.
 fn get_file_size(path: &Path) -> Result<u64, String> {
     fs::metadata(path)
         .map_err(|e| format!("Failed to get file metadata: {}", e))
         .map(|m| m.len())
 }
 
+/// Returns the dimensions and color depth of the image given in the bytes.
+///
+/// # Arguments
+/// * `bytes` - The image bytes to get the dimensions and color depth of.
+///
+/// # Returns
+/// `Result<((u32, u32), Option<u8>), String>` - The dimensions and color depth of the image if successful,
+/// or an error string if the image cannot be decoded.
+///
+/// The first element of the returned tuple is the image dimensions as a `(u32, u32)` tuple,
+/// and the second element is the color depth of the image in bits as an `Option<u8>`.
+///
+/// If the image color type is not supported, the color depth will be `None`.
 fn get_image_details(bytes: &[u8]) -> Result<((u32, u32), Option<u8>), String> {
     let reader = image::ImageReader::new(Cursor::new(bytes))
         .with_guessed_format()
@@ -82,6 +120,14 @@ fn get_image_details(bytes: &[u8]) -> Result<((u32, u32), Option<u8>), String> {
     Ok((dimensions, color_depth))
 }
 
+/// Processes the given image bytes and returns an `ImageMetadata` object containing the image data as a base64-encoded string, its EXIF data as a JSON string, its width, height, aspect ratio, format, color depth, and file size.
+///
+/// # Arguments
+/// * `path` - The path to the image file.
+/// * `bytes` - The image bytes to process.
+///
+/// # Returns
+/// `Result<ImageMetadata, String>` - The processed image metadata if successful, or an error string if the image cannot be processed.
 fn process_image_metadata(path: &Path, bytes: &[u8]) -> Result<ImageMetadata, String> {
     let (mime_type, format) = guess_image_format(path, bytes);
     let ((width, height), color_depth) = get_image_details(bytes)?;
@@ -103,6 +149,19 @@ fn process_image_metadata(path: &Path, bytes: &[u8]) -> Result<ImageMetadata, St
     })
 }
 
+/// Guesses the MIME type and format of an image given its bytes and path.
+///
+/// If the image format can be determined using the `image` crate, it returns the MIME type and format as a string.
+/// If the image format cannot be determined, it falls back to using the `mime_guess` crate to determine the MIME type and uses the file extension to determine the format.
+///
+/// # Arguments
+///
+/// * `path` - The path to the image file.
+/// * `bytes` - The image bytes to guess the format of.
+///
+/// # Returns
+///
+/// A tuple containing the MIME type and format of the image as strings.
 fn guess_image_format(path: &Path, bytes: &[u8]) -> (String, String) {
     let image_format_guess = image::guess_format(bytes);
     let mime_type = match image_format_guess {
@@ -123,6 +182,20 @@ fn guess_image_format(path: &Path, bytes: &[u8]) -> (String, String) {
     (mime_type, format)
 }
 
+/// Computes the aspect ratio of an image given its width and height.
+///
+/// The aspect ratio is returned as a string in the format "width:height".
+///
+/// If either the width or height is zero, an empty string is returned.
+///
+/// # Arguments
+///
+/// * `width` - The width of the image.
+/// * `height` - The height of the image.
+///
+/// # Returns
+///
+/// A string containing the aspect ratio of the image.
 fn compute_aspect_ratio(width: u32, height: u32) -> String {
     if width == 0 || height == 0 {
         return String::new();
@@ -131,11 +204,28 @@ fn compute_aspect_ratio(width: u32, height: u32) -> String {
     format!("{}:{}", width / divisor, height / divisor)
 }
 
+/// Builds a data URL string from the given mime type and bytes.
+///
+/// # Arguments
+///
+/// * `mime_type` - The mime type of the data.
+/// * `bytes` - The bytes of the data.
+///
+/// # Returns
+///
+/// A string containing the data URL.
 fn build_data_url(mime_type: &str, bytes: &[u8]) -> String {
     let base64_str = general_purpose::STANDARD.encode(bytes);
     format!("data:{};base64,{}", mime_type, base64_str)
 }
 
+/// Extracts the EXIF data from the given bytes and returns it as a JSON string.
+///
+/// The extracted EXIF data is a map of tag names to their corresponding values.
+/// The values are strings, and are either the original byte value if it is a valid UTF-8 string,
+/// or the value of `display_value` with the unit if it is not a valid UTF-8 string.
+///
+/// If the bytes do not contain valid EXIF data, an empty string is returned.
 fn extract_exif_json(bytes: &[u8]) -> String {
     match Reader::new().read_from_container(&mut std::io::Cursor::new(bytes)) {
         Ok(exif) => {
@@ -164,6 +254,14 @@ fn extract_exif_json(bytes: &[u8]) -> String {
     }
 }
 
+/// Extracts the original orientation of an image from its EXIF data.
+///
+/// Returns `None` if the bytes do not contain valid EXIF data or if the Orientation tag is not present.
+/// Returns `Some(orientation)` if the Orientation tag is present, where `orientation` is the value of the tag as a `u16`.
+///
+/// # Arguments
+///
+/// * `bytes` - The raw image data as a byte slice.
 fn extract_original_orientation(bytes: &[u8]) -> Option<u16> {
     match Reader::new().read_from_container(&mut std::io::Cursor::new(bytes)) {
         Ok(exif) => {
@@ -179,6 +277,16 @@ fn extract_original_orientation(bytes: &[u8]) -> Option<u16> {
     }
 }
 
+/// Applies the orientation correction to the given image according to the given orientation.
+///
+/// The orientation is expected to be a value from the EXIF Orientation tag.
+///
+/// The function returns the corrected image, or the original image if the orientation is not valid.
+///
+/// # Arguments
+///
+/// * `img` - The image to correct.
+/// * `orientation` - The orientation value from the EXIF Orientation tag.
 fn apply_orientation_correction(img: DynamicImage, orientation: u16) -> DynamicImage {
     match orientation {
         2 => img.fliph(),
@@ -249,6 +357,16 @@ pub fn save_image_to_format(
     Ok(save_path.to_string_lossy().to_string())
 }
 
+/// Saves a `DynamicImage` to a WebP file.
+///
+/// # Arguments
+///
+/// * `img` - The image to save.
+/// * `save_path` - The destination path to save the image.
+/// * `quality` - Optional quality setting for the saved WebP image (0.0-100.0). Defaults to 75.0 if not provided.
+///
+/// # Returns
+/// `Result<(), String>` - The result of the save operation. Returns an error string if the save operation fails.
 fn save_webp(img: &DynamicImage, save_path: &Path, quality: Option<f32>) -> Result<(), String> {
     let rgba_image = img.to_rgba8();
     let encoder = webp::Encoder::from_rgba(&rgba_image, rgba_image.width(), rgba_image.height());
@@ -257,6 +375,16 @@ fn save_webp(img: &DynamicImage, save_path: &Path, quality: Option<f32>) -> Resu
         .map_err(|e| format!("Failed to save WebP image: {}", e))
 }
 
+/// Saves a `DynamicImage` to a JPEG file.
+///
+/// # Arguments
+///
+/// * `img` - The image to save.
+/// * `save_path` - The destination path to save the image.
+/// * `quality` - Optional quality setting for the saved JPEG image (1.0-100.0). Defaults to 75.0 if not provided.
+///
+/// # Returns
+/// `Result<(), String>` - The result of the save operation. Returns an error string if the save operation fails.
 fn save_jpeg(img: &DynamicImage, save_path: &Path, quality: Option<f32>) -> Result<(), String> {
     let mut file = std::fs::File::create(save_path)
         .map_err(|e| format!("Failed to create JPEG file: {}", e))?;
@@ -300,6 +428,18 @@ pub fn detect_c2pa(path: &Path) -> Result<(bool, Option<String>), String> {
     Ok((false, None))
 }
 
+/// Extracts the C2PA store from a given byte slice.
+///
+/// The function expects the byte slice to contain the C2PA UUID (16 bytes) followed by the store data.
+/// It returns the JSON payload of the store as a string, along with the store data as a vector of bytes.
+///
+/// If the byte slice does not contain the C2PA UUID or the store data is malformed, the function returns `None`.
+///
+/// # Arguments
+/// * `bytes` - The byte slice containing the C2PA UUID and store data.
+///
+/// # Returns
+/// `Option<(String, Vec<u8>)>` - A tuple containing the JSON payload of the store as a string and the store data as a vector of bytes. If the byte slice does not contain the C2PA UUID or the store data is malformed, the function returns `None`.
 pub fn extract_c2pa_store(bytes: &[u8]) -> Option<(String, Vec<u8>)> {
     if bytes.len() < 20 {
         return None;
