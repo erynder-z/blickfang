@@ -164,6 +164,34 @@ fn extract_exif_json(bytes: &[u8]) -> String {
     }
 }
 
+fn extract_original_orientation(bytes: &[u8]) -> Option<u16> {
+    match Reader::new().read_from_container(&mut std::io::Cursor::new(bytes)) {
+        Ok(exif) => {
+            if let Some(orientation_field) =
+                exif.get_field(exif::Tag::Orientation, exif::In::PRIMARY)
+            {
+                orientation_field.value.get_uint(0).map(|val| val as u16)
+            } else {
+                None
+            }
+        }
+        Err(_) => None,
+    }
+}
+
+fn apply_orientation_correction(img: DynamicImage, orientation: u16) -> DynamicImage {
+    match orientation {
+        2 => img.fliph(),
+        3 => img.rotate180(),
+        4 => img.flipv(),
+        5 => img.rotate90().fliph(),
+        6 => img.rotate90(),
+        7 => img.rotate270().fliph(),
+        8 => img.rotate270(),
+        _ => img,
+    }
+}
+
 /// Saves image bytes to a specified path and format, with optional quality settings.
 ///
 /// # Arguments
@@ -184,9 +212,25 @@ pub fn save_image_to_format(
 ) -> Result<String, String> {
     let image_format = ImageFormat::from_extension(format)
         .ok_or_else(|| format!("Invalid image format: {}", format))?;
+    
+    // First, extract the original orientation from the EXIF data
+    let original_orientation = extract_original_orientation(bytes);
+    
     let mut img =
         image::load_from_memory(bytes).map_err(|e| format!("Failed to decode image: {}", e))?;
 
+    // For formats that don't preserve EXIF (like PNG), we need to bake the orientation
+    // into the pixel data. For JPEG, the EXIF orientation will be preserved.
+    let should_bake_orientation = !matches!(image_format, ImageFormat::Jpeg);
+    
+    if should_bake_orientation {
+        // Apply the original EXIF orientation to the pixel data
+        if let Some(orientation) = original_orientation {
+            img = apply_orientation_correction(img, orientation);
+        }
+    }
+
+    // Apply any additional rotation from user interaction
     img = match rotation {
         90 => img.rotate90(),
         180 => img.rotate180(),
