@@ -20,6 +20,7 @@
   });
 
   let buttons: HTMLButtonElement[] = [];
+  let backgroundColor: string = $appConfig.asciiBackgroundColor || "#000000";
 
   $: if ($isAsciiCharsMenuVisible) {
     tick().then(() => {
@@ -39,6 +40,15 @@
       appConfig.update((config) => ({ ...config, asciiChars: charSet }));
     } catch (error) {
       console.error("Failed to save ASCII character set:", error);
+    }
+  };
+
+  const saveBackgroundColor = async () => {
+    try {
+      await invoke("update_ascii_background_color_command", { backgroundColor });
+      appConfig.update((config) => ({ ...config, asciiBackgroundColor: backgroundColor }));
+    } catch (error) {
+      console.error("Failed to save ASCII background color:", error);
     }
   };
 
@@ -89,6 +99,20 @@
             <div class="charset-preview">{chars}</div>
           </button>
         {/each}
+      </div>
+
+      <div class="color-picker-section">
+        <h2>{$t["options.asciiBackgroundColor.heading"]}</h2>
+        <div class="color-picker-container">
+          <input
+            type="color"
+            id="background-color"
+            bind:value={backgroundColor}
+            on:change={saveBackgroundColor}
+            class="color-picker"
+          />
+          <span class="color-value">{backgroundColor}</span>
+        </div>
       </div>
 
       <button on:click={handleClose} class="close-button">
@@ -144,12 +168,14 @@
     align-items: center;
   }
 
-  h1 {
+  h1,
+  h2 {
     margin: 0 0 1rem 0;
     color: var(--color-text-primary);
     line-height: 1.2;
     font-size: 1.25rem;
     text-wrap: balance;
+    text-align: center;
   }
 
   .option-buttons {
@@ -227,5 +253,39 @@
     padding: 0.5rem 1rem;
     min-width: 0;
     color: var(--color-close-button);
+  }
+
+  .color-picker-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 80%;
+    margin-top: 1rem;
+  }
+
+  .color-picker-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .color-picker {
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: 0.15rem solid var(--color-outline);
+    border-radius: 0.25rem;
+    background-color: transparent;
+    cursor: pointer;
+  }
+
+  .color-value {
+    font-size: 0.9rem;
+    font-family: monospace;
+    color: var(--color-text-secondary);
+    padding: 0.25rem 0.5rem;
+    background-color: var(--color-button);
+    border: 0.1rem solid var(--color-outline);
+    border-radius: 0.2rem;
   }
 </style>

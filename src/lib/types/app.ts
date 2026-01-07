@@ -39,4 +39,5 @@ export interface AppConfig {
     | "dense_gradient"
     | "line_art"
     | "high_detail";
+  asciiBackgroundColor?: string;
 }

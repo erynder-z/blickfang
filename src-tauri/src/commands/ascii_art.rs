@@ -105,13 +105,14 @@ pub fn convert_image_to_ascii_art(path: String, app: tauri::AppHandle) -> Result
     let mut img = image::open(&path).map_err(|e| format!("Failed to open image: {e}"))?;
     img = correct_image_orientation(img, &file_bytes);
 
-    // Get the ASCII character set from config
+    // Get the ASCII character set and background color from config
     let config_str = read_config(&app)?;
     let config: Config = serde_json::from_str(&config_str)
         .map_err(|e| format!("Failed to deserialize config: {}", e))?;
 
     let ascii_chars = get_ascii_chars_from_config(&config);
-    let ascii_img = create_ascii_image_with_chars(&img, &ascii_chars);
+    let bg_color = parse_hex_color(&config.ascii_background_color);
+    let ascii_img = create_ascii_image_with_chars_and_bg(&img, &ascii_chars, bg_color);
     encode_image_to_base64(&ascii_img)
 }
 
@@ -200,7 +201,7 @@ fn encode_image_to_base64(img: &DynamicImage) -> Result<String, String> {
     Ok(format!("data:image/png;base64,{base64}"))
 }
 
-/// Creates an ASCII art representation of a given image.
+/// Creates an ASCII art representation of a given image with a custom background color.
 ///
 /// This function converts an input `DynamicImage` into a new `DynamicImage`
 /// composed of ASCII characters, where each character's brightness corresponds
@@ -209,14 +210,15 @@ fn encode_image_to_base64(img: &DynamicImage) -> Result<String, String> {
 /// # Arguments
 /// * `img` - A reference to the input `DynamicImage` to be converted.
 /// * `ascii_chars` - The ASCII character set to use.
+/// * `bg_color` - The background color to use.
 ///
 /// # Returns
 /// `DynamicImage` - A new `DynamicImage` representing the ASCII art version of the input image.
-fn create_ascii_image_with_chars(img: &DynamicImage, ascii_chars: &str) -> DynamicImage {
+fn create_ascii_image_with_chars_and_bg(img: &DynamicImage, ascii_chars: &str, bg_color: Rgb<u8>) -> DynamicImage {
     let cell_w: u32 = 10;
     let cell_h: u32 = 18;
     let gamma: f32 = 0.6;
-    let bg = Rgb([0, 0, 0]);
+    let bg = bg_color;
 
     let (w, h) = img.dimensions();
     let cols = (w / cell_w).max(1);
@@ -347,6 +349,34 @@ fn brightness_to_char(luma: f32, ascii_chars: &str) -> char {
     // Use .chars().nth() to correctly handle multi-byte characters
     ascii_chars.chars().nth(idx).unwrap_or(' ')
 }
+/// Parses a hex color string into an RGB color.
+///
+/// # Arguments
+/// * `hex_color` - The hex color string (e.g., "#000000" or "000000").
+///
+/// # Returns
+/// `Rgb<u8>` - The parsed RGB color, or black if parsing fails.
+fn parse_hex_color(hex_color: &str) -> Rgb<u8> {
+    let hex = if hex_color.starts_with('#') {
+        &hex_color[1..]
+    } else {
+        hex_color
+    };
+
+    if hex.len() == 6 {
+        if let Ok(r) = u8::from_str_radix(&hex[0..2], 16) {
+            if let Ok(g) = u8::from_str_radix(&hex[2..4], 16) {
+                if let Ok(b) = u8::from_str_radix(&hex[4..6], 16) {
+                    return Rgb([r, g, b]);
+                }
+            }
+        }
+    }
+
+    // Default to black if parsing fails
+    Rgb([0, 0, 0])
+}
+
 /// Blends a foreground color with a background color using a given alpha value.
 ///
 /// # Arguments

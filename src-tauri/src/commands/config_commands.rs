@@ -234,7 +234,9 @@ pub fn set_has_configured_initial_settings_command(
     app: AppHandle,
     value: bool,
 ) -> Result<(), String> {
-    update_config(&app, |config| config.has_configured_initial_settings = value)
+    update_config(&app, |config| {
+        config.has_configured_initial_settings = value
+    })
 }
 
 /// Sets the user's choice for Linux desktop file installation.
@@ -271,7 +273,7 @@ pub fn get_linux_desktop_install_choice_command(app: AppHandle) -> Result<String
 /// Updates the ASCII character set used for ASCII art conversion.
 ///
 /// # Arguments
-/// * `app` - The Tauri application handle. 
+/// * `app` - The Tauri application handle.
 /// * `ascii_chars` - The new ASCII character set name.
 ///
 /// # Returns
@@ -281,3 +283,20 @@ pub fn update_ascii_chars_command(app: AppHandle, ascii_chars: String) -> Result
     update_config(&app, |config| config.ascii_chars = ascii_chars)
 }
 
+/// Updates the background color used for ASCII art conversion.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+/// * `background_color` - The new background color as a hex string (e.g., "#000000").
+///
+/// # Returns
+/// `Result<(), String>`.
+#[tauri::command]
+pub fn update_ascii_background_color_command(
+    app: AppHandle,
+    background_color: String,
+) -> Result<(), String> {
+    update_config(&app, |config| {
+        config.ascii_background_color = background_color
+    })
+}
