@@ -300,3 +300,16 @@ pub fn update_ascii_background_color_command(
         config.ascii_background_color = background_color
     })
 }
+
+/// Updates the auto-background setting for ASCII art conversion.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+/// * `enabled` - Whether to enable auto-background color detection.
+///
+/// # Returns
+/// `Result<(), String>`.
+#[tauri::command]
+pub fn update_ascii_auto_background_command(app: AppHandle, enabled: bool) -> Result<(), String> {
+    update_config(&app, |config| config.ascii_auto_background = enabled)
+}

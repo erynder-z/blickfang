@@ -40,4 +40,5 @@ export interface AppConfig {
     | "line_art"
     | "high_detail";
   asciiBackgroundColor?: string;
+  asciiAutoBackground?: boolean;
 }

@@ -95,10 +95,18 @@ pub fn get_available_ascii_char_sets() -> Result<Vec<AsciiCharSetInfo>, String> 
     Ok(char_sets)
 }
 
-/// Converts an image to its ASCII art representation.
+/// Converts an image file to an ASCII art image.
 ///
-/// This command reads the image file from the given path, corrects the image orientation if necessary,
-/// creates an ASCII art representation of the image, and encodes it to a base64 string.
+/// The function takes a file path and a Tauri application handle as input, reads the file, opens it as an image, and converts it to an ASCII art image using the ASCII character set and background color from the application configuration. The resulting image is then encoded to a base64 string.
+///
+/// # Arguments
+///
+/// * `path` - The file path of the image to convert.
+/// * `app` - The Tauri application handle.
+///
+/// # Returns
+///
+/// A `Result` containing the base64-encoded ASCII art image string, or an error message if the conversion fails.
 #[tauri::command]
 pub fn convert_image_to_ascii_art(path: String, app: tauri::AppHandle) -> Result<String, String> {
     let file_bytes = std::fs::read(&path).map_err(|e| format!("Failed to read file: {e}"))?;
@@ -111,7 +119,16 @@ pub fn convert_image_to_ascii_art(path: String, app: tauri::AppHandle) -> Result
         .map_err(|e| format!("Failed to deserialize config: {}", e))?;
 
     let ascii_chars = get_ascii_chars_from_config(&config);
-    let bg_color = parse_hex_color(&config.ascii_background_color);
+
+    // Determine background color based on auto-background setting
+    let bg_color = if config.ascii_auto_background {
+        // Use dominant color from the image
+        detect_dominant_color(&img)
+    } else {
+        // Use the manually configured color
+        parse_hex_color(&config.ascii_background_color)
+    };
+
     let ascii_img = create_ascii_image_with_chars_and_bg(&img, &ascii_chars, bg_color);
     encode_image_to_base64(&ascii_img)
 }
@@ -214,7 +231,11 @@ fn encode_image_to_base64(img: &DynamicImage) -> Result<String, String> {
 ///
 /// # Returns
 /// `DynamicImage` - A new `DynamicImage` representing the ASCII art version of the input image.
-fn create_ascii_image_with_chars_and_bg(img: &DynamicImage, ascii_chars: &str, bg_color: Rgb<u8>) -> DynamicImage {
+fn create_ascii_image_with_chars_and_bg(
+    img: &DynamicImage,
+    ascii_chars: &str,
+    bg_color: Rgb<u8>,
+) -> DynamicImage {
     let cell_w: u32 = 10;
     let cell_h: u32 = 18;
     let gamma: f32 = 0.6;
@@ -392,4 +413,49 @@ fn blend(fg: Rgb<u8>, bg: Rgb<u8>, alpha: f32) -> Rgb<u8> {
         (fg[1] as f32 * alpha + bg[1] as f32 * (1.0 - alpha)) as u8,
         (fg[2] as f32 * alpha + bg[2] as f32 * (1.0 - alpha)) as u8,
     ])
+}
+
+/// Detects the dominant color in an image using a simple k-means clustering approach.
+///
+/// This function analyzes the image and returns the most dominant color.
+///
+/// # Arguments
+/// * `img` - The `DynamicImage` to analyze.
+///
+/// # Returns
+/// `Rgb<u8>` - The dominant color in the image.
+fn detect_dominant_color(img: &DynamicImage) -> Rgb<u8> {
+    let rgb_img = img.to_rgb8();
+    let (width, height) = rgb_img.dimensions();
+
+    let sample_step = 10;
+    let mut samples = Vec::new();
+
+    for y in (0..height).step_by(sample_step) {
+        for x in (0..width).step_by(sample_step) {
+            let pixel = rgb_img.get_pixel(x, y);
+            samples.push(pixel);
+        }
+    }
+
+    if samples.is_empty() {
+        return Rgb([0, 0, 0]);
+    }
+
+    let mut color_counts = std::collections::HashMap::new();
+
+    for pixel in samples {
+        let quantized = Rgb([
+            (pixel[0] / 16) * 16,
+            (pixel[1] / 16) * 16,
+            (pixel[2] / 16) * 16,
+        ]);
+        *color_counts.entry(quantized).or_insert(0) += 1;
+    }
+
+    color_counts
+        .into_iter()
+        .max_by_key(|&(_, count)| count)
+        .map(|(color, _)| color)
+        .unwrap_or(Rgb([0, 0, 0]))
 }

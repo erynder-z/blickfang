@@ -53,6 +53,7 @@ pub fn run() {
             commands::config_commands::get_linux_desktop_install_choice_command,
             commands::config_commands::update_ascii_chars_command,
             commands::config_commands::update_ascii_background_color_command,
+            commands::config_commands::update_ascii_auto_background_command,
             commands::linux_integration::install_linux_desktop_file_command,
             commands::linux_integration::is_running_as_appimage_command,
             commands::image_analyze::detect_ai_image,

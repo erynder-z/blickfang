@@ -17,6 +17,7 @@
   "options.toolbar.heading": "Schaltflächengröße",
   "options.asciiChars.heading": "ASCII-Zeichensatz",
   "options.asciiBackgroundColor.heading": "ASCII-Hintergrundfarbe",
+  "options.asciiAutoBackground.label": "Automatische Hintergrundfarbe",
   "asciiChars.blocks": "Blöcke (█▓▒░ )",
   "asciiChars.stripes": "Streifen (█▉▊▋▌▍▎▏)",
   "asciiChars.minimal": "Minimal (@%#*+=-:. )",

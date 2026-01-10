@@ -21,6 +21,7 @@
 
   let buttons: HTMLButtonElement[] = [];
   let backgroundColor: string = $appConfig.asciiBackgroundColor || "#000000";
+  let autoBackground: boolean = $appConfig.asciiAutoBackground || false;
 
   $: if ($isAsciiCharsMenuVisible) {
     tick().then(() => {
@@ -49,6 +50,15 @@
       appConfig.update((config) => ({ ...config, asciiBackgroundColor: backgroundColor }));
     } catch (error) {
       console.error("Failed to save ASCII background color:", error);
+    }
+  };
+
+  const saveAutoBackground = async () => {
+    try {
+      await invoke("update_ascii_auto_background_command", { enabled: autoBackground });
+      appConfig.update((config) => ({ ...config, asciiAutoBackground: autoBackground }));
+    } catch (error) {
+      console.error("Failed to save ASCII auto background setting:", error);
     }
   };
 
@@ -101,17 +111,32 @@
         {/each}
       </div>
 
-      <div class="color-picker-section">
-        <h2>{$t["options.asciiBackgroundColor.heading"]}</h2>
-        <div class="color-picker-container">
-          <input
-            type="color"
-            id="background-color"
-            bind:value={backgroundColor}
-            on:change={saveBackgroundColor}
-            class="color-picker"
-          />
-          <span class="color-value">{backgroundColor}</span>
+      <h2>{$t["options.asciiBackgroundColor.heading"]}</h2>
+      <div class="background-color-section">
+        <div class="auto-background-section">
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              bind:checked={autoBackground}
+              on:change={saveAutoBackground}
+              class="checkbox-input"
+            />
+            <span class="checkbox-text">{$t["options.asciiAutoBackground.label"]}</span>
+          </label>
+        </div>
+
+        <div class="color-picker-section" class:disabled={autoBackground}>
+          <div class="color-picker-container">
+            <input
+              type="color"
+              id="background-color"
+              bind:value={backgroundColor}
+              on:change={saveBackgroundColor}
+              class="color-picker"
+              disabled={autoBackground}
+            />
+            <span class="color-value">{backgroundColor}</span>
+          </div>
         </div>
       </div>
 
@@ -168,9 +193,17 @@
     align-items: center;
   }
 
-  h1,
-  h2 {
+  h1 {
     margin: 0 0 1rem 0;
+    color: var(--color-text-primary);
+    line-height: 1.2;
+    font-size: 1.25rem;
+    text-wrap: balance;
+    text-align: center;
+  }
+
+  h2 {
+    margin: 2rem 0 1rem 0;
     color: var(--color-text-primary);
     line-height: 1.2;
     font-size: 1.25rem;
@@ -255,12 +288,50 @@
     color: var(--color-close-button);
   }
 
+  .background-color-section {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .auto-background-section {
+    display: flex;
+    justify-content: center;
+    width: 80%;
+    margin-top: 1rem;
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+  }
+
+  .checkbox-input {
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+  }
+
+  .checkbox-text {
+    font-size: 0.9rem;
+    color: var(--color-text-primary);
+  }
+
   .color-picker-section {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     width: 80%;
     margin-top: 1rem;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+  }
+
+  .color-picker-section.disabled {
+    opacity: 0.5;
+    pointer-events: none;
   }
 
   .color-picker-container {
