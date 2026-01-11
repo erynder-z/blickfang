@@ -14,6 +14,18 @@ const C2PA_UUID: [u8; 16] = [
     0xD8, 0xFE, 0x07, 0xFF, 0xF1, 0xD9, 0x4D, 0x9A, 0xA0, 0x5E, 0xA8, 0x0B, 0x5A, 0x9F, 0xD8, 0x5A,
 ];
 
+/// Calculates the greatest common divisor (GCD) of two unsigned 32-bit integers.
+///
+/// The GCD of two numbers is the largest number that divides both of them without leaving a remainder.
+///
+/// This implementation uses the Euclidean algorithm to calculate the GCD.
+///
+/// # Arguments
+/// * `a` - The first number.
+/// * `b` - The second number.
+///
+/// # Returns
+/// `u32` - The GCD of the two numbers.
 fn gcd(a: u32, b: u32) -> u32 {
     if b == 0 {
         a
@@ -233,7 +245,6 @@ fn extract_exif_json(bytes: &[u8]) -> String {
                 .fields()
                 .filter_map(|field| {
                     let value_str = match &field.value {
-                        // This is always binary, so we skip it.
                         exif::Value::Undefined(_, _) => return None,
 
                         exif::Value::Byte(buf) => {
@@ -300,17 +311,83 @@ fn apply_orientation_correction(img: DynamicImage, orientation: u16) -> DynamicI
     }
 }
 
-/// Saves image bytes to a specified path and format, with optional quality settings.
+fn handle_exif_orientation(
+    bytes: &[u8],
+    img: DynamicImage,
+    image_format: ImageFormat,
+) -> DynamicImage {
+    let original_orientation = extract_original_orientation(bytes);
+    let should_bake_orientation = !matches!(image_format, ImageFormat::Jpeg);
+
+    if should_bake_orientation {
+        if let Some(orientation) = original_orientation {
+            return apply_orientation_correction(img, orientation);
+        }
+    }
+    img
+}
+
+/// Applies a user-defined rotation to an image.
+///
+/// The rotation is expected to be one of the following values:
+///
+/// * 90: Rotate the image 90 degrees clockwise.
+/// * 180: Rotate the image 180 degrees.
+/// * 270: Rotate the image 270 degrees clockwise.
+///
+/// If the rotation is not one of the above values, the image is returned unchanged.
+fn apply_user_rotation(img: DynamicImage, rotation: i32) -> DynamicImage {
+    match rotation {
+        90 => img.rotate90(),
+        180 => img.rotate180(),
+        270 => img.rotate270(),
+        _ => img,
+    }
+}
+
+/// Saves an image to a file in the specified format.
 ///
 /// # Arguments
-/// * `bytes` - The raw image data as a byte slice.
+///
+/// * `img` - The image to save.
 /// * `save_path` - The destination path to save the image.
-/// * `format` - The desired output format (e.g., "png", "jpeg", "webp").
-/// * `quality` - Optional quality setting for formats like JPEG/WebP (0.0-100.0).
-/// * `rotation` - Optional rotation angle in degrees (0, 90, 180, 270).
+/// * `format` - The desired output format (e.g., "png", "jpeg").
+/// * `quality` - Optional quality setting for formats like JPEG (0.0-100.0).
 ///
 /// # Returns
-/// `Result<String, String>` - The path to the saved file if successful.
+/// `Result<(), String>` - The result of the save operation. Returns an error string if the save operation fails.
+fn save_image(
+    img: &DynamicImage,
+    save_path: &Path,
+    format: &str,
+    quality: Option<f32>,
+) -> Result<(), String> {
+    let image_format = ImageFormat::from_extension(format)
+        .ok_or_else(|| format!("Invalid image format: {}", format))?;
+
+    match image_format {
+        ImageFormat::WebP => save_webp(img, save_path, quality)?,
+        ImageFormat::Jpeg => save_jpeg(img, save_path, quality)?,
+        _ => img
+            .save_with_format(save_path, image_format)
+            .map_err(|e| format!("Failed to save image: {}", e))?,
+    }
+    Ok(())
+}
+
+/// Saves an image to a file in the specified format.
+///
+/// # Arguments
+///
+/// * `bytes` - The image bytes to save.
+/// * `save_path` - The path to save the image file to.
+/// * `format` - The desired image format (e.g., "png", "jpeg").
+/// * `quality` - Optional quality setting for the saved image (0.0-100.0).
+/// * `rotation` - The rotation angle in degrees (0, 90, 180, 270).
+///
+/// # Returns
+///
+/// A `Result` containing the path to the saved image file as a string if successful, or an error string if the save operation fails.
 pub fn save_image_to_format(
     bytes: &[u8],
     save_path: &Path,
@@ -320,39 +397,14 @@ pub fn save_image_to_format(
 ) -> Result<String, String> {
     let image_format = ImageFormat::from_extension(format)
         .ok_or_else(|| format!("Invalid image format: {}", format))?;
-    
-    // First, extract the original orientation from the EXIF data
-    let original_orientation = extract_original_orientation(bytes);
-    
+
     let mut img =
         image::load_from_memory(bytes).map_err(|e| format!("Failed to decode image: {}", e))?;
 
-    // For formats that don't preserve EXIF (like PNG), we need to bake the orientation
-    // into the pixel data. For JPEG, the EXIF orientation will be preserved.
-    let should_bake_orientation = !matches!(image_format, ImageFormat::Jpeg);
-    
-    if should_bake_orientation {
-        // Apply the original EXIF orientation to the pixel data
-        if let Some(orientation) = original_orientation {
-            img = apply_orientation_correction(img, orientation);
-        }
-    }
+    img = handle_exif_orientation(bytes, img, image_format);
+    img = apply_user_rotation(img, rotation);
 
-    // Apply any additional rotation from user interaction
-    img = match rotation {
-        90 => img.rotate90(),
-        180 => img.rotate180(),
-        270 => img.rotate270(),
-        _ => img,
-    };
-
-    match image_format {
-        ImageFormat::WebP => save_webp(&img, save_path, quality)?,
-        ImageFormat::Jpeg => save_jpeg(&img, save_path, quality)?,
-        _ => img
-            .save_with_format(save_path, image_format)
-            .map_err(|e| format!("Failed to save image: {}", e))?,
-    }
+    save_image(&img, save_path, format, quality)?;
 
     Ok(save_path.to_string_lossy().to_string())
 }
