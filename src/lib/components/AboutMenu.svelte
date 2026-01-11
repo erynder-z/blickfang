@@ -7,6 +7,10 @@
 
   const handleClose = () => isAboutMenuVisible.set(false);
 
+  /**
+   * Handle keydown event for About menu
+   * @param {KeyboardEvent} event - Keydown event
+   */
   const handleKeydown = (event: KeyboardEvent) => {
     if (!$isAboutMenuVisible) return;
     if (event.key === "Escape") {
@@ -15,10 +19,22 @@
     }
   };
 
+  /**
+   * Open the source code of the application on GitHub
+   * @async
+   */
   const handleSourceLinkClick = async () => {
     await openUrl("https://github.com/erynder-z/blickfang");
   };
 
+  /**
+   * Open the license page of the used font in a new tab
+   * @async
+   */
+  /**
+   * @description Open the license page of the used font in a new tab
+   * @returns {Promise<void>} - Resolves when the page is opened
+   */
   const handleFontLicenseLinkClick = async () => {
     await openUrl("https://scripts.sil.org/OFL");
   };

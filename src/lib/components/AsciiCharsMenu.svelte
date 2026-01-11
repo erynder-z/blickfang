@@ -35,6 +35,13 @@
     });
   }
 
+  /**
+   * Saves the selected ASCII character set to the application configuration.
+   *
+   * @param {string} charSet - The ID of the ASCII character set to save.
+   *
+   * @returns {Promise<void>} - A promise that resolves when the character set is saved.
+   */
   const saveAsciiChars = async (charSet: AsciiCharSetId) => {
     try {
       await invoke("update_ascii_chars_command", { asciiChars: charSet });
@@ -44,6 +51,11 @@
     }
   };
 
+  /**
+   * Saves the selected ASCII background color to the application configuration.
+   *
+   * @returns {Promise<void>} - A promise that resolves when the background color is saved.
+   */
   const saveBackgroundColor = async () => {
     try {
       await invoke("update_ascii_background_color_command", { backgroundColor });
@@ -53,6 +65,11 @@
     }
   };
 
+  /**
+   * Saves the selected ASCII auto background setting to the application configuration.
+   *
+   * @returns {Promise<void>} - A promise that resolves when the auto background setting is saved.
+   */
   const saveAutoBackground = async () => {
     try {
       await invoke("update_ascii_auto_background_command", { enabled: autoBackground });
@@ -62,13 +79,30 @@
     }
   };
 
+  /**
+   * Handles the click event on an ASCII character set button.
+   *
+   * Saves the selected ASCII character set to the application configuration
+   * and closes the ASCII character set menu.
+   *
+   * @param {string} charSet - The ID of the ASCII character set to save.
+   */
   const handleButtonClick = (charSet: AsciiCharSetId) => {
     saveAsciiChars(charSet);
     handleClose();
   };
 
+  /**
+   * Closes the ASCII character set menu.
+   */
   const handleClose = () => isAsciiCharsMenuVisible.set(false);
-
+  /**
+   * Handles the keydown event on the ASCII character set menu.
+   *
+   * If the key is "Escape", closes the ASCII character set menu.
+   *
+   * @param {KeyboardEvent} event - The keydown event.
+   */
   const handleKeydown = (event: KeyboardEvent) => {
     if (!$isAsciiCharsMenuVisible) return;
     if (event.key === "Escape") {

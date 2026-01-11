@@ -16,6 +16,11 @@
     });
   }
 
+  /**
+   * Save the edge indicator visibility setting.
+   * @param {boolean} visible - Whether edge indicators should be visible.
+   * @returns {Promise<void>} - A promise that resolves when the setting is saved.
+   */
   const saveEdgeIndicatorMode = async (visible: boolean) => {
     try {
       await invoke("update_edge_indicators_visible_command", { visible });
@@ -24,10 +29,25 @@
     }
   };
 
+  /**
+   * Handles the button click event for the edge indicator visibility setting.
+   * Saves the edge indicator visibility setting to the app config.
+   * @param {boolean} visible - Whether edge indicators should be visible.
+   * @returns {Promise<void>} - A promise that resolves when the setting is saved.
+   */
   const handleButtonClick = (visible: boolean) => saveEdgeIndicatorMode(visible);
 
+  /**
+   * Handles the close event for the edge indicator menu.
+   * Sets the edge indicator menu visibility to false.
+   */
   const handleClose = () => isEdgeIndicatorMenuVisible.set(false);
 
+  /**
+   * Handles the keydown event for the edge indicator menu.
+   * If the pressed key is "Escape", closes the edge indicator menu.
+   * @param {KeyboardEvent} event - The keydown event.
+   */
   const handleKeydown = (event: KeyboardEvent) => {
     if (!$isEdgeIndicatorMenuVisible) return;
     if (event.key === "Escape") handleClose();

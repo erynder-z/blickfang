@@ -20,7 +20,14 @@
     });
   }
 
-  const saveLanguage = async (lang: string) => {
+  /**
+   * Saves the selected language to the application configuration.
+   *
+   * @param {string} lang - The language code to save (e.g., "en", "de").
+   *
+   * @returns {Promise<void>} - A promise that resolves when the language is saved.
+   */
+  const saveLanguage = async (lang: string): Promise<void> => {
     try {
       await invoke("update_language_command", { language: lang });
     } catch (error) {
@@ -28,13 +35,31 @@
     }
   };
 
+  /**
+   * Handles the button click event for the language menu.
+   *
+   * @param {string} lang - The language code to select (e.g., "en", "de").
+   */
+
   const handleButtonClick = (lang: string) => {
     setLocale(lang);
     saveLanguage(lang);
   };
 
-  const handleClose = () => isLanguageMenuVisible.set(false);
+  /**
+   * Closes the language menu.
+   */
+  const handleClose = () => {
+    isLanguageMenuVisible.set(false);
+  };
 
+  /**
+   * Handles the keydown event for the language menu.
+   *
+   * If the key is "Escape", closes the language menu.
+   *
+   * @param {KeyboardEvent} event - The keydown event.
+   */
   const handleKeydown = (event: KeyboardEvent) => {
     if (!$isLanguageMenuVisible) return;
     if (event.key === "Escape") {

@@ -19,15 +19,33 @@
     tempShortcuts = JSON.parse(JSON.stringify($appConfig.shortcuts));
   }
 
+  /**
+   * Close the remap dialog.
+   */
   const handleClose = () => isRemapping.set(false);
 
+  /**
+   * Cancel the remap process and close the remap dialog.
+   */
   const handleCancelRemap = () => handleClose();
 
-  const handleSaveRemap = async () => {
+  /**
+   * Saves the remapped shortcuts to the application configuration and closes the remap dialog.
+   * @returns {Promise<void>} - A promise that resolves when the remapped shortcuts are saved.
+   */
+  const handleSaveRemap = async (): Promise<void> => {
     await invoke("update_custom_shortcuts_command", { newShortcuts: tempShortcuts });
     handleClose();
   };
 
+  /**
+   * Handles the keydown event for the remap dialog.
+   * If the remap process is not active, does nothing.
+   * If the remap process is active, prevents the default action for the keydown event,
+   * checks if the pressed key is already used in the shortcuts, and if not, updates the shortcut
+   * for the current action with the pressed key.
+   * @param {KeyboardEvent} event - The keydown event.
+   */
   const handleRemappingKeydown = (event: KeyboardEvent) => {
     if (!$isRemapping || remapStep >= actionsToRemap.length) return;
 
@@ -66,6 +84,11 @@
     }
   };
 
+  /**
+   * Handles the keydown event for the remap dialog when the remap process is not active.
+   * If the pressed key is the escape key, closes the remap dialog.
+   * @param {KeyboardEvent} event - The keydown event.
+   */
   const handleKeydown = (event: KeyboardEvent) => {
     if (!$isRemapping) return;
     if (event.key === "Escape") handleClose();

@@ -7,17 +7,33 @@
 
   let buttons: HTMLButtonElement[] = [];
 
-  const handleInstallClick = async () => {
+  /**
+   * Handle the install button click event.
+   * Installs the Linux desktop file and sets the user's choice for Linux desktop file installation.
+   * Closes the Linux desktop install dialog.
+   * @returns {Promise<void>} - A promise that resolves when the operation is complete.
+   */
+  const handleInstallClick = async (): Promise<void> => {
     await invoke("install_linux_desktop_file_command");
     await invoke("set_linux_desktop_install_choice_command", { choice: "installed" });
     isLinuxDesktopInstallDialogVisible.set(false);
   };
 
-  const handleSkipClick = async () => {
+  /**
+   * Handle the skip button click event.
+   * Sets the user's choice for Linux desktop file installation to "skipped".
+   * Closes the Linux desktop install dialog.
+   * @returns {Promise<void>} - A promise that resolves when the operation is complete.
+   */
+  const handleSkipClick = async (): Promise<void> => {
     await invoke("set_linux_desktop_install_choice_command", { choice: "skipped" });
     isLinuxDesktopInstallDialogVisible.set(false);
   };
 
+  /**
+   * Handle keydown events for the Linux desktop install dialog.
+   * @param {KeyboardEvent} event - Keydown event
+   */
   const handleKeydown = (event: KeyboardEvent) => {
     if (!$isLinuxDesktopInstallDialogVisible) return;
     if (event.key === "Escape") handleSkipClick();

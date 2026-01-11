@@ -18,7 +18,14 @@
     });
   }
 
-  const saveTheme = async (theme: string) => {
+  /**
+   * Saves the selected theme to the application configuration.
+   *
+   * @param {string} theme - The theme to save.
+   *
+   * @returns {Promise<void>} - A promise that resolves when the theme is saved.
+   */
+  const saveTheme = async (theme: string): Promise<void> => {
     try {
       await invoke("update_theme_command", { theme: theme });
     } catch (error) {
@@ -26,10 +33,23 @@
     }
   };
 
+  /**
+   * Handles the button click event for the theme setting.
+   * Saves the selected theme to the app config.
+   * @param {string} theme - The theme to save.
+   * @returns {Promise<void>} - A promise that resolves when the theme is saved.
+   */
   const handleButtonClick = (theme: string) => saveTheme(theme);
 
+  /**
+   * Closes the theme menu.
+   */
   const handleClose = () => isThemeMenuVisible.set(false);
 
+  /**
+   * Handles the keydown event for the theme menu.
+   * @param {KeyboardEvent} event - The keydown event.
+   */
   const handleKeydown = (event: KeyboardEvent) => {
     if (!$isThemeMenuVisible) return;
     if (event.key === "Escape") {

@@ -25,6 +25,10 @@
       toggleButtons[0]?.focus();
     });
 
+  /**
+   * Check if the remap dialog should be shown.
+   * @returns {boolean} True if the remap dialog should be shown, false otherwise.
+   */
   const shouldShowRemapDialog = () => {
     return (
       defaultShortcuts &&
@@ -32,19 +36,36 @@
     );
   };
 
+  /**
+   * Toggle the remap dialog visibility
+   */
   const handleRemap = () => isRemapping.set(true);
 
+  /**
+   * Close the hotkeys menu
+   */
   const handleClose = () => isHotkeysMenuVisible.set(false);
 
+  /**
+   * Set active shortcuts to default shortcuts
+   */
   const handleSetDefault = () => {
     invoke("set_active_shortcuts_to_default");
   };
 
+  /**
+   * Set active shortcuts to custom shortcuts
+   * If the remap dialog should be shown, open it
+   */
   const handleSetCustom = () => {
     invoke("set_active_shortcuts_to_custom");
     if (shouldShowRemapDialog()) handleRemap();
   };
 
+  /**
+   * Handle keydown event for hotkeys menu
+   * @param {KeyboardEvent} event - Keydown event
+   */
   const handleKeydown = (event: KeyboardEvent) => {
     if (!$isHotkeysMenuVisible) return;
     if (event.key === "Escape") {

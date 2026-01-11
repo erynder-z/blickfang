@@ -17,6 +17,13 @@
     });
   }
 
+  /**
+   * Saves the image name display mode to the application configuration.
+   *
+   * @param {DisplayMode} mode - The new display mode.
+   *
+   * @returns {Promise<void>} - A promise that resolves when the display mode is saved.
+   */
   const saveDisplayMode = async (mode: DisplayMode) => {
     try {
       await invoke("update_image_name_display_mode_command", { mode });
@@ -25,19 +32,38 @@
     }
   };
 
+  /**
+   * Handles a button click in the image name display mode menu.
+   *
+   * @param {DisplayMode} mode - The new display mode.
+   */
   const handleButtonClick = (mode: DisplayMode) => {
     appConfig.update((config) => ({ ...config, imageNameDisplayMode: mode }));
     saveDisplayMode(mode);
   };
 
+  /**
+   * Handles the close button click in the image name display mode menu.
+   */
   const handleClose = () => isImageNameDisplayMenuVisible.set(false);
 
+  /**
+   * Handles a keydown event in the image name display mode menu.
+   *
+   * @param {KeyboardEvent} event - The keydown event.
+   */
   const handleKeydown = (event: KeyboardEvent) => {
     if (!$isImageNameDisplayMenuVisible) return;
     if (event.key === "Escape") handleClose();
   };
 
-  const getLabel = (mode: DisplayMode) => {
+  /**
+   * Returns the label for a button representing the given display mode.
+   *
+   * @param {DisplayMode} mode - The display mode.
+   * @returns {string} - The label for the button.
+   */
+  const getLabel = (mode: DisplayMode): string => {
     if (mode === "show" || mode === "hide") {
       return `general.${mode}`;
     }

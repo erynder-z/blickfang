@@ -22,6 +22,11 @@
     }
   });
 
+  /**
+   * Handles a format button click in the save as menu.
+   *
+   * @param {string} format - The format to save the image as.
+   */
   const handleFormatClick = (format: string) => {
     const formatLower = format.toLowerCase();
     if (lossyFormats.map((f) => f.toLowerCase()).includes(formatLower)) {
@@ -32,10 +37,18 @@
     handleClose();
   };
 
+  /**
+   * Closes the save as menu.
+   */
   const handleClose = () => {
     isSaveAsMenuVisible.set(false);
   };
 
+  /**
+   * Handles a keydown event in the save as menu.
+   *
+   * @param {KeyboardEvent} event - The event to handle.
+   */
   const handleKeydown = (event: KeyboardEvent) => {
     if (!$isSaveAsMenuVisible) return;
     if (event.key === "Escape") handleClose();

@@ -16,6 +16,11 @@
     });
   }
 
+  /**
+   * Save the remember window size setting.
+   * @param {boolean} remember - Whether to remember window size and position.
+   * @returns {Promise<void>} - A promise that resolves when the setting is saved.
+   */
   const saveRememberWindowSize = async (remember: boolean) => {
     try {
       await invoke("update_remember_window_size_command", { remember });
@@ -24,10 +29,25 @@
     }
   };
 
+  /**
+   * Handles the button click event for the remember window size setting.
+   * Saves the remember window size setting to the app config.
+   * @param {boolean} remember - Whether to remember window size and position.
+   * @returns {Promise<void>} - A promise that resolves when the setting is saved.
+   */
   const handleButtonClick = (remember: boolean) => saveRememberWindowSize(remember);
 
+  /**
+   * Handles the close event of the app window menu.
+   * Sets the {@link isAppWindowMenuVisible} store to false.
+   */
   const handleClose = () => isAppWindowMenuVisible.set(false);
 
+  /**
+   * Handles the keydown event of the app window menu.
+   * If the key is "Escape", closes the menu.
+   * @param {KeyboardEvent} event - The keydown event.
+   */
   const handleKeydown = (event: KeyboardEvent) => {
     if (!$isAppWindowMenuVisible) return;
 

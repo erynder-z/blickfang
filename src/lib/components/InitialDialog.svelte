@@ -11,19 +11,36 @@
 
   let buttons: HTMLButtonElement[] = [];
 
-  const handleConfigureClick = async () => {
+  /**
+   * Handle the configure button click event.
+   * Sets the flag indicating whether initial application settings have been configured.
+   * Closes the initial dialog and opens the initial config settings dialog.
+   * @returns {Promise<void>} - A promise that resolves when the operation is complete.
+   */
+  const handleConfigureClick = async (): Promise<void> => {
     await invoke("set_has_configured_initial_settings_command", { value: true });
     hasConfiguredInitialSettings.set(true);
     isInitialDialogVisible.set(false);
     isInitialConfigSettingsDialogVisible.set(true);
   };
 
-  const handleDontCareClick = async () => {
+  /**
+   * Handles the "don't care" button click event.
+   * Sets the flag indicating whether initial application settings have been configured.
+   * Closes the initial dialog.
+   * @returns {Promise<void>} - A promise that resolves when the operation is complete.
+   */
+  const handleDontCareClick = async (): Promise<void> => {
     await invoke("set_has_configured_initial_settings_command", { value: true });
     hasConfiguredInitialSettings.set(true);
     isInitialDialogVisible.set(false);
   };
 
+  /**
+   * Handles keydown events for the initial dialog.
+   * If the escape key is pressed, calls the "don't care" button click event handler.
+   * @param {KeyboardEvent} event - Keydown event
+   */
   const handleKeydown = (event: KeyboardEvent) => {
     if (!$isInitialDialogVisible) return;
     if (event.key === "Escape") handleDontCareClick();

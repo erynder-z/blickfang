@@ -31,6 +31,9 @@
 
   $: size = buttonSizes[$appConfig.toolbarButtonSize];
 
+  /**
+   * Toggles the visibility of the save as menu.
+   */
   const showSaveAsMenu = () => {
     isSaveAsMenuVisible.update((v) => !v);
   };

@@ -18,26 +18,42 @@
     isInitialConfigSettingsDialogVisible.set(true);
   }
 
+  /**
+   * Open the theme menu
+   */
   const handleSelectThemeClick = () => {
     isSubMenuOpen = true;
     isInitialConfigSettingsDialogVisible.set(false);
     isThemeMenuVisible.set(true);
   };
 
+  /**
+   * Open the language menu
+   */
   const handleSelectLanguageClick = () => {
     isSubMenuOpen = true;
     isInitialConfigSettingsDialogVisible.set(false);
     isLanguageMenuVisible.set(true);
   };
 
+  /**
+   * Open the hotkeys menu
+   */
   const handleToggleHotkeys = () => {
     isSubMenuOpen = true;
     isInitialConfigSettingsDialogVisible.set(false);
     isHotkeysMenuVisible.set(true);
   };
 
+  /**
+   * Close the initial config settings dialog
+   */
   const handleClose = () => isInitialConfigSettingsDialogVisible.set(false);
 
+  /**
+   * Handle keydown event for initial config settings dialog
+   * @param {KeyboardEvent} event - Keydown event
+   */
   const handleKeydown = (event: KeyboardEvent) => {
     if (!$isInitialConfigSettingsDialogVisible || $isThemeMenuVisible || $isLanguageMenuVisible)
       return;

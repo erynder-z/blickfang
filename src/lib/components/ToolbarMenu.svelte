@@ -17,7 +17,14 @@
     });
   }
 
-  const saveToolbarButtonSize = async (size: string) => {
+  /**
+   * Saves the selected toolbar button size to the application configuration.
+   *
+   * @param {string} size - The size of the toolbar buttons to save (e.g., "large", "small", "hide").
+   *
+   * @returns {Promise<void>} - A promise that resolves when the button size is saved.
+   */
+  const saveToolbarButtonSize = async (size: string): Promise<void> => {
     try {
       await invoke("update_toolbar_button_size_command", { toolbarButtonSize: size });
     } catch (error) {
@@ -25,10 +32,24 @@
     }
   };
 
+  /**
+   * Handles the button click event for the toolbar button size menu.
+   *
+   * @param {string} size - The size of the toolbar buttons to save (e.g., "large", "small", "hide").
+   */
   const handleButtonClick = (size: string) => saveToolbarButtonSize(size);
 
+  /**
+   * Closes the toolbar button size menu.
+   */
   const handleClose = () => isToolbarMenuVisible.set(false);
 
+  /**
+   * Returns the label for a given toolbar button size.
+   *
+   * @param {string} size - The size of the toolbar buttons (e.g., "large", "small", "hide").
+   * @returns {string} - The label for the given button size.
+   */
   const getLabel = (size: string) => {
     if (size === "large" || size === "small") {
       return `general.${size}`;
@@ -36,6 +57,13 @@
     return `general.${size}`;
   };
 
+  /**
+   * Handles the keydown event on the toolbar button size menu.
+   *
+   * If the key is "Escape", closes the toolbar button size menu.
+   *
+   * @param {KeyboardEvent} event - The keydown event.
+   */
   const handleKeydown = (event: KeyboardEvent) => {
     if (!$isToolbarMenuVisible) return;
     if (event.key === "Escape") handleClose();
