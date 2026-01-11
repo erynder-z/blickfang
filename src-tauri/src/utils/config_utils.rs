@@ -4,14 +4,21 @@ use std::fs;
 use std::path::PathBuf;
 use tauri::{AppHandle, Manager};
 
-/// Returns the path to the application configuration file.
+/// Returns the path to the configuration file as a `PathBuf`.
 ///
-/// The configuration file is located in the application's data directory, which is specific to the current user.
-/// The configuration file is named `config.json` and is created if it does not already exist.
+/// The path is determined by creating a directory named "blickfang" in the application data directory,
+/// and then appending "config.json" to it. If the directory or file cannot be created,
+/// an error string is returned.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+///
+/// # Returns
+/// A `Result` containing the path to the configuration file as a `PathBuf`, or an error string if the path cannot be created.
 ///
 /// # Errors
-/// If the application's data directory cannot be retrieved, or if the configuration directory cannot be created,
-/// an error is returned.
+///
+/// If the application data directory cannot be obtained, or if the "blickfang" directory or "config.json" file cannot be created, an error string is returned.
 fn get_config_path(app: &AppHandle) -> Result<PathBuf, String> {
     let mut config_path = app
         .path()

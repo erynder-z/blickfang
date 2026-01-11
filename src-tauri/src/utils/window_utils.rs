@@ -3,11 +3,35 @@ use crate::utils::config_utils::{read_config, write_config};
 use serde_json;
 use tauri::{App, AppHandle, Manager, PhysicalPosition, PhysicalSize, RunEvent, WindowEvent};
 
+/// Loads the application configuration from the config file.
+///
+/// # Arguments
+/// * `app_handle` - The Tauri application handle.
+///
+/// # Returns
+/// `Result<Config, String>` - A `Config` object if the configuration is successfully loaded, an error string otherwise.
+///
+/// # Errors
+///
+/// If the configuration file cannot be read or deserialized, an error string is returned.
 fn load_config(app_handle: &AppHandle) -> Result<Config, String> {
     let config_str = read_config(app_handle)?;
     serde_json::from_str(&config_str).map_err(|e| format!("Failed to deserialize config: {}", e))
 }
 
+/// Saves the provided configuration to the application's config file.
+///
+/// If the configuration cannot be serialized to JSON, an error message is printed.
+/// If the configuration cannot be written to the config file, an error message is printed.
+///
+/// # Arguments
+///
+/// * `app_handle` - The Tauri application handle.
+/// * `config` - The configuration to be saved.
+///
+/// # Errors
+///
+/// If the configuration cannot be serialized or written, an error message is printed.
 fn save_config(app_handle: &AppHandle, config: &Config) {
     if let Ok(json) = serde_json::to_string(config) {
         if let Err(e) = write_config(app_handle, &json) {

@@ -16,12 +16,15 @@ pub struct OpenedPathsState {
 #[derive(Default)]
 pub struct AppReady(pub AtomicBool);
 
-/// Tauri command called by the frontend to signal that it has finished loading and is ready to receive events.
-/// If there were paths opened before the frontend was ready, they are emitted now.
+/// Marks the frontend as ready to receive events.
+///
+/// This command is used to indicate that the frontend has finished loading and is ready
+/// to receive events. If there are any paths stored in the OpenedPathsState, they are
+/// emitted to the frontend as an "image-source" event.
 ///
 /// # Arguments
-/// * `opened_paths_state` - Tauri State for `OpenedPathsState`, containing any paths opened before frontend readiness.
-/// * `app_ready_state` - Tauri State for `AppReady`, used to mark the frontend as ready.
+/// * `opened_paths_state` - A mutable reference to the OpenedPathsState struct.
+/// * `app_ready_state` - A mutable reference to the AppReady struct.
 /// * `app` - The Tauri application handle.
 #[tauri::command]
 pub fn frontend_is_ready(
@@ -70,6 +73,11 @@ pub fn handle_run_event(app_handle: &AppHandle, event: &RunEvent) {
     }
 }
 
+/// Handles the paths passed to the application at launch and emits them to the frontend.
+///
+/// # Arguments
+/// * `app_handle` - The Tauri application handle.
+/// * `paths` - A vector of strings representing file paths.
 fn handle_opened_paths(app_handle: &AppHandle, paths: Vec<String>) {
     let app_ready_state = app_handle.state::<AppReady>();
 

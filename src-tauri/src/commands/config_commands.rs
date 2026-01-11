@@ -3,6 +3,19 @@ use crate::utils::config_utils::{read_config, write_config};
 use serde_json;
 use tauri::{AppHandle, Emitter, Manager};
 
+/// Updates the application configuration.
+///
+/// # Arguments
+///
+/// * `app` - The Tauri application handle.
+/// * `updater` - A function that takes a mutable reference to a `Config` object and updates it.
+///
+/// # Returns
+/// `Result<(), String>` - `Ok(())` if the configuration is successfully updated, an error string otherwise.
+///
+/// # Errors
+///
+/// If the configuration file cannot be read or deserialized, or if the updated configuration cannot be serialized or written to the configuration file, or if the "config-updated" event cannot be emitted, an error string is returned.
 fn update_config<F>(app: &AppHandle, updater: F) -> Result<(), String>
 where
     F: FnOnce(&mut Config),

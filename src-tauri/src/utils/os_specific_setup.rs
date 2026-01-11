@@ -10,7 +10,6 @@ use tauri::AppHandle;
 ///
 /// # Returns
 /// `Result<(), String>` - Ok if setup succeeds, Err with error message otherwise.
-
 pub fn perform_os_specific_setup(app: &AppHandle) -> Result<(), String> {
     #[cfg(target_os = "linux")]
     {

@@ -113,19 +113,15 @@ pub fn convert_image_to_ascii_art(path: String, app: tauri::AppHandle) -> Result
     let mut img = image::open(&path).map_err(|e| format!("Failed to open image: {e}"))?;
     img = correct_image_orientation(img, &file_bytes);
 
-    // Get the ASCII character set and background color from config
     let config_str = read_config(&app)?;
     let config: Config = serde_json::from_str(&config_str)
         .map_err(|e| format!("Failed to deserialize config: {}", e))?;
 
     let ascii_chars = get_ascii_chars_from_config(&config);
 
-    // Determine background color based on auto-background setting
     let bg_color = if config.ascii_auto_background {
-        // Use dominant color from the image
         detect_dominant_color(&img)
     } else {
-        // Use the manually configured color
         parse_hex_color(&config.ascii_background_color)
     };
 
@@ -133,22 +129,22 @@ pub fn convert_image_to_ascii_art(path: String, app: tauri::AppHandle) -> Result
     encode_image_to_base64(&ascii_img)
 }
 
-/// Corrects the image orientation according to the EXIF data.
+/// Corrects the orientation of an image according to its EXIF data.
 ///
-/// The function takes a DynamicImage and the file bytes as input, and returns a new DynamicImage with the correct orientation.
+/// Takes a `DynamicImage` and the raw image bytes as input, reads the EXIF data
+/// from the image bytes, and applies the orientation correction to the image
+/// if the Orientation tag is present.
 ///
-/// If the EXIF data does not contain the Orientation tag, or if the tag value is not recognized, the function returns the original image.
+/// If the Orientation tag is not present, the original image is returned.
 ///
-/// The function supports the following Orientation tag values:
+/// # Arguments
 ///
-/// * 1: The 0th row of pixels is on the top side of the image and the 0th column is on the left side.
-/// * 2: The 0th row of pixels is on the right side of the image and the 0th column is on the top side.
-/// * 3: The 0th row of pixels is on the bottom side of the image and the 0th column is on the right side.
-/// * 4: The 0th row of pixels is on the left side of the image and the 0th column is on the bottom side.
-/// * 5: The 0th row of pixels is on the right side of the image and the 0th column is on the top side.
-/// * 6: The 0th row of pixels is on the top side of the image and the 0th column is on the right side.
-/// * 7: The 0th row of pixels is on the bottom side of the image and the 0th column is on the left side.
-/// * 8: The 0th row of pixels is on the left side of the image and the 0th column is on the top side.
+/// * `img` - The image to correct.
+/// * `file_bytes` - The raw image bytes.
+///
+/// # Returns
+///
+/// The corrected image.
 fn correct_image_orientation(img: DynamicImage, file_bytes: &[u8]) -> DynamicImage {
     if let Ok(exif_data) = exif::Reader::new().read_from_container(&mut Cursor::new(file_bytes)) {
         if let Some(orientation_field) =
@@ -179,17 +175,14 @@ fn correct_image_orientation(img: DynamicImage, file_bytes: &[u8]) -> DynamicIma
 /// # Returns
 /// `String` - The ASCII character set.
 fn get_ascii_chars_from_config(config: &Config) -> String {
-    // Load the ASCII character sets from the JSON file
     let ascii_chars_map = read_ascii_chars_json();
 
-    // Get the selected character set from config, default to "classic"
     let char_set_name = if config.ascii_chars.is_empty() {
         "classic".to_string()
     } else {
         config.ascii_chars.clone()
     };
 
-    // Get the character set from the map
     ascii_chars_map[&char_set_name]
         .as_str()
         .unwrap_or("@#W$9876543210?!abc;:+=-,._ ")
@@ -359,7 +352,7 @@ fn perceptual_luminance(p: &Rgb<u8>, gamma: f32) -> f32 {
 fn brightness_to_char(luma: f32, ascii_chars: &str) -> char {
     let num_chars = ascii_chars.chars().count();
     if num_chars == 0 {
-        return ' '; // Return a space if the charset is empty
+        return ' ';
     }
 
     // Map luma so that 0.0 (dark) maps to index 0, and 255.0 (bright) maps to the end of the string.
