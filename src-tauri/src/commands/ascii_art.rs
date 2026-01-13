@@ -183,7 +183,7 @@ fn get_ascii_chars_from_config(config: &Config) -> String {
         config.ascii_chars.clone()
     };
 
-    ascii_chars_map[&char_set_name]
+    ascii_chars_map[&char_set_name]["chars"]
         .as_str()
         .unwrap_or("@#W$9876543210?!abc;:+=-,._ ")
         .to_string()
