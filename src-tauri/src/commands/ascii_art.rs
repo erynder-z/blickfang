@@ -244,7 +244,7 @@ fn create_ascii_image_with_chars_and_bg(
     let scale = Scale::uniform(cell_h as f32 * 1.15);
     let v_metrics = font.v_metrics(scale);
 
-    let mut out = ImageBuffer::from_pixel(cols * cell_w, rows * cell_h + cell_h, bg);
+    let mut out = ImageBuffer::from_pixel(cols * cell_w, rows * cell_h, bg);
 
     for y in 0..rows {
         for x in 0..cols {
