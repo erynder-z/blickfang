@@ -1,4 +1,4 @@
-export interface AiDetectionResult {
+export type AiDetectionResult = {
   is_ai_generated: boolean;
   reasons: string[];
   exif_data: Record<string, string> | null;
@@ -6,9 +6,9 @@ export interface AiDetectionResult {
   png_metadata: Record<string, string> | null;
   has_c2pa: boolean;
   c2pa_manifest: string | null;
-}
+};
 
-export interface ImageMetadata {
+export type ImageMetadata = {
   image_data: string;
   exif_data: string;
   width: number;
@@ -17,4 +17,4 @@ export interface ImageMetadata {
   format: string;
   color_depth: number | null;
   file_size: number;
-}
+};

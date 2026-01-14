@@ -8,8 +8,8 @@ export type AsciiCharSetId =
   | "line_art"
   | "high_detail";
 
-export interface AsciiCharSet {
+export type AsciiCharSet = {
   id: AsciiCharSetId;
   label: string;
   chars: string;
-}
+};

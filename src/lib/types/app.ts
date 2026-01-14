@@ -1,9 +1,9 @@
-export interface Shortcut {
+export type Shortcut = {
   keys: string[];
   label: string;
-}
+};
 
-export interface Shortcuts {
+export type Shortcuts = {
   openFile: Shortcut;
   saveImageAs: Shortcut;
   previousImage: Shortcut;
@@ -18,9 +18,9 @@ export interface Shortcuts {
   zoomModifierDown: Shortcut;
   toggleFullscreen: Shortcut;
   convertToAsciiArt: Shortcut;
-}
+};
 
-export interface AppConfig {
+export type AppConfig = {
   language: string;
   theme: string;
   shortcuts: Shortcuts;
@@ -41,4 +41,4 @@ export interface AppConfig {
     | "high_detail";
   asciiBackgroundColor?: string;
   asciiAutoBackground?: boolean;
-}
+};
