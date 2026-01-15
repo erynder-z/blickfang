@@ -62,6 +62,8 @@ pub struct Config {
     pub ascii_background_color: String,
     #[serde(default = "default_ascii_auto_background")]
     pub ascii_auto_background: bool,
+    #[serde(default = "default_grid_overlay_mode")]
+    pub grid_overlay_mode: String,
 }
 
 fn default_linux_desktop_install_choice() -> String {
@@ -78,6 +80,10 @@ fn default_ascii_background_color() -> String {
 
 fn default_ascii_auto_background() -> bool {
     false
+}
+
+fn default_grid_overlay_mode() -> String {
+    "rule-of-thirds".into()
 }
 
 fn default_has_configured_initial_settings() -> bool {
@@ -184,6 +190,7 @@ impl Default for Config {
             ascii_chars: default_ascii_chars(),
             ascii_background_color: default_ascii_background_color(),
             ascii_auto_background: default_ascii_auto_background(),
+            grid_overlay_mode: default_grid_overlay_mode(),
         }
     }
 }

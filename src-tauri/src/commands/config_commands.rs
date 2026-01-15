@@ -326,3 +326,19 @@ pub fn update_ascii_background_color_command(
 pub fn update_ascii_auto_background_command(app: AppHandle, enabled: bool) -> Result<(), String> {
     update_config(&app, |config| config.ascii_auto_background = enabled)
 }
+
+/// Updates the grid overlay mode.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+/// * `grid_overlay_mode` - The new grid overlay mode.
+///
+/// # Returns
+/// `Result<(), String>`.
+#[tauri::command]
+pub fn update_grid_overlay_mode_command(
+    app: AppHandle,
+    grid_overlay_mode: String,
+) -> Result<(), String> {
+    update_config(&app, |config| config.grid_overlay_mode = grid_overlay_mode)
+}

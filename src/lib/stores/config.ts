@@ -11,6 +11,7 @@ export const appConfig = writable<AppConfig>({
   linuxDesktopInstallChoice: "not_asked",
   asciiChars: "minimal",
   asciiAutoBackground: false,
+  gridOverlayMode: "rule-of-thirds",
   shortcuts: {
     openFile: { keys: [], label: "" },
     saveImageAs: { keys: [], label: "" },

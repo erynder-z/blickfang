@@ -20,7 +20,8 @@
   import LinuxDesktopInstallDialog from "$lib/components/LinuxDesktopInstallDialog.svelte";
   import TooltipRenderer from "$lib/components/TooltipRenderer.svelte";
   import AboutMenu from "$lib/components/AboutMenu.svelte";
-import AsciiCharsMenu from "$lib/components/AsciiCharsMenu.svelte";
+  import AsciiCharsMenu from "$lib/components/AsciiCharsMenu.svelte";
+  import GridOverlayMenu from "$lib/components/GridOverlayMenu.svelte";
 
   initThemeManager();
 
@@ -58,6 +59,7 @@ import AsciiCharsMenu from "$lib/components/AsciiCharsMenu.svelte";
   <InitialDialog />
   <InitialConfigSettingsDialog />
   <LinuxDesktopInstallDialog />
+  <GridOverlayMenu />
 
   <slot />
 </div>

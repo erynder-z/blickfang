@@ -41,4 +41,5 @@ export type AppConfig = {
     | "high_detail";
   asciiBackgroundColor?: string;
   asciiAutoBackground?: boolean;
+  gridOverlayMode: "golden-ratio" | "rule-of-thirds" | "grid";
 };
