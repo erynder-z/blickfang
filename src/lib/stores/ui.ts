@@ -14,6 +14,7 @@ export const isSaveAsMenuVisible = writable(false);
 export const isAboutMenuVisible = writable(false);
 export const isAsciiCharsMenuVisible = writable(false);
 export const isGridOverlayMenuVisible = writable(false);
+export const isGridOverlayVisible = writable(false);
 
 export const isFullscreenActive = writable(false);
 export const isRefittingOnResize = writable(false);

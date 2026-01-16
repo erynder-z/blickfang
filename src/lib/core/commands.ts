@@ -27,6 +27,7 @@ import {
   imageFileSize,
   rotation,
   isConvertedToAscii,
+  isGridOverlayVisible,
 } from "$lib/stores";
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -386,6 +387,15 @@ export const convertToAsciiArt = async (): Promise<void> => {
   } catch (error) {
     console.error("Failed to convert image to ASCII art:", error);
   }
+};
+
+/**
+ * Toggles the visibility of the grid overlay.
+ * Starts feedback for the "toggleGridOverlay" action, and then updates the isGridOverlayVisible store.
+ */
+export const toggleGridOverlay = () => {
+  singleShotFeedback("toggleGridOverlay");
+  isGridOverlayVisible.update((isVisible) => !isVisible);
 };
 
 // --- Utility Functions ---
