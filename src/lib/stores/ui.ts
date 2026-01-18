@@ -1,3 +1,4 @@
+import type { ImageTransform } from "$lib/types/viewport";
 import { createTooltipStore } from "$lib/utils/createTooltipStore";
 import { writable } from "svelte/store";
 
@@ -27,8 +28,20 @@ export const edgeIndicators = writable({
 });
 
 export const indicatorsVisible = writable(false);
-
 export const zoomLevel = writable(1);
 export const isZoomModifierUpActive = writable(false);
 export const isZoomModifierDownActive = writable(false);
 export const tooltip = createTooltipStore();
+export const imageTransform = writable<ImageTransform>({
+  offsetX: 0,
+  offsetY: 0,
+  scale: 1,
+  rotation: 0,
+  width: 0,
+  height: 0,
+  naturalWidth: 0,
+  naturalHeight: 0,
+  renderedWidth: 0,
+  renderedHeight: 0,
+  baseScale: 1,
+});

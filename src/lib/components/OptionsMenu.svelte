@@ -106,10 +106,10 @@
         width="1.25rem"
         fill="var(--color-text-primary)"
         ><path
-          d="M360-80v-280H80v-80h280v-80H80v-80h280v-280h80v280h80v-280h80v280h280v80H600v80h280v80H600v280h-80v-280h-80v280h-80Zm80-360h80v-80h-80v80Z"
+          d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h133v-133H200v133Zm213 0h134v-133H413v133Zm214 0h133v-133H627v133ZM200-413h133v-134H200v134Zm213 0h134v-134H413v134Zm214 0h133v-134H627v134ZM200-627h133v-133H200v133Zm213 0h134v-133H413v133Zm214 0h133v-133H627v133Z"
         /></svg
-      ></button
-    >
+      >
+    </button>
     <button
       class="toolbar-button"
       on:click={() => openMenu(isToolbarMenuVisible)}

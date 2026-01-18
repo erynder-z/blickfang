@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { imageUrl, zoomLevel } from "$lib/stores";
+  import { imageUrl, zoomLevel, isGridOverlayVisible } from "$lib/stores";
   import { imageViewport } from "$lib/actions/imageViewport";
   import EdgeIndicators from "$lib/components/EdgeIndicators.svelte";
+  import GridOverlay from "$lib/components/GridOverlay.svelte";
   import { t } from "$lib/utils/i18n";
   import { openFile } from "$lib/core/commands";
   import { fade } from "svelte/transition";
@@ -23,14 +24,17 @@
   <EdgeIndicators />
   {#if $imageUrl}
     {#key $imageUrl}
-      <canvas
-        use:imageViewport={{
-          imageUrlStore: imageUrl,
-          zoomLevelStore: zoomLevel,
-          onImageDrawn: () => (canvasOpacity = 1),
-        }}
-        style="opacity: {canvasOpacity}; transition: opacity 150ms linear;"
-      ></canvas>
+      <div class="image-wrapper">
+        <canvas
+          use:imageViewport={{
+            imageUrlStore: imageUrl,
+            zoomLevelStore: zoomLevel,
+            onImageDrawn: () => (canvasOpacity = 1),
+          }}
+          style="opacity: {canvasOpacity}; transition: opacity 150ms linear;"
+        ></canvas>
+        <GridOverlay />
+      </div>
     {/key}
   {:else}
     <div class="empty-canvas">
@@ -68,7 +72,12 @@
   .image-view-container:active {
     cursor: grabbing;
   }
-  canvas {
+  .image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  .image-wrapper canvas {
     width: 100%;
     height: 100%;
   }

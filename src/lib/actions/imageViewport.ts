@@ -7,6 +7,7 @@ import {
   isZoomModifierUpActive,
   isZoomModifierDownActive,
   rotation,
+  imageTransform,
 } from "$lib/stores";
 
 import type { ViewportOptions } from "$lib/types/viewport";
@@ -334,6 +335,22 @@ class ImageViewport {
       }
 
       this.ctx.restore();
+
+      const { width: rotatedWidth, height: rotatedHeight } = this.getRotatedImageDimensions();
+
+      imageTransform.set({
+        offsetX: this.offsetX,
+        offsetY: this.offsetY,
+        scale: this.displayScale,
+        rotation: this.currentRotation,
+        naturalWidth: w,
+        naturalHeight: h,
+        width: rotatedWidth,
+        height: rotatedHeight,
+        renderedWidth: rotatedWidth * this.displayScale,
+        renderedHeight: rotatedHeight * this.displayScale,
+        baseScale: this.baseScale,
+      });
     }
 
     this.updateEdgeIndicators();

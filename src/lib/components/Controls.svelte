@@ -245,6 +245,28 @@
     >
   </button>
 
+  <!-- Grid Overlay -->
+  <button
+    on:click={toggleGridOverlay}
+    on:mouseenter={(e) => tooltip.show($t["tooltip.gridOverlay"], e.currentTarget)}
+    on:mouseleave={tooltip.hide}
+    aria-label={$t["tooltip.gridOverlay"]}
+    style="--btn-size: {size}"
+    class:active={$activeActions.includes("toggleGridOverlay")}
+    disabled={!$imageUrl}
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="fit-content"
+      viewBox="0 -960 960 960"
+      width="fit-content"
+      fill="currentColor"
+      ><path
+        d="M320-160v-160H160v-80h160v-160H160v-80h160v-160h80v160h160v-160h80v160h160v80H640v160h160v80H640v160h-80v-160H400v160h-80Zm80-240h160v-160H400v160Z"
+      /></svg
+    >
+  </button>
+
   <!-- Fullscreen -->
   <button
     on:click={toggleFullscreen}
@@ -284,28 +306,6 @@
       fill="currentColor"
       ><path
         d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"
-      /></svg
-    >
-  </button>
-
-  <!-- Grid Overlay -->
-  <button
-    on:click={toggleGridOverlay}
-    on:mouseenter={(e) => tooltip.show($t["tooltip.gridOverlay"], e.currentTarget)}
-    on:mouseleave={tooltip.hide}
-    aria-label={$t["tooltip.gridOverlay"]}
-    style="--btn-size: {size}"
-    class:active={$activeActions.includes("toggleGridOverlay")}
-    disabled={!$imageUrl}
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      height="fit-content"
-      viewBox="0 -960 960 960"
-      width="fit-content"
-      fill="currentColor"
-      ><path
-        d="M160-160v-640h640v640H160Zm80-80h480v-480H240v480Zm160-160h160v-160H400v160Zm-160 160h160v-160H240v160Zm160-320h160v-160H400v160Zm160 160h160v-160H560v160Zm-160-320h160v-160H400v160Zm160 160h160v-160H560v160Z"
       /></svg
     >
   </button>
