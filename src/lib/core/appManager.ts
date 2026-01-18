@@ -2,14 +2,14 @@ import { listen } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/core";
 import { setLocale } from "$lib/utils/i18n";
 import { imageUrl, imagePath, appConfig, aiDetectionResult } from "$lib/stores";
-import { 
-  isInitialDialogVisible, 
+import {
+  isInitialDialogVisible,
   hasConfiguredInitialSettings,
-  isLinuxDesktopInstallDialogVisible 
+  isLinuxDesktopInstallDialogVisible,
 } from "$lib/stores/initialDialog";
 import type { AppConfig } from "$lib/types/app";
 import type { AiDetectionResult, ImageMetadata } from "$lib/types/image";
-import { updateImageStores } from "./commands";
+import { updateImageStores } from "$lib/core/commands";
 
 export class AppManager {
   private unlistenImageSource: (() => void) | undefined;
@@ -115,12 +115,11 @@ export class AppManager {
     }, timeout);
   }
 
-
-/**
- * Initializes the app by registering event listeners and showing the main window.
- * This function returns a promise that resolves to a function that can be used to unregister the event listeners.
- * @returns {Promise<() => void>} A promise that resolves to a function that can be used to unregister the event listeners.
- */
+  /**
+   * Initializes the app by registering event listeners and showing the main window.
+   * This function returns a promise that resolves to a function that can be used to unregister the event listeners.
+   * @returns {Promise<() => void>} A promise that resolves to a function that can be used to unregister the event listeners.
+   */
   public async initializeApp(): Promise<() => void> {
     const unlisteners = await this.registerEventListeners();
     this.unlistenImageSource = unlisteners.unlistenImageSource;
@@ -139,9 +138,11 @@ export class AppManager {
       });
 
     try {
-      const isAppImage = await invoke("is_running_as_appimage_command") as boolean;
-      const linuxDesktopChoice = await invoke("get_linux_desktop_install_choice_command") as string;
-      
+      const isAppImage = (await invoke("is_running_as_appimage_command")) as boolean;
+      const linuxDesktopChoice = (await invoke(
+        "get_linux_desktop_install_choice_command"
+      )) as string;
+
       if (isAppImage && linuxDesktopChoice === "not_asked") {
         isLinuxDesktopInstallDialogVisible.set(true);
       }

@@ -1,4 +1,4 @@
-import themes from "./themes.json";
+import themes from "$lib/theme/themes.json";
 import { appConfig } from "$lib/stores";
 
 /**

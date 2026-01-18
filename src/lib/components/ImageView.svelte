@@ -1,7 +1,7 @@
 <script lang="ts">
   import { imageUrl, zoomLevel } from "$lib/stores";
   import { imageViewport } from "$lib/actions/imageViewport";
-  import EdgeIndicators from "./EdgeIndicators.svelte";
+  import EdgeIndicators from "$lib/components/EdgeIndicators.svelte";
   import { t } from "$lib/utils/i18n";
   import { openFile } from "$lib/core/commands";
   import { fade } from "svelte/transition";

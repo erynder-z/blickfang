@@ -21,7 +21,7 @@ import {
   rotateCounterclockwise,
   rotateClockwise,
   convertToAsciiArt,
-} from "./commands";
+} from "$lib/core/commands";
 
 export class KeyboardInputManager {
   // Actions that fire only once (triggered by a single key press)

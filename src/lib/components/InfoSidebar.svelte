@@ -1,9 +1,9 @@
 <script lang="ts">
   import { isInfoSidebarVisible, imageFormat } from "$lib/stores";
-  import ExifDisplay from "./ExifDisplay.svelte";
-  import AiDetection from "./AiDetection.svelte";
-  import ImageDetails from "./ImageDetails.svelte";
-  import InfoSidebarPlaceholder from "./InfoSidebarPlaceholder.svelte";
+  import ExifDisplay from "$lib/components/ExifDisplay.svelte";
+  import AiDetection from "$lib/components/AiDetection.svelte";
+  import ImageDetails from "$lib/components/ImageDetails.svelte";
+  import InfoSidebarPlaceholder from "$lib/components/InfoSidebarPlaceholder.svelte";
 </script>
 
 <div class="info-sidebar-overlay" class:visible={$isInfoSidebarVisible}>
