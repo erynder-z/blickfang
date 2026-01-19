@@ -21,6 +21,7 @@ import {
   rotateCounterclockwise,
   rotateClockwise,
   convertToAsciiArt,
+  toggleGridOverlay,
 } from "$lib/core/commands";
 
 export class KeyboardInputManager {
@@ -36,6 +37,7 @@ export class KeyboardInputManager {
     toggleFullscreen,
     saveImageAs: toggleSaveAsMenu,
     convertToAsciiArt,
+    toggleGridOverlay,
   };
 
   // Actions that are continuous (toggled by holding a key)
@@ -54,6 +56,7 @@ export class KeyboardInputManager {
     "rotateCounterclockwise",
     "saveImageAs",
     "convertToAsciiArt",
+    "toggleGridOverlay",
   ]);
 
   private activeContinuousKey: string | null = null;

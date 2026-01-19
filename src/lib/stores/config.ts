@@ -27,6 +27,7 @@ export const appConfig = writable<AppConfig>({
     rotateClockwise: { keys: [], label: "" },
     rotateCounterclockwise: { keys: [], label: "" },
     convertToAsciiArt: { keys: [], label: "" },
+    toggleGridOverlay: { keys: [], label: "" },
   },
   customShortcuts: {
     openFile: { keys: [], label: "" },
@@ -43,5 +44,6 @@ export const appConfig = writable<AppConfig>({
     rotateClockwise: { keys: [], label: "" },
     rotateCounterclockwise: { keys: [], label: "" },
     convertToAsciiArt: { keys: [], label: "" },
+    toggleGridOverlay: { keys: [], label: "" },
   },
 });

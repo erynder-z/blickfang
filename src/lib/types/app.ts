@@ -18,6 +18,7 @@ export type Shortcuts = {
   zoomModifierDown: Shortcut;
   toggleFullscreen: Shortcut;
   convertToAsciiArt: Shortcut;
+  toggleGridOverlay: Shortcut;
 };
 
 export type AppConfig = {

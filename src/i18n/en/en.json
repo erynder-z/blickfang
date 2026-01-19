@@ -60,6 +60,7 @@
   "hotkeys.zoomModifierUp": "Increase zoom speed modifier (hold)",
   "hotkeys.zoomModifierDown": "Decrease zoom speed modifier (hold)",
   "hotkeys.convertToAsciiArt": "Convert image to ASCII art",
+  "hotkeys.toggleGridOverlay": "Toggle grid",
   "hotkeys.remap.title": "Remap Hotkeys",
   "hotkeys.remap.press_key_for_action": "Press a key for action:",
   "hotkeys.remap.finished": "All keys have been remapped.",
