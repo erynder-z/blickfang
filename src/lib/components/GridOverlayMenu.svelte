@@ -9,6 +9,7 @@
   const gridOverlayOptions = ["golden-ratio", "rule-of-thirds", "grid"];
 
   let buttons: HTMLButtonElement[] = [];
+  let color: string = $appConfig.gridColor || "#000000";
 
   $: if ($isGridOverlayMenuVisible) {
     tick().then(() => {
@@ -38,6 +39,20 @@
    * @param {string} mode - The grid overlay mode to save (e.g., "hide", "golden-ratio", "rule-of-thirds", "grid").
    */
   const handleButtonClick = (mode: string) => saveGridOverlayMode(mode);
+
+  /**
+   * Saves the grid color to the application configuration.
+   *
+   * @returns {Promise<void>} - A promise that resolves when the grid color is saved.
+   */
+  const saveGridColor = async (): Promise<void> => {
+    try {
+      await invoke("update_grid_color_command", { color });
+      appConfig.update((config) => ({ ...config, gridColor: color }));
+    } catch (error) {
+      console.error("Failed to save grid color:", error);
+    }
+  };
 
   /**
    * Closes the grid overlay menu.
@@ -98,6 +113,20 @@
             {$t[getLabel(mode)]}
           </button>
         {/each}
+      </div>
+
+      <h2>{$t["options.gridColor.heading"]}</h2>
+      <div class="color-picker-section">
+        <div class="color-picker-container">
+          <input
+            type="color"
+            id="grid-color"
+            bind:value={color}
+            on:change={saveGridColor}
+            class="color-picker"
+          />
+          <span class="color-value">{color}</span>
+        </div>
       </div>
 
       <button on:click={handleClose} class="close-button">
@@ -161,6 +190,15 @@
     text-wrap: balance;
   }
 
+  h2 {
+    margin: 2rem 0 1rem 0;
+    color: var(--color-text-primary);
+    line-height: 1.2;
+    font-size: 1.25rem;
+    text-wrap: balance;
+    text-align: center;
+  }
+
   .option-buttons {
     display: flex;
     flex-direction: column;
@@ -214,5 +252,41 @@
     min-width: 0;
     align-self: center;
     color: var(--color-close-button);
+  }
+
+  .color-picker-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 80%;
+    margin-top: 1rem;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+  }
+
+  .color-picker-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .color-picker {
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: 0.15rem solid var(--color-outline);
+    border-radius: 0.25rem;
+    background-color: transparent;
+    cursor: pointer;
+  }
+
+  .color-value {
+    font-size: 0.9rem;
+    font-family: monospace;
+    color: var(--color-text-secondary);
+    padding: 0.25rem 0.5rem;
+    background-color: var(--color-button);
+    border: 0.1rem solid var(--color-outline);
+    border-radius: 0.2rem;
   }
 </style>

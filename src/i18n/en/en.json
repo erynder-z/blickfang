@@ -18,6 +18,7 @@
   "options.asciiChars.heading": "ASCII Character Set",
   "options.asciiBackgroundColor.heading": "ASCII Background Color",
   "options.asciiAutoBackground.label": "Auto background color",
+  "options.gridColor.heading": "Grid Color",
   "asciiChars.blocks": "Blocks (█▓▒░ )",
   "asciiChars.stripes": "Stripes (█▉▊▋▌▍▎▏)",
   "asciiChars.minimal": "Minimal (@%#*+=-:. )",

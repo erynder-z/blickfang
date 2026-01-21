@@ -342,3 +342,16 @@ pub fn update_grid_overlay_mode_command(
 ) -> Result<(), String> {
     update_config(&app, |config| config.grid_overlay_mode = grid_overlay_mode)
 }
+
+/// Updates the color used for the grid overlay.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+/// * `color` - The new color as a hex string (e.g., "#000000").
+///
+/// # Returns
+/// `Result<(), String>` - `Ok(())` if the grid color is successfully updated, an error string otherwise.
+#[tauri::command]
+pub fn update_grid_color_command(app: AppHandle, color: String) -> Result<(), String> {
+    update_config(&app, |config| config.grid_color = color)
+}

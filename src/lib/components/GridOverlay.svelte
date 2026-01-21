@@ -1,10 +1,12 @@
 <script lang="ts">
   import { appConfig, isGridOverlayVisible, imageTransform } from "$lib/stores";
+  import { hexToRgba } from "$lib/utils/hexToRgba";
   import { onMount, onDestroy } from "svelte";
 
   let canvas: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D;
   let resizeObserver: ResizeObserver;
+  let color: string = $appConfig.gridColor || "#000000";
 
   onMount(() => {
     if (canvas) {
@@ -57,7 +59,7 @@
     const imageLeft = offsetX - renderedWidth / 2;
     const imageTop = offsetY - renderedHeight / 2;
 
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+    ctx.strokeStyle = hexToRgba($appConfig.gridColor || "#000000", 0.5);
     ctx.lineWidth = 1;
     ctx.beginPath();
 
