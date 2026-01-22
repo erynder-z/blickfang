@@ -355,3 +355,16 @@ pub fn update_grid_overlay_mode_command(
 pub fn update_grid_color_command(app: AppHandle, color: String) -> Result<(), String> {
     update_config(&app, |config| config.grid_color = color)
 }
+
+/// Updates the line strength used for the grid overlay.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+/// * `strength` - The new line strength (1-10 pixels).
+///
+/// # Returns
+/// `Result<(), String>` - `Ok(())` if the grid line strength is successfully updated, an error string otherwise.
+#[tauri::command]
+pub fn update_grid_line_strength_command(app: AppHandle, strength: u32) -> Result<(), String> {
+    update_config(&app, |config| config.grid_line_strength = strength)
+}

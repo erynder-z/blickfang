@@ -58,9 +58,11 @@
     // Draw grid
     const imageLeft = offsetX - renderedWidth / 2;
     const imageTop = offsetY - renderedHeight / 2;
+    const defaultColor = "#000000";
+    const defaultStrength = 2;
 
-    ctx.strokeStyle = hexToRgba($appConfig.gridColor || "#000000", 0.5);
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = hexToRgba($appConfig.gridColor || defaultColor, 0.5);
+    ctx.lineWidth = $appConfig.gridLineStrength || defaultStrength;
     ctx.beginPath();
 
     switch ($appConfig.gridOverlayMode) {

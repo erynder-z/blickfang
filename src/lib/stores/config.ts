@@ -12,6 +12,7 @@ export const appConfig = writable<AppConfig>({
   asciiChars: "minimal",
   asciiAutoBackground: false,
   gridOverlayMode: "rule-of-thirds",
+  gridLineStrength: 2,
   shortcuts: {
     openFile: { keys: [], label: "" },
     saveImageAs: { keys: [], label: "" },

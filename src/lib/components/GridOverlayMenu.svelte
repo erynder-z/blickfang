@@ -7,9 +7,12 @@
   import { focusTrap } from "$lib/actions/focusTrap";
 
   const gridOverlayOptions = ["golden-ratio", "rule-of-thirds", "grid"];
+  const defaultColor = "#000000";
+  const defaultStrength = 2;
 
   let buttons: HTMLButtonElement[] = [];
-  let color: string = $appConfig.gridColor || "#000000";
+  let color: string = $appConfig.gridColor || defaultColor;
+  let strength: number = $appConfig.gridLineStrength || defaultStrength;
 
   $: if ($isGridOverlayMenuVisible) {
     tick().then(() => {
@@ -51,6 +54,20 @@
       appConfig.update((config) => ({ ...config, gridColor: color }));
     } catch (error) {
       console.error("Failed to save grid color:", error);
+    }
+  };
+
+  /**
+   * Saves the grid line strength to the application configuration.
+   *
+   * @returns {Promise<void>} - A promise that resolves when the grid line strength is saved.
+   */
+  const saveGridLineStrength = async (): Promise<void> => {
+    try {
+      await invoke("update_grid_line_strength_command", { strength });
+      appConfig.update((config) => ({ ...config, gridLinestrength: strength }));
+    } catch (error) {
+      console.error("Failed to save grid line strength:", error);
     }
   };
 
@@ -126,6 +143,22 @@
             class="color-picker"
           />
           <span class="color-value">{color}</span>
+        </div>
+      </div>
+
+      <h2>{$t["options.gridLineStrength.heading"]}</h2>
+      <div class="strength-control-section">
+        <div class="strength-control-container">
+          <input
+            type="range"
+            id="grid-strength"
+            min="1"
+            max="10"
+            bind:value={strength}
+            on:input={saveGridLineStrength}
+            class="strength-slider"
+          />
+          <span class="strength-value">{strength}px</span>
         </div>
       </div>
 
@@ -288,5 +321,55 @@
     background-color: var(--color-button);
     border: 0.1rem solid var(--color-outline);
     border-radius: 0.2rem;
+  }
+
+  .strength-control-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 80%;
+    margin-top: 1rem;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+  }
+
+  .strength-control-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .strength-slider {
+    flex: 1;
+    height: 0.5rem;
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--color-button);
+    border: 0.1rem solid var(--color-outline);
+    border-radius: 0.25rem;
+    outline: none;
+  }
+
+  .strength-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    background: var(--color-accent);
+    cursor: pointer;
+    border: 0.1rem solid var(--color-outline);
+  }
+
+  .strength-value {
+    font-size: 0.9rem;
+    font-family: monospace;
+    color: var(--color-text-secondary);
+    padding: 0.25rem 0.5rem;
+    background-color: var(--color-button);
+    border: 0.1rem solid var(--color-outline);
+    border-radius: 0.2rem;
+    min-width: 3rem;
+    text-align: center;
   }
 </style>

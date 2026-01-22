@@ -67,6 +67,8 @@ pub struct Config {
     pub grid_overlay_mode: String,
     #[serde(default = "default_grid_color")]
     pub grid_color: String,
+    #[serde(default = "default_grid_line_strength")]
+    pub grid_line_strength: u32,
 }
 
 fn default_linux_desktop_install_choice() -> String {
@@ -91,6 +93,10 @@ fn default_grid_overlay_mode() -> String {
 
 fn default_grid_color() -> String {
     "#000000".into()
+}
+
+fn default_grid_line_strength() -> u32 {
+    2
 }
 
 fn default_has_configured_initial_settings() -> bool {
@@ -203,6 +209,7 @@ impl Default for Config {
             ascii_auto_background: default_ascii_auto_background(),
             grid_overlay_mode: default_grid_overlay_mode(),
             grid_color: default_grid_color(),
+            grid_line_strength: default_grid_line_strength(),
         }
     }
 }

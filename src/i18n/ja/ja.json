@@ -20,6 +20,7 @@
   "options.asciiBackgroundColor.heading": "ASCII背景色",
   "options.asciiAutoBackground.label": "自動背景色",
   "options.gridColor.heading": "グリッド色",
+  "options.gridLineStrength.heading": "グリッド線の太さ",
   "asciiChars.blocks": "ブロック (█▓▒░ )",
   "asciiChars.stripes": "ストライプ (█▉▊▋▌▍▎▏)",
   "asciiChars.minimal": "ミニマル (@%#*+=-:. )",

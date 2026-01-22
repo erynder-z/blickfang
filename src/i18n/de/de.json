@@ -19,6 +19,7 @@
   "options.asciiBackgroundColor.heading": "ASCII-Hintergrundfarbe",
   "options.asciiAutoBackground.label": "Automatische Hintergrundfarbe",
   "options.gridColor.heading": "Grid Farbe",
+  "options.gridLineStrength.heading": "Grid Linienstärke",
   "asciiChars.blocks": "Blöcke (█▓▒░ )",
   "asciiChars.stripes": "Streifen (█▉▊▋▌▍▎▏)",
   "asciiChars.minimal": "Minimal (@%#*+=-:. )",
