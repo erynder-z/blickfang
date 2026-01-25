@@ -342,6 +342,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
     gap: 1rem;
     padding: 1rem;
     background-color: transparent;
