@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { imageUrl, zoomLevel, isGridOverlayVisible } from "$lib/stores";
+  import { imageUrl, zoomLevel, isZenModeActive } from "$lib/stores";
   import { imageViewport } from "$lib/actions/imageViewport";
   import EdgeIndicators from "$lib/components/EdgeIndicators.svelte";
   import GridOverlay from "$lib/components/GridOverlay.svelte";
@@ -20,7 +20,7 @@
   }
 </script>
 
-<div class="image-view-container">
+<div class="image-view-container" style={$isZenModeActive ? "background-color: black;" : ""}>
   <EdgeIndicators />
   {#if $imageUrl}
     {#key $imageUrl}
@@ -69,14 +69,17 @@
     overflow: hidden;
     background-color: var(--color-background);
   }
+
   .image-view-container:active {
     cursor: grabbing;
   }
+
   .image-wrapper {
     position: relative;
     width: 100%;
     height: 100%;
   }
+
   .image-wrapper canvas {
     width: 100%;
     height: 100%;

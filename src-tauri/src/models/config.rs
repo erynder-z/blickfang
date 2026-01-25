@@ -24,6 +24,7 @@ pub struct Shortcuts {
     pub zoom_modifier_down: Shortcut,
     pub convert_to_ascii_art: Shortcut,
     pub toggle_grid_overlay: Shortcut,
+    pub toggle_zen_mode: Shortcut,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -183,6 +184,10 @@ pub fn default_shortcuts() -> Shortcuts {
         toggle_grid_overlay: Shortcut {
             keys: vec!["g".into()],
             label: "g".into(),
+        },
+        toggle_zen_mode: Shortcut {
+            keys: vec!["z".into()],
+            label: "z".into(),
         },
     }
 }

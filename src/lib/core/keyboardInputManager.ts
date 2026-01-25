@@ -22,6 +22,7 @@ import {
   rotateClockwise,
   convertToAsciiArt,
   toggleGridOverlay,
+  toggleZenMode,
 } from "$lib/core/commands";
 
 export class KeyboardInputManager {
@@ -38,6 +39,7 @@ export class KeyboardInputManager {
     saveImageAs: toggleSaveAsMenu,
     convertToAsciiArt,
     toggleGridOverlay,
+    toggleZenMode,
   };
 
   // Actions that are continuous (toggled by holding a key)
@@ -57,6 +59,7 @@ export class KeyboardInputManager {
     "saveImageAs",
     "convertToAsciiArt",
     "toggleGridOverlay",
+    "toggleZenMode",
   ]);
 
   private activeContinuousKey: string | null = null;
@@ -130,7 +133,16 @@ export class KeyboardInputManager {
       // Single-shot actions
       const action = this.singleShotActions[actionName];
       if (action) {
-        action();
+        try {
+          const result = action();
+          const promiseResult = result as Promise<void> | void;
+
+          if (promiseResult && typeof promiseResult.then === "function") {
+            promiseResult.catch(console.error);
+          }
+        } catch (error) {
+          console.error("Error executing action:", error);
+        }
         event.preventDefault();
       }
       return;

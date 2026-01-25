@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { appConfig, isGridOverlayVisible, imageTransform } from "$lib/stores";
+  import { appConfig, isGridOverlayVisible, imageTransform, isZenModeActive } from "$lib/stores";
   import { hexToRgba } from "$lib/utils/hexToRgba";
   import { onMount, onDestroy } from "svelte";
 
@@ -136,7 +136,7 @@
 <canvas
   bind:this={canvas}
   class="grid-overlay"
-  style:display={$isGridOverlayVisible ? "block" : "none"}
+  style:display={$isGridOverlayVisible && !$isZenModeActive ? "block" : "none"}
 ></canvas>
 
 <style>

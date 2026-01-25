@@ -63,6 +63,7 @@
   "hotkeys.zoomModifierDown": "Zoomgeschwindigkeit verringern (Taste halten)",
   "hotkeys.convertToAsciiArt": "Bild in ASCII-Art umwandeln",
   "hotkeys.toggleGridOverlay": "Grid anzeigen/verbergen",
+  "hotkeys.toggleZenMode": "Zenmodus verwenden/beenden",
   "hotkeys.remap.title": "Hotkeys neu zuweisen",
   "hotkeys.remap.press_key_for_action": "Taste drücken für Aktion:",
   "hotkeys.remap.finished": "Alle Tasten wurden neu zugewiesen.",

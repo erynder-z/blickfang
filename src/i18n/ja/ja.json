@@ -64,6 +64,7 @@
   "hotkeys.zoomModifierDown": "ズームスピードを減らす (押しぱなし)",
   "hotkeys.convertToAsciiArt": "画像をASCIIアートに変換",
   "hotkeys.toggleGridOverlay": "グリドを表示/非表示",
+  "hotkeys.toggleZenMode": "ゼンモードを切り替え",
   "hotkeys.remap.title": "ショートカットキーの再割り当て",
   "hotkeys.remap.press_key_for_action": "下記アクションキーを押して下さい：",
   "hotkeys.remap.finished": "すべてのキーが再割り当てされました。",

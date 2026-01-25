@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { imagePath, appConfig } from "$lib/stores";
+  import { imagePath, appConfig, isZenModeActive } from "$lib/stores";
   import { quintOut } from "svelte/easing";
   import { fade } from "svelte/transition";
 
@@ -11,7 +11,7 @@
   $: {
     const timeoutInMilliseconds = 3000;
 
-    if ($appConfig.imageNameDisplayMode === "hide") {
+    if ($appConfig.imageNameDisplayMode === "hide" || $isZenModeActive) {
       isVisible = false;
     } else if ($appConfig.imageNameDisplayMode === "show") {
       isVisible = true;

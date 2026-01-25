@@ -19,6 +19,7 @@ export type Shortcuts = {
   toggleFullscreen: Shortcut;
   convertToAsciiArt: Shortcut;
   toggleGridOverlay: Shortcut;
+  toggleZenMode: Shortcut;
 };
 
 export type AppConfig = {

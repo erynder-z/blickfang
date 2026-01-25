@@ -28,6 +28,7 @@ import {
   rotation,
   isConvertedToAscii,
   isGridOverlayVisible,
+  isZenModeActive,
 } from "$lib/stores";
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -315,6 +316,7 @@ export const triggerWheelZoom = (direction: "in" | "out") => {
  * Toggles the fullscreen mode of the application window.
  * If the application window is not in fullscreen mode, it will be set to fullscreen mode, and vice versa.
  * Starts feedback for the "toggleFullscreen" action, and then updates the isFullscreenActive store with the new state.
+ * Also exits zen mode if fullscreen is toggled manually.
  * @returns {Promise<void>}
  */
 export const toggleFullscreen = async (): Promise<void> => {
@@ -323,6 +325,8 @@ export const toggleFullscreen = async (): Promise<void> => {
   const fullscreen = !get(isFullscreenActive);
 
   if (fullscreen) closeAllOpenMenus();
+
+  if (get(isZenModeActive)) isZenModeActive.set(false);
 
   isRefittingOnResize.set(true);
   await getCurrentWindow().setFullscreen(fullscreen);
@@ -398,6 +402,42 @@ export const toggleGridOverlay = () => {
   isGridOverlayVisible.update((isVisible) => !isVisible);
 };
 
+/**
+ * Toggles the zen mode of the application window.
+ * If the application window is not in zen mode, it will be set to zen mode, and vice versa.
+ * If the application window is not in fullscreen mode and zen mode is being toggled on, it will be set to fullscreen mode.
+ * If the application window is in fullscreen mode and zen mode is being toggled off, it will be set to non-fullscreen mode.
+ * Starts feedback for the "toggleZenMode" action, and then updates the isZenModeActive store with the new state.
+ * @returns {Promise<void>}
+ */
+export const toggleZenMode = async () => {
+  const hasImage = !!get(imageUrl);
+  if (!hasImage) return;
+
+  singleShotFeedback("toggleZenMode");
+
+  const currentZenMode = get(isZenModeActive);
+  const newZenMode = !currentZenMode;
+
+  if (newZenMode && !get(isFullscreenActive)) {
+    isRefittingOnResize.set(true);
+    await getCurrentWindow().setFullscreen(true);
+    setTimeout(() => {
+      isRefittingOnResize.set(false);
+    }, 100);
+    isFullscreenActive.set(true);
+  } else if (!newZenMode && get(isFullscreenActive) && currentZenMode) {
+    isRefittingOnResize.set(true);
+    await getCurrentWindow().setFullscreen(false);
+    setTimeout(() => {
+      isRefittingOnResize.set(false);
+    }, 100);
+    isFullscreenActive.set(false);
+  }
+
+  isZenModeActive.set(newZenMode);
+};
+
 // --- Utility Functions ---
 
 /**
@@ -415,4 +455,5 @@ const closeAllOpenMenus = () => {
   isImageNameDisplayMenuVisible.set(false);
   isEdgeIndicatorMenuVisible.set(false);
   isAppWindowMenuVisible.set(false);
+  isZenModeActive.set(false);
 };

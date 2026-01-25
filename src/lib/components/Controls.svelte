@@ -9,6 +9,7 @@
     isZoomModifierDownActive,
     tooltip,
     isGridOverlayVisible,
+    isZenModeActive,
   } from "$lib/stores";
   import {
     nextImage,
@@ -23,6 +24,7 @@
     rotateClockwise,
     convertToAsciiArt,
     toggleGridOverlay,
+    toggleZenMode,
   } from "$lib/core/commands";
   import { t } from "$lib/utils/i18n";
 
@@ -43,7 +45,7 @@
 
 <div
   class="controls-container"
-  style:display={$appConfig.toolbarButtonSize === "hide" ? "none" : "flex"}
+  style:display={$appConfig.toolbarButtonSize === "hide" || $isZenModeActive ? "none" : "flex"}
 >
   <!-- Open File -->
   <button
@@ -263,6 +265,28 @@
       fill="currentColor"
       ><path
         d="M320-160v-160H160v-80h160v-160H160v-80h160v-160h80v160h160v-160h80v160h160v80H640v160h160v80H640v160h-80v-160H400v160h-80Zm80-240h160v-160H400v160Z"
+      /></svg
+    >
+  </button>
+
+  <!-- Zen Mode -->
+  <button
+    on:click={toggleZenMode}
+    on:mouseenter={(e) => tooltip.show($t["tooltip.toggleZenMode"], e.currentTarget)}
+    on:mouseleave={tooltip.hide}
+    aria-label={$t["tooltip.toggleZenMode"]}
+    style="--btn-size: {size}"
+    class:active={$activeActions.includes("toggleZenMode")}
+    disabled={!$imageUrl}
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="fit-content"
+      viewBox="0 -960 960 960"
+      width="fit-content"
+      fill="currentColor"
+      ><path
+        d="m644-448-56-58 122-94-230-178-94 72-56-58 150-116 360 280-196 152Zm115 114-58-58 73-56 66 50-81 64Zm33 258L632-236 480-118 120-398l66-50 294 228 94-73-57-56-37 29-360-280 83-65L55-811l57-57 736 736-56 56ZM487-606Z"
       /></svg
     >
   </button>

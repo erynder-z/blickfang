@@ -1,6 +1,6 @@
 <script lang="ts">
   import { toggleOptions } from "$lib/core/commands";
-  import { tooltip } from "$lib/stores";
+  import { tooltip, isZenModeActive } from "$lib/stores";
   import { t } from "$lib/utils/i18n";
 </script>
 
@@ -9,6 +9,7 @@
   on:mouseenter={(e) => tooltip.show($t["tooltip.toggleOptions"], e.currentTarget)}
   on:mouseleave={tooltip.hide}
   aria-label={$t["tooltip.toggleOptions"]}
+  style:display={$isZenModeActive ? "none" : "flex"}
 >
   <svg
     xmlns="http://www.w3.org/2000/svg"
