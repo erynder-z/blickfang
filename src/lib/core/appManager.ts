@@ -6,7 +6,7 @@ import {
   isInitialDialogVisible,
   hasConfiguredInitialSettings,
   isLinuxDesktopInstallDialogVisible,
-} from "$lib/stores/initialDialog";
+} from "$lib/stores/index";
 import type { AppConfig } from "$lib/types/app";
 import type { AiDetectionResult, ImageMetadata } from "$lib/types/image";
 import { updateImageStores } from "$lib/core/commands";

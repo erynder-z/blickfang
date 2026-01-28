@@ -3,7 +3,7 @@
   import { t } from "$lib/utils/i18n";
   import { fly, fade } from "svelte/transition";
   import { focusTrap } from "$lib/actions/focusTrap";
-  import { isInitialConfigSettingsDialogVisible } from "$lib/stores/initialDialog";
+  import { isInitialConfigSettingsDialogVisible } from "$lib/stores/index";
 
   let buttons: HTMLButtonElement[] = [];
   let isSubMenuOpen = false;

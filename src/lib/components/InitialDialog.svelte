@@ -7,7 +7,7 @@
     hasConfiguredInitialSettings,
     isInitialConfigSettingsDialogVisible,
     isInitialDialogVisible,
-  } from "$lib/stores/initialDialog";
+  } from "$lib/stores/index";
 
   let buttons: HTMLButtonElement[] = [];
 

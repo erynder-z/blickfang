@@ -3,7 +3,7 @@
   import { invoke } from "@tauri-apps/api/core";
   import { fly, fade } from "svelte/transition";
   import { focusTrap } from "$lib/actions/focusTrap";
-  import { isLinuxDesktopInstallDialogVisible } from "$lib/stores/initialDialog";
+  import { isLinuxDesktopInstallDialogVisible } from "$lib/stores/index";
 
   let buttons: HTMLButtonElement[] = [];
 
