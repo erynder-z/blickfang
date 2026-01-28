@@ -6,7 +6,7 @@
   import ThemeMenu from "$lib/components/ThemeMenu.svelte";
   import InfoSidebar from "$lib/components/InfoSidebar.svelte";
   import OptionsDisplaySidebar from "$lib/components/OptionsMenu.svelte";
-  import { initThemeManager } from "$lib/theme/themeManager";
+  import { themeManager } from "$lib/theme/themeManager";
   import { keyboardInputManager } from "$lib/core/keyboardInputManager";
   import HotkeysMenu from "$lib/components/HotkeysMenu.svelte";
   import { appManager } from "$lib/core/appManager";
@@ -23,7 +23,7 @@
   import AsciiCharsMenu from "$lib/components/AsciiCharsMenu.svelte";
   import GridOverlayMenu from "$lib/components/GridOverlayMenu.svelte";
 
-  initThemeManager();
+  themeManager.init();
 
   onMount(() => {
     let unlistenAppManager: () => void = () => {};
