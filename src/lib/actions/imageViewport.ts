@@ -301,60 +301,129 @@ class ImageViewport {
    */
   private draw = () => {
     this.animationFrameId = requestAnimationFrame(this.draw);
-
-    const isInteracting =
-      this.isDragging || this.isAnimating || Date.now() - this.lastWheelTime < 100;
-    if (isInteracting) this.debounceIndicatorVisibility();
-
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-    if (this.image && this.image.complete) {
-      this.ctx.save();
-      const w = this.image.naturalWidth;
-      const h = this.image.naturalHeight;
-
-      this.ctx.imageSmoothingEnabled = true;
-      this.ctx.imageSmoothingQuality = "high";
-
-      this.ctx.translate(this.offsetX, this.offsetY);
-
-      if (this.currentRotation > 0) {
-        const rad = (this.currentRotation * Math.PI) / 180;
-        this.ctx.rotate(rad);
-      }
-
-      this.ctx.scale(this.displayScale, this.displayScale);
-
-      const isZoomedOut = this.displayScale < 0.75;
-
-      if (isZoomedOut && !isInteracting) {
-        this.renderHighQuality(this.image, w, h);
-      } else {
-        if (isInteracting) this.canvasCache = null;
-        this.renderPreview(this.image, w, h);
-      }
-
-      this.ctx.restore();
-
-      const { width: rotatedWidth, height: rotatedHeight } = this.getRotatedImageDimensions();
-
-      imageTransform.set({
-        offsetX: this.offsetX,
-        offsetY: this.offsetY,
-        scale: this.displayScale,
-        rotation: this.currentRotation,
-        naturalWidth: w,
-        naturalHeight: h,
-        width: rotatedWidth,
-        height: rotatedHeight,
-        renderedWidth: rotatedWidth * this.displayScale,
-        renderedHeight: rotatedHeight * this.displayScale,
-        baseScale: this.baseScale,
-      });
-    }
-
-    this.updateEdgeIndicators();
+    this.handleInteractionState();
+    this.renderFrame();
   };
+
+  /**
+   * Handles interaction state and edge indicator visibility.
+   */
+  private handleInteractionState() {
+    const isInteracting = this.isInteracting();
+    if (isInteracting) {
+      this.debounceIndicatorVisibility();
+    }
+  }
+
+  /**
+   * Determines if the viewport is currently in an interacting state.
+   * @returns true if user is interacting with the viewport
+   */
+  private isInteracting(): boolean {
+    return this.isDragging || this.isAnimating || Date.now() - this.lastWheelTime < 100;
+  }
+
+  /**
+   * Renders a single frame to the canvas.
+   */
+  private renderFrame() {
+    this.clearCanvas();
+    
+    if (!this.shouldRenderImage()) {
+      this.updateEdgeIndicators();
+      return;
+    }
+    
+    this.setupCanvasContext();
+    this.applyTransformations();
+    this.renderImage();
+    this.ctx.restore();
+    
+    this.updateImageTransformState();
+    this.updateEdgeIndicators();
+  }
+
+
+  /**
+   * Clears the entire canvas by filling it with transparent black.
+   * This is necessary to prevent previous frame's image from bleeding into the current frame.
+   */
+  private clearCanvas() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  /**
+   * Checks if the image is ready to be rendered.
+   * @returns true if image exists and is fully loaded
+   */
+  private shouldRenderImage(): boolean {
+    return !!this.image && this.image.complete;
+  }
+
+  /**
+   * Sets up the canvas context with proper image smoothing settings.
+   */
+  private setupCanvasContext() {
+    this.ctx.save();
+    this.ctx.imageSmoothingEnabled = true;
+    this.ctx.imageSmoothingQuality = "high";
+  }
+
+  /**
+   * Applies all transformations (translation, rotation, scaling) to the canvas context.
+   */
+  private applyTransformations() {
+    this.ctx.translate(this.offsetX, this.offsetY);
+    
+    if (this.currentRotation > 0) {
+      const rad = (this.currentRotation * Math.PI) / 180;
+      this.ctx.rotate(rad);
+    }
+    
+    this.ctx.scale(this.displayScale, this.displayScale);
+  }
+
+  /**
+   * Renders the image using the appropriate rendering method based on zoom level and interaction state.
+   */
+  private renderImage() {
+    const w = this.image!.naturalWidth;
+    const h = this.image!.naturalHeight;
+    const isZoomedOut = this.displayScale < 0.75;
+    const isInteracting = this.isInteracting();
+    
+    if (isZoomedOut && !isInteracting) {
+      this.renderHighQuality(this.image!, w, h);
+    } else {
+      if (isInteracting) {
+        this.canvasCache = null;
+      }
+      this.renderPreview(this.image!, w, h);
+    }
+  }
+
+  /**
+   * Updates the image transform state store with current transformation data.
+   */
+  private updateImageTransformState() {
+    const w = this.image!.naturalWidth;
+    const h = this.image!.naturalHeight;
+    const { width: rotatedWidth, height: rotatedHeight } = this.getRotatedImageDimensions();
+
+    imageTransform.set({
+      offsetX: this.offsetX,
+      offsetY: this.offsetY,
+      scale: this.displayScale,
+      rotation: this.currentRotation,
+      naturalWidth: w,
+      naturalHeight: h,
+      width: rotatedWidth,
+      height: rotatedHeight,
+      renderedWidth: rotatedWidth * this.displayScale,
+      renderedHeight: rotatedHeight * this.displayScale,
+      baseScale: this.baseScale,
+    });
+  }
 
   /**
    * Updates the visibility of the edge indicators based on whether the image is overflowing the canvas.
