@@ -29,9 +29,11 @@ import {
   isConvertedToAscii,
   isGridOverlayVisible,
   isZenModeActive,
+  appConfig,
 } from "$lib/stores";
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { showNotification } from "$lib/utils/toastNotifications";
 
 /**
  * Updates the image stores with the new metadata.
@@ -403,14 +405,35 @@ export const toggleGridOverlay = () => {
 };
 
 /**
- * Toggles the zen mode of the application window.
- * If the application window is not in zen mode, it will be set to zen mode, and vice versa.
- * If the application window is not in fullscreen mode and zen mode is being toggled on, it will be set to fullscreen mode.
- * If the application window is in fullscreen mode and zen mode is being toggled off, it will be set to non-fullscreen mode.
- * Starts feedback for the "toggleZenMode" action, and then updates the isZenModeActive store with the new state.
+ * Handles toggling the fullscreen mode of the application window.
+ * Sets the isRefittingOnResize store to true, and then sets the fullscreen mode of the current window to the specified value.
+ * Waits for the window resize to complete by delaying for 100ms.
+ * Finally, sets the isRefittingOnResize store to false and updates the isFullscreenActive store with the new value.
+ * @param {boolean} shouldBeFullscreen - Whether the application window should be in fullscreen mode.
  * @returns {Promise<void>}
  */
-export const toggleZenMode = async () => {
+async function handleFullscreenChange(shouldBeFullscreen: boolean): Promise<void> {
+  isRefittingOnResize.set(true);
+  if (shouldBeFullscreen) {
+    await getCurrentWindow().setFullscreen(true);
+  } else {
+    await getCurrentWindow().setFullscreen(false);
+  }
+
+  // Delay to allow window resize to complete
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  isRefittingOnResize.set(false);
+  isFullscreenActive.set(shouldBeFullscreen);
+}
+
+/**
+ * Toggles the zen mode of the application window.
+ * When entering zen mode, automatically enables fullscreen if not already active.
+ * When exiting zen mode, automatically disables fullscreen if it was enabled by zen mode.
+ * Shows a notification when entering zen mode with the shortcut to exit.
+ * @returns {Promise<void>}
+ */
+export const toggleZenMode = async (): Promise<void> => {
   const hasImage = !!get(imageUrl);
   if (!hasImage) return;
 
@@ -418,24 +441,22 @@ export const toggleZenMode = async () => {
 
   const currentZenMode = get(isZenModeActive);
   const newZenMode = !currentZenMode;
+  const isCurrentlyFullscreen = get(isFullscreenActive);
 
-  if (newZenMode && !get(isFullscreenActive)) {
-    isRefittingOnResize.set(true);
-    await getCurrentWindow().setFullscreen(true);
-    setTimeout(() => {
-      isRefittingOnResize.set(false);
-    }, 100);
-    isFullscreenActive.set(true);
-  } else if (!newZenMode && get(isFullscreenActive) && currentZenMode) {
-    isRefittingOnResize.set(true);
-    await getCurrentWindow().setFullscreen(false);
-    setTimeout(() => {
-      isRefittingOnResize.set(false);
-    }, 100);
-    isFullscreenActive.set(false);
+  if (newZenMode && !isCurrentlyFullscreen) {
+    await handleFullscreenChange(true);
+  } else if (!newZenMode && isCurrentlyFullscreen && currentZenMode) {
+    await handleFullscreenChange(false);
   }
 
   isZenModeActive.set(newZenMode);
+
+  if (newZenMode) {
+    const zenModeShortcut = get(appConfig).shortcuts.toggleZenMode;
+    showNotification(
+      `Zen mode activated. Press ${zenModeShortcut.label.toLocaleUpperCase()} to exit.`
+    );
+  }
 };
 
 // --- Utility Functions ---

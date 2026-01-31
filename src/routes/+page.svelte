@@ -3,6 +3,7 @@
   import Controls from "$lib/components/Controls.svelte";
   import OptionsButton from "$lib/components/OptionsButton.svelte";
   import ImageNameDisplay from "$lib/components/ImageNameDisplay.svelte";
+  import NotificationToast from "$lib/components/NotificationToast.svelte";
 </script>
 
 <main>
@@ -10,6 +11,7 @@
   <OptionsButton />
   <Controls />
   <ImageNameDisplay />
+  <NotificationToast />
 </main>
 
 <style>

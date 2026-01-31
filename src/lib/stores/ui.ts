@@ -33,6 +33,12 @@ export const zoomLevel = writable(1);
 export const isZoomModifierUpActive = writable(false);
 export const isZoomModifierDownActive = writable(false);
 export const tooltip = createTooltipStore();
+
+export const notification = writable<{ message: string; visible: boolean }>({
+  message: "",
+  visible: false,
+});
+
 export const imageTransform = writable<ImageTransform>({
   offsetX: 0,
   offsetY: 0,
