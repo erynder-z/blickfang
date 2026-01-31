@@ -36,6 +36,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 100ms ease-in-out;
   }
 
   button:hover {

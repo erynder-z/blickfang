@@ -68,6 +68,7 @@
     height: 100%;
     overflow: hidden;
     background-color: var(--color-background);
+    transition: all 100ms ease-in-out;
   }
 
   .image-view-container:active {

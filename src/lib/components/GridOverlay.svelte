@@ -148,5 +148,6 @@
     height: 100%;
     pointer-events: none;
     z-index: 5;
+    transition: all 100ms ease-in-out;
   }
 </style>

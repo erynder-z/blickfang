@@ -347,6 +347,7 @@
     padding: 1rem;
     background-color: transparent;
     z-index: 10;
+    transition: all 100ms ease-in-out;
   }
 
   button {
