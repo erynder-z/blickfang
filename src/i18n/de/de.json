@@ -116,5 +116,5 @@
   "about.heading": "Über Blickfang",
   "about.message": "Blickfang ist ein simpler Bildbetrachter, erstellt mit SvelteKit und Tauri.",
   "about.sourcecode": "Der Quellcode von Blickfang ist verfügbar auf ",
-  "about.fontAttribution": "Diese App benutzt die SUSE Mono font. SUSE typeface ist unter lizensiert unter der SIL Open Font License, Version 1.1. Diese Lizenz und ein FAQ findet sich unter "
+  "about.fontAttribution": "Diese App benutzt die SUSE Mono und 0xProto Nerd Font Mono fonts. SUSE Mono ist unter der SIL Open Font License, Version 1.1 lizenziert. 0xProto Nerd Font Mono ist unter der SIL Open Font License, Version 1.1 (ohne RFN) lizenziert. Beide Lizenzen mit FAQs finden sich unter "
 }
