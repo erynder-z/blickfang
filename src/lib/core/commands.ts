@@ -462,6 +462,14 @@ export const toggleZenMode = async (): Promise<void> => {
 // --- Utility Functions ---
 
 /**
+ * Gets the application version from the backend.
+ * @returns {Promise<string>} The application version
+ */
+export const getAppVersion = async (): Promise<string> => {
+  return await invoke("get_app_version");
+};
+
+/**
  * Closes all open menus in the application.
  * This function is used to reset the application state when certain actions are taken.
  * For example, when the user toggles the fullscreen mode, all open menus will be closed.

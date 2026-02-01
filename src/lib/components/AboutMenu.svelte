@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { isAboutMenuVisible } from "$lib/stores";
+  import { isAboutMenuVisible, appVersion } from "$lib/stores";
   import { t } from "$lib/utils/i18n";
   import { fly, fade } from "svelte/transition";
   import { focusTrap } from "$lib/actions/focusTrap";
@@ -60,6 +60,7 @@
   >
     <div class="menu-content">
       <h1>{$t["about.heading"]}</h1>
+      <p class="version">Version: {$appVersion}</p>
       <p>{$t["about.message"]}</p>
       <p>
         {$t["about.sourcecode"]}
@@ -130,7 +131,7 @@
   }
 
   h1 {
-    margin: 0 0 1rem 0;
+    margin: 0 0 0.5rem 0;
     color: var(--color-text-primary);
     line-height: 1.2;
     font-size: 1.25rem;
@@ -140,6 +141,13 @@
   p {
     color: var(--color-text-secondary);
     text-align: center;
+  }
+
+  .version {
+    color: var(--color-text-primary);
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+    font-weight: 500;
   }
 
   button {

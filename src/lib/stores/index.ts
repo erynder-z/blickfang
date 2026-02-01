@@ -3,3 +3,4 @@ export * from "$lib/stores/ui";
 export * from "$lib/stores/config";
 export * from "$lib/stores/actions";
 export * from "$lib/stores/initialDialog";
+export * from "$lib/stores/app";

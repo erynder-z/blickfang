@@ -114,7 +114,7 @@
   "initialConfigSettings.selectThemeButton": "テーマ",
   "initialConfigSettings.selectLanguageButton": "言語",
   "initialConfigSettings.toggleHotkeysButton": "ホットキー",
-  "about.heading": "Blickfangについて",
+  "about.heading": "Blickfang",
   "about.message": "BlickfangはSvelteKitとTauriで構築された画像ビューアアプリケーションです。",
   "about.sourcecode": "Blickfangのソースコードはここで公開されています: ",
   "about.fontAttribution": "このアプリは'SUSE Mono'と'0xProto Nerd Font Mono'のフォントを使っています。 'SUSE Mono'は'SIL Open Font License, Version 1.1'でライセンスされています。 '0xProto Nerd Font Mono'は'SIL Open Font License, Version 1.1 (no RFN)'でライセンスされています。 両方のライセンスとFAQはここで確認できます: "

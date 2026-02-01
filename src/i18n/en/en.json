@@ -114,7 +114,7 @@
   "initialConfigSettings.selectThemeButton": "Theme",
   "initialConfigSettings.selectLanguageButton": "Language",
   "initialConfigSettings.toggleHotkeysButton": "Hotkeys",
-  "about.heading": "About Blickfang",
+  "about.heading": "Blickfang",
   "about.message": "Blickfang is an image viewer application built with SvelteKit and Tauri.",
   "about.sourcecode": "The source code for Blickfang is available at ",
   "about.fontAttribution": "This app uses the SUSE Mono and 0xProto Nerd Font Mono fonts. SUSE Mono is licensed under the SIL Open Font License, Version 1.1. 0xProto Nerd Font Mono is licensed under SIL Open Font License, Version 1.1 (no RFN). Both licenses are available with FAQs at "

@@ -1,3 +1,4 @@
+pub mod app_info;
 pub mod ascii_art;
 pub mod config_commands;
 pub mod file_operations;

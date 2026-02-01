@@ -30,6 +30,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             utils::window_utils::show_window,
             utils::startup_handler::frontend_is_ready,
+            commands::app_info::get_app_version,
             commands::file_operations::open_and_read_file,
             commands::file_operations::read_image_from_path,
             commands::file_operations::change_image,

@@ -3,7 +3,7 @@
 // See: https://svelte.dev/docs/kit/single-page-apps
 // See: https://v2.tauri.app/start/frontend/sveltekit/ for more info
 
-import { appConfig } from "$lib/stores";
+import { appConfig, appVersion } from "$lib/stores";
 import type { AppConfig } from "$lib/types/app";
 import { setLocale } from "$lib/utils/i18n";
 import { browser } from "$app/environment";
@@ -17,7 +17,7 @@ export const ssr = false;
  * accordingly. If the config cannot be loaded, it will log an error to the console.
  * @param {LoadEvent} event - The event passed to this function by SvelteKit
  */
-export async function load({ fetch }: LoadEvent) {
+export const load = async ({ fetch }: LoadEvent) => {
   if (browser) {
     try {
       const { invoke } = await import("@tauri-apps/api/core");
@@ -25,8 +25,15 @@ export async function load({ fetch }: LoadEvent) {
       const config: AppConfig = JSON.parse(configStr);
       appConfig.set(config);
       setLocale(config.language);
+
+      try {
+        const version: string = await invoke("get_app_version");
+        appVersion.set(version);
+      } catch (error) {
+        console.error("Failed to load app version:", error);
+      }
     } catch (error) {
       console.error("Failed to load config:", error);
     }
   }
-}
+};
