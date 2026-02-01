@@ -17,7 +17,7 @@ pub async fn open_image_dialog(window: Window) -> Result<Option<PathBuf>, String
     window
         .dialog()
         .file()
-        .add_filter("Image files", &["png", "jpg", "jpeg", "webp", "bmp"])
+        .add_filter("Image files", &["png", "jpg", "jpeg", "webp", "bmp", "gif"])
         .pick_file(move |result| {
             let path_to_send = result.and_then(|fp| match fp {
                 tauri_plugin_dialog::FilePath::Path(p) => Some(p),

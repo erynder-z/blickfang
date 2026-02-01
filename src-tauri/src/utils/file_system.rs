@@ -15,9 +15,7 @@ pub async fn get_directory_files(file_path: &str) -> Result<Vec<String>, String>
         .parent()
         .ok_or_else(|| "Could not determine parent directory".to_string())?;
 
-    let image_extensions = [
-        "png", "jpg", "jpeg", "webp", "bmp", "dds", "gif", "hdr", "ico", "tga", "tif", "tiff",
-    ];
+    let image_extensions = ["png", "jpg", "jpeg", "webp", "bmp", "gif"];
     let mut image_files = Vec::new();
 
     let mut dir = fs::read_dir(parent_dir)
