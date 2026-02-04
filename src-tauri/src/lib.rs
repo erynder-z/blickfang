@@ -21,7 +21,7 @@ pub fn run() {
         .manage(AppReady::default())
         .setup(|app| {
             perform_os_specific_setup(&app.handle())?;
-            setup_main_window(app)?;
+            setup_main_window(&app.handle())?;
             Ok(())
         })
         .plugin(tauri_plugin_opener::init())

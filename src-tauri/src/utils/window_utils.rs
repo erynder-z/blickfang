@@ -1,7 +1,7 @@
 use crate::models::config::Config;
 use crate::utils::config_utils::{read_config, write_config};
 use serde_json;
-use tauri::{App, AppHandle, Manager, PhysicalPosition, PhysicalSize, RunEvent, WindowEvent};
+use tauri::{AppHandle, Manager, PhysicalPosition, PhysicalSize, RunEvent, WindowEvent};
 
 /// Loads the application configuration from the config file.
 ///
@@ -42,21 +42,47 @@ fn save_config(app_handle: &AppHandle, config: &Config) {
     }
 }
 
-/// Configures the main application window's size and position based on saved settings
-/// in the config file, or calculates a default size/position if no settings are found
-/// or `remember_window_size` is false.
+/// Sets up the main window according to the application configuration.
+///
+/// If the configuration indicates that the window size should be remembered, it tries to set the window to the remembered size and position.
+/// If the window size is not remembered, it tries to set a default size based on the monitor size.
 ///
 /// # Arguments
-/// * `app` - A mutable reference to the Tauri `App` instance.
+///
+/// * `app_handle` - The Tauri application handle.
 ///
 /// # Returns
-/// `Result<(), String>`.
-pub fn setup_main_window(app: &mut App) -> Result<(), String> {
-    let window = app
+///
+/// `Result<(), String>` - Ok if the window is successfully set up, an error string otherwise.
+///
+/// # Errors
+///
+/// If the configuration cannot be loaded, an error string is returned.
+/// If the window cannot be set to the desired size or position, an error message is printed.
+pub fn setup_main_window(app_handle: &AppHandle) -> Result<(), String> {
+    let config = load_config(app_handle)?;
+
+    if config.remember_window_size {
+        if let Some(true) = config.window_maximized {
+            let handle_for_call = app_handle.clone();
+            let handle_for_closure = handle_for_call.clone();
+
+            let _ = handle_for_call.run_on_main_thread(move || {
+                // run on main thread in order to make sure the window is ready before doing any window operations
+                if let Some(window) = handle_for_closure.get_webview_window("main") {
+                    if let Err(e) = window.maximize() {
+                        eprintln!("Failed to maximize window: {e}");
+                    }
+                }
+            });
+
+            return Ok(());
+        }
+    }
+
+    let window = app_handle
         .get_webview_window("main")
         .ok_or_else(|| "Main window not found".to_string())?;
-
-    let config = load_config(&app.handle())?;
 
     if config.remember_window_size {
         if let (Some(w), Some(h), Some(x), Some(y)) = (
@@ -108,7 +134,7 @@ pub fn show_window(window: tauri::Window) {
 }
 
 /// Handles Tauri window events, specifically `Moved` and `Resized` for the main window.
-/// If `remember_window_size` is enabled in the config, it saves the new position and size.
+/// If `remember_window_size` is enabled in the config, it saves the new position, size, and maximized state.
 ///
 /// # Arguments
 /// * `app_handle` - The Tauri application handle.
@@ -131,6 +157,10 @@ pub fn handle_window_event(app_handle: &AppHandle, event: &RunEvent) {
                         if let Ok(pos) = window.outer_position() {
                             config.window_x = Some(pos.x as f64);
                             config.window_y = Some(pos.y as f64);
+                        }
+
+                        if let Ok(is_maximized) = window.is_maximized() {
+                            config.window_maximized = Some(is_maximized);
                         }
                         save_config(app_handle, &config);
                     }

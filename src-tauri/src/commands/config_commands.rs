@@ -185,15 +185,19 @@ pub fn update_edge_indicators_visible_command(app: AppHandle, visible: bool) -> 
     update_config(&app, |config| config.edge_indicators_visible = visible)
 }
 
-/// Updates the setting for remembering window size and position.
-/// If `remember` is true, it captures the current window size and position.
+/// Updates the setting for remembering the main window's size.
 ///
 /// # Arguments
 /// * `app` - The Tauri application handle.
-/// * `remember` - Whether to remember window size/position.
+/// * `remember` - Whether to remember the main window's size.
 ///
 /// # Returns
-/// `Result<(), String>`.
+/// `Result<(), String>` - `Ok(())` if the setting is successfully updated, an error string otherwise.
+///
+/// # Notes
+///
+/// If `remember` is `true`, the main window's size will be stored in the configuration file.
+/// If `remember` is `false`, any stored window size will be cleared from the configuration file.
 #[tauri::command]
 pub fn update_remember_window_size_command(app: AppHandle, remember: bool) -> Result<(), String> {
     update_config(&app, |config| {
@@ -209,12 +213,17 @@ pub fn update_remember_window_size_command(app: AppHandle, remember: bool) -> Re
                     config.window_x = Some(pos.x as f64);
                     config.window_y = Some(pos.y as f64);
                 }
+
+                if let Ok(is_maximized) = window.is_maximized() {
+                    config.window_maximized = Some(is_maximized);
+                }
             }
         } else {
             config.window_width = None;
             config.window_height = None;
             config.window_x = None;
             config.window_y = None;
+            config.window_maximized = None;
         }
     })
 }

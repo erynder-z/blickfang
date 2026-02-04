@@ -54,6 +54,8 @@ pub struct Config {
     pub window_x: Option<f64>,
     #[serde(default)]
     pub window_y: Option<f64>,
+    #[serde(default)]
+    pub window_maximized: Option<bool>,
     #[serde(default = "default_has_configured_initial_settings")]
     pub has_configured_initial_settings: bool,
     #[serde(default = "default_linux_desktop_install_choice")]
@@ -207,6 +209,7 @@ impl Default for Config {
             window_height: None,
             window_x: None,
             window_y: None,
+            window_maximized: None,
             has_configured_initial_settings: default_has_configured_initial_settings(),
             linux_desktop_install_choice: default_linux_desktop_install_choice(),
             ascii_chars: default_ascii_chars(),
