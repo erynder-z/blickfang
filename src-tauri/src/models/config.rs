@@ -119,7 +119,7 @@ fn default_image_name_display_mode() -> String {
     "fade".into()
 }
 fn default_edge_indicators_visible() -> bool {
-    false
+    true
 }
 fn default_remember_window_size() -> bool {
     false
