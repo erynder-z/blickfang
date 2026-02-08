@@ -1,4 +1,7 @@
-# Blickfang
+<p align="center">
+  <h1>Blickfang</h1>
+  <img src="src-tauri/icons/icon.png" alt="App Icon" width="128"/>
+</p>
 
 `Blickfang` is a modern, cross-platform image viewer application built with SvelteKit and Tauri. It offers a simple interface for browsing images, as well as a few tools for image analysis and transformation.
 
@@ -31,6 +34,10 @@ Binaries for all supported platforms are available on the [Releases](https://git
 ## Contributing
 
 Contributions are welcome! Please feel free to open issues or submit pull requests.
+
+## Attribution
+
+This app uses the SUSE Mono and 0xProto Nerd Font Mono fonts. SUSE Mono is licensed under the SIL Open Font License, Version 1.1. 0xProto Nerd Font Mono is licensed under SIL Open Font License, Version 1.1 (no RFN). Both licenses are available with FAQs at https://scripts.sil.org/OFL.
 
 ## License
 
