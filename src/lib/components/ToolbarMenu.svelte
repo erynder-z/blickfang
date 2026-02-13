@@ -7,13 +7,18 @@
   import { focusTrap } from "$lib/actions/focusTrap";
 
   const buttonSizes = ["large", "small", "hide"];
+  const buttonPositions = ["top", "left"];
 
-  let buttons: HTMLButtonElement[] = [];
+  let sizeButtons: HTMLButtonElement[] = [];
+  let positionButtons: HTMLButtonElement[] = [];
 
   $: if ($isToolbarMenuVisible) {
     tick().then(() => {
-      const currentIndex = buttonSizes.indexOf($appConfig.toolbarButtonSize);
-      if (currentIndex !== -1) buttons[currentIndex]?.focus();
+      const currentIndex_position = buttonPositions.indexOf($appConfig.toolbarButtonPosition);
+      if (currentIndex_position !== -1) positionButtons[currentIndex_position]?.focus();
+
+      const currentIndex_size = buttonSizes.indexOf($appConfig.toolbarButtonSize);
+      if (currentIndex_size !== -1) sizeButtons[currentIndex_size]?.focus();
     });
   }
 
@@ -33,11 +38,33 @@
   };
 
   /**
+   * Saves the selected toolbar button position to the application configuration.
+   *
+   * @param {string} position - The position of the toolbar buttons to save (e.g., "top", "left").
+   *
+   * @returns {Promise<void>} - A promise that resolves when the button position is saved.
+   */
+  const saveToolbarButtonPosition = async (position: string): Promise<void> => {
+    try {
+      await invoke("update_toolbar_button_position_command", { toolbarButtonPosition: position });
+    } catch (error) {
+      console.error("Failed to save button position:", error);
+    }
+  };
+
+  /**
    * Handles the button click event for the toolbar button size menu.
    *
-   * @param {string} size - The size of the toolbar buttons to save (e.g., "large", "small", "hide").
+   * @param {string} value - The value of the toolbar buttons to save (e.g., "large", "small", "hide" for size, or "top", "left" for position).
+   * @param {'size' | 'position'} type - The type of the button being clicked ('size' or 'position').
    */
-  const handleButtonClick = (size: string) => saveToolbarButtonSize(size);
+  const handleButtonClick = (value: string, type: "size" | "position") => {
+    if (type === "size") {
+      saveToolbarButtonSize(value);
+    } else if (type === "position") {
+      saveToolbarButtonPosition(value);
+    }
+  };
 
   /**
    * Closes the toolbar button size menu.
@@ -45,16 +72,16 @@
   const handleClose = () => isToolbarMenuVisible.set(false);
 
   /**
-   * Returns the label for a given toolbar button size.
+   * Returns the label for a given toolbar button option.
    *
-   * @param {string} size - The size of the toolbar buttons (e.g., "large", "small", "hide").
-   * @returns {string} - The label for the given button size.
+   * @param {string} option - The option for the toolbar buttons (e.g., "large", "small", "hide", "top", "left").
+   * @returns {string} - The label for the given button option.
    */
-  const getLabel = (size: string) => {
-    if (size === "large" || size === "small") {
-      return `general.${size}`;
+  const getLabel = (option: string) => {
+    if (option === "large" || option === "small" || option === "top" || option === "left") {
+      return `general.${option}`;
     }
-    return `general.${size}`;
+    return `general.${option}`;
   };
 
   /**
@@ -89,13 +116,26 @@
     out:fade={{ duration: 100 }}
   >
     <div class="menu-content">
-      <h1>{$t["options.toolbar.heading"]}</h1>
+      <h1>{$t["options.toolbar.buttonPosition.heading"]}</h1>
+      <div class="option-buttons">
+        {#each buttonPositions as position, i}
+          <button
+            bind:this={positionButtons[i]}
+            on:click={() => handleButtonClick(position, "position")}
+            class:active={$appConfig.toolbarButtonPosition === position}
+          >
+            {$t[getLabel(position)]}
+          </button>
+        {/each}
+      </div>
+
+      <h1>{$t["options.toolbar.buttonSize.heading"]}</h1>
 
       <div class="option-buttons">
         {#each buttonSizes as size, i}
           <button
-            bind:this={buttons[i]}
-            on:click={() => handleButtonClick(size)}
+            bind:this={sizeButtons[i]}
+            on:click={() => handleButtonClick(size, "size")}
             class:active={$appConfig.toolbarButtonSize === size}
           >
             {$t[getLabel(size)]}
@@ -200,6 +240,7 @@
     box-shadow: 0 0 0 var(--color-outline);
   }
 
+  button.active,
   button:focus {
     outline: none;
     background-color: var(--color-accent);

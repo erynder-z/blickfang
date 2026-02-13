@@ -41,6 +41,7 @@ pub fn run() {
             commands::config_commands::update_language_command,
             commands::config_commands::update_theme_command,
             commands::config_commands::update_toolbar_button_size_command,
+            commands::config_commands::update_toolbar_button_position_command,
             commands::config_commands::get_default_shortcuts_command,
             commands::config_commands::update_custom_shortcuts_command,
             commands::config_commands::set_active_shortcuts_to_default,

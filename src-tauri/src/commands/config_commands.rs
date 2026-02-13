@@ -105,6 +105,24 @@ pub fn update_toolbar_button_size_command(
     })
 }
 
+/// Updates the position of toolbar buttons.
+///
+/// # Arguments
+/// * `app` - The Tauri application handle.
+/// * `toolbar_button_position` - The new position setting for toolbar buttons.
+///
+/// # Returns
+/// `Result<(), String>`.
+#[tauri::command]
+pub fn update_toolbar_button_position_command(
+    app: AppHandle,
+    toolbar_button_position: String,
+) -> Result<(), String> {
+    update_config(&app, |config| {
+        config.toolbar_button_position = toolbar_button_position
+    })
+}
+
 /// Updates the image name display mode.
 ///
 /// # Arguments

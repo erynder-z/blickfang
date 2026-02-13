@@ -36,6 +36,8 @@ pub struct Config {
     pub theme: String,
     #[serde(default = "default_shortcuts")]
     pub shortcuts: Shortcuts,
+    #[serde(default = "default_toolbar_button_position")]
+    pub toolbar_button_position: String,
     #[serde(default = "default_toolbar_button_size")]
     pub toolbar_button_size: String,
     #[serde(default = "default_shortcuts")]
@@ -111,6 +113,9 @@ fn default_language() -> String {
 }
 fn default_theme() -> String {
     "lowest-common-denominator".into()
+}
+fn default_toolbar_button_position() -> String {
+    "top".into()
 }
 fn default_toolbar_button_size() -> String {
     "large".into()
@@ -199,6 +204,7 @@ impl Default for Config {
         Self {
             language: default_language(),
             theme: default_theme(),
+            toolbar_button_position: default_toolbar_button_position(),
             toolbar_button_size: default_toolbar_button_size(),
             image_name_display_mode: default_image_name_display_mode(),
             shortcuts: default_shortcuts(),

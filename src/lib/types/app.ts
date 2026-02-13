@@ -27,6 +27,7 @@ export type AppConfig = {
   theme: string;
   shortcuts: Shortcuts;
   customShortcuts: Shortcuts;
+  toolbarButtonPosition: "top" | "left";
   toolbarButtonSize: "large" | "small" | "hide";
   imageNameDisplayMode: "show" | "hide" | "fade";
   edgeIndicatorsVisible: boolean;

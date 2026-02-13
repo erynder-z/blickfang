@@ -3,7 +3,8 @@ import type { AppConfig } from "$lib/types/app";
 
 export const appConfig = writable<AppConfig>({
   language: "en",
-  theme: "default",
+  theme: "lowest-common-denominator",
+  toolbarButtonPosition: "top",
   toolbarButtonSize: "large",
   imageNameDisplayMode: "fade",
   edgeIndicatorsVisible: false,

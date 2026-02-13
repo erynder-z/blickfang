@@ -8,7 +8,6 @@
     isZoomModifierUpActive,
     isZoomModifierDownActive,
     tooltip,
-    isGridOverlayVisible,
     isZenModeActive,
   } from "$lib/stores";
   import {
@@ -35,6 +34,29 @@
 
   $: size = buttonSizes[$appConfig.toolbarButtonSize];
 
+  $: containerStyles =
+    $appConfig.toolbarButtonPosition === "top"
+      ? {
+          position: "absolute",
+          top: "0",
+          left: "0",
+          width: "100%",
+          height: "auto",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+        }
+      : {
+          position: "absolute",
+          top: "0",
+          left: "0",
+          width: "auto",
+          height: "100%",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        };
+
   /**
    * Toggles the visibility of the save as menu.
    */
@@ -46,6 +68,15 @@
 <div
   class="controls-container"
   style:display={$appConfig.toolbarButtonSize === "hide" || $isZenModeActive ? "none" : "flex"}
+  style:position={containerStyles.position}
+  style:top={containerStyles.top}
+  style:left={containerStyles.left}
+  style:width={containerStyles.width}
+  style:height={containerStyles.height}
+  style:flex-direction={containerStyles.flexDirection}
+  style:justify-content={containerStyles.justifyContent}
+  style:align-items={containerStyles.alignItems}
+  style:padding={$appConfig.toolbarButtonPosition === "top" ? "1rem" : "1rem 0.5rem"}
 >
   <!-- Open File -->
   <button
@@ -337,11 +368,7 @@
 
 <style>
   .controls-container {
-    position: absolute;
-    top: 0;
-    width: 100%;
     display: flex;
-    justify-content: center;
     flex-wrap: wrap;
     gap: 1rem;
     padding: 1rem;
