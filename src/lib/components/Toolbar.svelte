@@ -395,8 +395,7 @@
   }
 
   button.active {
-    background-color: var(--color-accent);
-    color: var(--color-text-tertiary);
+    background-color: rgb(from var(--color-accent) r g b / 0.2);
   }
 
   button.active.subdued {
