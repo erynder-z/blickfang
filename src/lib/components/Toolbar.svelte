@@ -33,29 +33,8 @@
   };
 
   $: size = buttonSizes[$appConfig.toolbarButtonSize];
-
-  $: containerStyles =
-    $appConfig.toolbarButtonPosition === "top"
-      ? {
-          position: "absolute",
-          top: "0",
-          left: "0",
-          width: "100%",
-          height: "auto",
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-        }
-      : {
-          position: "absolute",
-          top: "0",
-          left: "0",
-          width: "auto",
-          height: "100%",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        };
+  $: containerPosition = $appConfig.toolbarButtonPosition;
+  $: isHidden = $appConfig.toolbarButtonSize === "hide" || $isZenModeActive;
 
   /**
    * Toggles the visibility of the save as menu.
@@ -67,16 +46,9 @@
 
 <div
   class="toolbar-container"
-  style:display={$appConfig.toolbarButtonSize === "hide" || $isZenModeActive ? "none" : "flex"}
-  style:position={containerStyles.position}
-  style:top={containerStyles.top}
-  style:left={containerStyles.left}
-  style:width={containerStyles.width}
-  style:height={containerStyles.height}
-  style:flex-direction={containerStyles.flexDirection}
-  style:justify-content={containerStyles.justifyContent}
-  style:align-items={containerStyles.alignItems}
-  style:padding={$appConfig.toolbarButtonPosition === "top" ? "1rem" : "1rem 0.5rem"}
+  class:hidden={isHidden}
+  class:top-position={containerPosition === "top"}
+  class:side-position={containerPosition === "left"}
 >
   <!-- Open File -->
   <button
@@ -373,13 +345,37 @@
 
 <style>
   .toolbar-container {
+    position: absolute;
+    top: 0;
+    left: 0;
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
-    padding: 1rem;
     background-color: transparent;
     z-index: 10;
     transition: all 100ms ease-in-out;
+  }
+
+  .toolbar-container.top-position {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  .toolbar-container.side-position {
+    width: auto;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 0.5rem;
+  }
+
+  .toolbar-container.hidden {
+    display: none;
   }
 
   button {
