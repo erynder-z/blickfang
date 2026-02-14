@@ -66,7 +66,7 @@
 </script>
 
 <div
-  class="controls-container"
+  class="toolbar-container"
   style:display={$appConfig.toolbarButtonSize === "hide" || $isZenModeActive ? "none" : "flex"}
   style:position={containerStyles.position}
   style:top={containerStyles.top}
@@ -372,7 +372,7 @@
 </div>
 
 <style>
-  .controls-container {
+  .toolbar-container {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
