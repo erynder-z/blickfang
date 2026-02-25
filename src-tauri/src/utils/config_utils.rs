@@ -6,7 +6,7 @@ use tauri::{AppHandle, Manager};
 
 /// Returns the path to the configuration file as a `PathBuf`.
 ///
-/// The path is determined by creating a directory named "blickfang" in the application data directory,
+/// The path is determined by creating a directory named ".blickfang" in the user's home directory,
 /// and then appending "config.json" to it. If the directory or file cannot be created,
 /// an error string is returned.
 ///
@@ -18,14 +18,14 @@ use tauri::{AppHandle, Manager};
 ///
 /// # Errors
 ///
-/// If the application data directory cannot be obtained, or if the "blickfang" directory or "config.json" file cannot be created, an error string is returned.
+/// If the home directory cannot be obtained, or if the ".blickfang" directory or "config.json" file cannot be created, an error string is returned.
 fn get_config_path(app: &AppHandle) -> Result<PathBuf, String> {
     let mut config_path = app
         .path()
-        .app_data_dir()
-        .map_err(|e| format!("Failed to get app data directory: {}", e))?;
+        .home_dir()
+        .map_err(|e| format!("Failed to get home directory: {}", e))?;
 
-    config_path.push("blickfang");
+    config_path.push(".blickfang");
     fs::create_dir_all(&config_path)
         .map_err(|e| format!("Failed to create config directory: {}", e))?;
     config_path.push("config.json");
