@@ -15,12 +15,12 @@ name = "blickfang_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2.5.5", features = [] }
+tauri-build = { version = "2.5.6", features = [] }
 
 
 
 [dependencies]
-tauri = { version = "2.10.2", features = [] }
+tauri = { version = "2.10.3", features = [] }
 tauri-plugin-dialog = "2.6.0"
 tauri-plugin-opener = "2.5.3"
 tauri-plugin-fs = "2.4.5"
@@ -28,11 +28,11 @@ serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.149"
 base64 = "0.22.1"
 mime_guess = "2.0.5"
-tokio = { version = "1.49.0", features = ["sync", "fs", "rt"] }
+tokio = { version = "1.50.0", features = ["sync", "fs", "rt"] }
 kamadak-exif = "0.6.1"
 lazy_static = "1.5.0"
 webp = "0.3.1"
-image = { version = "0.25.9", features = ["bmp", "png", "jpeg", "webp", "gif"] }
+image = { version = "0.25.10", features = ["bmp", "png", "jpeg", "webp", "gif"] }
 rusttype = "0.9.3"
 
 
