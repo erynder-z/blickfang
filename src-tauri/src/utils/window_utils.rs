@@ -128,8 +128,13 @@ pub fn setup_main_window(app_handle: &AppHandle) -> Result<(), String> {
 /// * `window` - The Tauri `Window` to show.
 #[tauri::command]
 pub fn show_window(window: tauri::Window) {
-    if let Err(e) = window.show() {
-        eprintln!("Failed to show window: {e}");
+    window.show().map_err(|e| e.to_string()).unwrap();
+
+    // Workaround fix for window bar buttons not working on Wayland (Linux)
+    #[cfg(target_os = "linux")]
+    {
+        let _ = window.set_resizable(false);
+        let _ = window.set_resizable(true);
     }
 }
 
